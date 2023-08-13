@@ -13,27 +13,162 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="소스 파일\GraphicCore">
+    <Filter Include="Obj">
+      <UniqueIdentifier>{044a8699-8769-428c-a21f-75158d1414f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GraphicCore">
       <UniqueIdentifier>{8ef1ab9c-48fe-4d42-86ec-7521ab4df2a4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\NetworkCore">
+    <Filter Include="Managers">
+      <UniqueIdentifier>{bc78d8a2-aaa8-4492-99a1-894a6fdd438c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NetworkCore">
       <UniqueIdentifier>{baa2bdba-a1b9-4119-95fd-2e75e7a8adc4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{95414e71-17b1-4fcf-a581-34892839295b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Packet">
+      <UniqueIdentifier>{11547ffa-b9ea-47e2-83bc-720c50c5a9b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Obj\UI">
+      <UniqueIdentifier>{b2b62dfb-2ef7-403a-9863-52725c1e1e3a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="MapleTournament_Client.cpp">
+    <ClCompile Include="Main.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Setting.h">
       <Filter>헤더 파일</Filter>
     </ClCompile>
+    <ClCompile Include="GameApp.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicCore\Graphics.cpp">
+      <Filter>GraphicCore</Filter>
+    </ClCompile>
+    <ClCompile Include="Window.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkCore\TCPClient.cpp">
+      <Filter>NetworkCore</Filter>
+    </ClCompile>
     <ClCompile Include="App.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="NetworkCore\Connector.cpp">
+      <Filter>NetworkCore</Filter>
+    </ClCompile>
+    <ClCompile Include="User.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Packet\Packet.cpp">
+      <Filter>Packet</Filter>
+    </ClCompile>
+    <ClCompile Include="Packet\PacketHandler.cpp">
+      <Filter>Packet</Filter>
+    </ClCompile>
+    <ClCompile Include="Managers\UserManager.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Packet\EnterPacket.cpp">
+      <Filter>Packet</Filter>
+    </ClCompile>
+    <ClCompile Include="Managers\ResourceManager.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Bitmap.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\LoginScene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Scene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Managers\SceneManager.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Obj\Obj.cpp">
+      <Filter>Obj</Filter>
+    </ClCompile>
+    <ClCompile Include="Obj\UI\UI.cpp">
+      <Filter>Obj\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Obj\UI\UIButton.cpp">
+      <Filter>Obj\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Obj\UI\UIPanel.cpp">
+      <Filter>Obj\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Layer.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="GameApp.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicCore\Graphics.h">
+      <Filter>GraphicCore</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkCore\TCPClient.h">
+      <Filter>NetworkCore</Filter>
+    </ClInclude>
     <ClInclude Include="App.h">
       <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkCore\Connector.h">
+      <Filter>NetworkCore</Filter>
+    </ClInclude>
+    <ClInclude Include="User.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Packet\Packet.h">
+      <Filter>Packet</Filter>
+    </ClInclude>
+    <ClInclude Include="Packet\PacketHandler.h">
+      <Filter>Packet</Filter>
+    </ClInclude>
+    <ClInclude Include="Managers\UserManager.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Packet\EnterPacket.h">
+      <Filter>Packet</Filter>
+    </ClInclude>
+    <ClInclude Include="Managers\ResourceManager.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Bitmap.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Window.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\LoginScene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Scene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Managers\SceneManager.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Obj\Obj.h">
+      <Filter>Obj</Filter>
+    </ClInclude>
+    <ClInclude Include="Obj\UI\UI.h">
+      <Filter>Obj\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Obj\UI\UIButton.h">
+      <Filter>Obj\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Obj\UI\UIPanel.h">
+      <Filter>Obj\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Layer.h">
+      <Filter>Scene</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -128,11 +128,51 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />
-    <ClCompile Include="MapleTournament_Client.cpp" />
+    <ClCompile Include="Bitmap.cpp" />
+    <ClCompile Include="GameApp.cpp" />
+    <ClCompile Include="GraphicCore\Graphics.cpp" />
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Managers\ResourceManager.cpp" />
+    <ClCompile Include="Managers\SceneManager.cpp" />
+    <ClCompile Include="Managers\UserManager.cpp" />
+    <ClCompile Include="NetworkCore\Connector.cpp" />
+    <ClCompile Include="NetworkCore\TCPClient.cpp" />
+    <ClCompile Include="Obj\Obj.cpp" />
+    <ClCompile Include="Obj\UI\UI.cpp" />
+    <ClCompile Include="Obj\UI\UIButton.cpp" />
+    <ClCompile Include="Obj\UI\UIPanel.cpp" />
+    <ClCompile Include="Packet\EnterPacket.cpp" />
+    <ClCompile Include="Packet\Packet.cpp" />
+    <ClCompile Include="Packet\PacketHandler.cpp" />
+    <ClCompile Include="Scene\Layer.cpp" />
+    <ClCompile Include="Scene\LoginScene.cpp" />
+    <ClCompile Include="Scene\Scene.cpp" />
     <ClCompile Include="Setting.h" />
+    <ClCompile Include="User.cpp" />
+    <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h" />
+    <ClInclude Include="Bitmap.h" />
+    <ClInclude Include="GameApp.h" />
+    <ClInclude Include="GraphicCore\Graphics.h" />
+    <ClInclude Include="Managers\ResourceManager.h" />
+    <ClInclude Include="Managers\SceneManager.h" />
+    <ClInclude Include="Managers\UserManager.h" />
+    <ClInclude Include="NetworkCore\Connector.h" />
+    <ClInclude Include="NetworkCore\TCPClient.h" />
+    <ClInclude Include="Obj\Obj.h" />
+    <ClInclude Include="Obj\UI\UI.h" />
+    <ClInclude Include="Obj\UI\UIButton.h" />
+    <ClInclude Include="Obj\UI\UIPanel.h" />
+    <ClInclude Include="Packet\EnterPacket.h" />
+    <ClInclude Include="Packet\Packet.h" />
+    <ClInclude Include="Packet\PacketHandler.h" />
+    <ClInclude Include="Scene\Layer.h" />
+    <ClInclude Include="Scene\LoginScene.h" />
+    <ClInclude Include="Scene\Scene.h" />
+    <ClInclude Include="User.h" />
+    <ClInclude Include="Window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
