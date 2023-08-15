@@ -4,23 +4,21 @@
 #include "../Packet/PacketHandler.h"
 
 class Packet;
-class Connector;
 
 class TCPClient
 {
 private:
 	HANDLE m_hThread;
 
-	Connector*			m_pConnector;
 	PacketHandler		m_packetHandler;
 
 	bool				m_bIsRunning;
 
 public:
-	TCPClient(const char* _serverIP, int _serverPort);
+	TCPClient();
 	~TCPClient();
 
-	void Send(Packet* _pPacket); // TODO 존재이유
+	bool Init();
 
 	unsigned int ReceivePacket();
 

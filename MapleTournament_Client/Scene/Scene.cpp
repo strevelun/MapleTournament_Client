@@ -28,6 +28,8 @@ Layer* Scene::CreateLayer(const std::wstring& _layerName, uint32_t _zOrder)
     if(!pLayer) pLayer = new Layer(_layerName, _zOrder);
     m_listLayer.push_back(pLayer);
 
+    // sort
+
     return pLayer;
 }
 
@@ -36,13 +38,24 @@ bool Scene::Init()
     return true;
 }
 
-void Scene::Render(ID2D1HwndRenderTarget* _pRenderTarget)
+void Scene::Update()
 {
     std::list<Layer*>::iterator iter = m_listLayer.begin();
     std::list<Layer*>::iterator iterEnd = m_listLayer.end();
 
     for (; iter != iterEnd; iter++)
     {
-        (*iter)->Render(_pRenderTarget);
+        (*iter)->Update();
+    }
+}
+
+void Scene::Render(Graphics* _pGraphics)
+{
+    std::list<Layer*>::iterator iter = m_listLayer.begin();
+    std::list<Layer*>::iterator iterEnd = m_listLayer.end();
+
+    for (; iter != iterEnd; iter++)
+    {
+        (*iter)->Render(_pGraphics);
     }
 }

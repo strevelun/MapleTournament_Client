@@ -15,13 +15,24 @@ void Layer::AddObj(Obj* _pObj)
     m_listObj.push_back(_pObj);
 }
 
-void Layer::Render(ID2D1HwndRenderTarget* _pRenderTarget)
+void Layer::Update()
 {
     std::list<Obj*>::iterator iter = m_listObj.begin();
     std::list<Obj*>::iterator iterEnd = m_listObj.end();
 
     for (; iter != iterEnd; iter++)
     {
-        (*iter)->Render(_pRenderTarget);
+        (*iter)->Update();
+    }
+}
+
+void Layer::Render(Graphics* _pGraphics)
+{
+    std::list<Obj*>::iterator iter = m_listObj.begin();
+    std::list<Obj*>::iterator iterEnd = m_listObj.end();
+
+    for (; iter != iterEnd; iter++)
+    {
+        (*iter)->Render(_pGraphics);
     }
 }

@@ -1,8 +1,6 @@
 #include "SceneManager.h"
 #include "../Scene/Scene.h"
 
-#include <d2d1.h>
-
 SceneManager* SceneManager::m_pInst = nullptr;
 
 SceneManager::SceneManager() :
@@ -38,7 +36,12 @@ void SceneManager::CheckSceneChange()
 	m_pNextScene = nullptr;
 }
 
-void SceneManager::Render(ID2D1HwndRenderTarget* _pRenderTarget)
+void SceneManager::Update()
 {
-	m_pCurScene->Render(_pRenderTarget);
+	m_pCurScene->Update();
+}
+
+void SceneManager::Render(Graphics* _pGraphics)
+{
+	m_pCurScene->Render(_pGraphics);
 }

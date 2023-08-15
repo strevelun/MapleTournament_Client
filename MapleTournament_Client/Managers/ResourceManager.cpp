@@ -30,14 +30,12 @@ bool ResourceManager::Init(IWICImagingFactory* _pImagingFactory, ID2D1HwndRender
 	return true;
 }
 
-ID2D1Bitmap* ResourceManager::LoadImageFromFile(const std::wstring& _fileName, const std::wstring& _path)
+ID2D1Bitmap* ResourceManager::LoadImageFromFile(const std::wstring& _fileNameWithPath)
 {
 	HRESULT hr = S_OK;
 	IWICBitmapDecoder* pDecoder = nullptr;
 
-	std::wstring fullFilePath = _path + _fileName;
-
-	hr = m_pImagingFactory->CreateDecoderFromFilename(fullFilePath.c_str(), NULL, GENERIC_READ, WICDecodeMetadataCacheOnLoad, &pDecoder);
+	hr = m_pImagingFactory->CreateDecoderFromFilename(_fileNameWithPath.c_str(), NULL, GENERIC_READ, WICDecodeMetadataCacheOnLoad, &pDecoder);
 	if (FAILED(hr)) return nullptr;
 
 	IWICBitmapFrameDecode* pFrame = nullptr;
@@ -62,20 +60,20 @@ ID2D1Bitmap* ResourceManager::LoadImageFromFile(const std::wstring& _fileName, c
 	return pBitmap;
 }
 
-Bitmap* ResourceManager::GetBitmap(const std::wstring& _fileName, const std::wstring& _path)
+Bitmap* ResourceManager::GetBitmap(const std::wstring& _fileNameWithPath)
 {
-	std::map<std::wstring, Bitmap*>::const_iterator iter = m_mapBitmap.find(_fileName);
+	std::map<std::wstring, Bitmap*>::const_iterator iter = m_mapBitmap.find(_fileNameWithPath);
 	if (iter != m_mapBitmap.cend())
 		return iter->second;
 
-	ID2D1Bitmap* pImage = LoadImageFromFile(_fileName, _path);
+	ID2D1Bitmap* pImage = LoadImageFromFile(_fileNameWithPath);
 	if (pImage == nullptr)
 	{
 		OutputDebugStringW(L"LoadImageFromFile ¸®ÅÏ°ª nullptr");
 		return nullptr;
 	}
 	Bitmap* pBitmap = new Bitmap(pImage);
-	m_mapBitmap.insert(make_pair(_fileName, pBitmap));
+	m_mapBitmap.insert(make_pair(_fileNameWithPath, pBitmap));
 
 	return pBitmap;
 }

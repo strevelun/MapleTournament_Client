@@ -1,15 +1,18 @@
 #include "NetworkCore/TCPClient.h"
+#include "NetworkCore/NetworkManager.h"
 #include "GraphicCore/Graphics.h"
 #include "GameApp.h"
 #include "Managers/ResourceManager.h"
 #include "Managers/SceneManager.h"
+#include "Managers/InputManager.h"
 #include "Scene/LoginScene.h"
 #include "User.h"
+#include "Obj/UI/Mouse.h"
 
 #include <d2d1.h>
 
-GameApp::GameApp(HINSTANCE _hInst, int _nCmdShow, const wchar_t* _wndClassName, const wchar_t* _windowName, UINT _width, UINT _height)
-	: m_window(_hInst, _nCmdShow, _wndClassName, _windowName, _width, _height),
+GameApp::GameApp(HINSTANCE _hInst, const wchar_t* _wndClassName)
+	: m_window(_hInst, _wndClassName),
 	m_pClient(nullptr),
 	m_pGraphics(nullptr)
 {
@@ -25,18 +28,34 @@ GameApp::~GameApp()
 
 	if (m_pClient) delete m_pClient;
 
-	ResourceManager::DestroyInst();
+	ResourceManager::DestroyInst(); // TODO : m_mapBitmap 해제
+	InputManager::DestroyInst();
+	SceneManager::DestroyInst();
 }
 
-bool GameApp::Init()
+bool GameApp::Init(int _nCmdShow, const wchar_t* _windowName, UINT _width, UINT _height)
 {
 	WSADATA  wsaData;
-	if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) throw L"문제 발생 at WASStartup";
+	if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
+	{
+		OutputDebugStringW(L"WASStartup 에러");
+		return false;
+	}
+
+	if (!m_window.Init(_nCmdShow, _windowName, _width, _height)) return false;
 
 	m_pGraphics = new Graphics(m_window.GetHWnd());
-	m_pClient = new TCPClient("192.168.219.167", 30001);
+	if (!m_pGraphics->Init()) return false;
 
-	if (!ResourceManager::GetInst()->Init(m_pGraphics->GetImagingFactory(), m_pGraphics->GetRenderTarget())) return false;
+	m_pClient = new TCPClient();
+	if (!m_pClient->Init()) return false;
+
+	if (!ResourceManager::GetInst()->Init(m_pGraphics->GetImagingFactory(), m_pGraphics->GetRenderTarget()))
+	{
+		OutputDebugStringW(L"NetworkManager 초기화 에러");
+		return false;
+	}
+	if (!InputManager::GetInst()->Init(m_window.GetHWnd())) return false;
 
 	SceneManager::GetInst()->ChangeScene(new LoginScene);
 
@@ -74,16 +93,18 @@ void GameApp::Input()
 
 void GameApp::Update()
 {
-
+	InputManager::GetInst()->Update();
+	SceneManager::GetInst()->Update();
 }
 
 void GameApp::Render()
 {
-	ID2D1HwndRenderTarget* pRenderTarget = m_pGraphics->GetRenderTarget();
-	pRenderTarget->BeginDraw();
-	pRenderTarget->Clear();
+	m_pGraphics->BeginDraw();
 
-	SceneManager::GetInst()->Render(pRenderTarget);
+	m_pGraphics->Render();
 
-	pRenderTarget->EndDraw();
+	Mouse* pMouse = InputManager::GetInst()->GetMouse();
+	m_pGraphics->DrawMouseCoordinates(pMouse->GetPosX(), pMouse->GetPosY());
+
+	m_pGraphics->EndDraw();
 }

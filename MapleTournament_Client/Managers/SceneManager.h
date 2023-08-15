@@ -1,7 +1,9 @@
 #pragma once
 
+#include <d2d1.h>
+
 class Scene;
-struct ID2D1HwndRenderTarget;
+class Graphics;
 
 class SceneManager
 {
@@ -30,6 +32,7 @@ public:
 	void ChangeScene(Scene* _pScene);
 	void CheckSceneChange();
 
-	void Render(ID2D1HwndRenderTarget* _pRenderTarget);
+	void Update();
+	void Render(Graphics* _pGraphics);
 };
 

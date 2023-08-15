@@ -1,7 +1,5 @@
 #pragma once
 
-#include "../Setting.h"
-
 typedef unsigned short ushort;
 
 class Packet

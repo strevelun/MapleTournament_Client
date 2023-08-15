@@ -1,30 +1,35 @@
-#include "Connector.h"
+#include "NetworkManager.h"
 #include "TCPClient.h"
 #include "../Packet/Packet.h"
 #include "../Packet/EnterPacket.h"
 
 #include <thread>
+#include <string>
 
-TCPClient::TCPClient(const char* _serverIP, int _serverPort)
-	: m_bIsRunning(true)
+TCPClient::TCPClient()
+	: m_bIsRunning(true), m_hThread(nullptr)
 {
-	m_pConnector = new Connector(_serverIP, _serverPort);
-	
-	unsigned int threadID;
-	m_hThread = (HANDLE)_beginthreadex(NULL, 0, ThreadFunc, this, 0, &threadID);
-	if (m_hThread == NULL) throw L"Failed BeginThreadEx";
 }
 
 TCPClient::~TCPClient()
 {
     CloseHandle(m_hThread);
 
-	if (m_pConnector) delete m_pConnector;
+	NetworkManager::DestroyInst();
 }
 
-void TCPClient::Send(Packet* _pPacket) 
+bool TCPClient::Init()
 {
-	m_pConnector->Send(_pPacket);
+	if (!NetworkManager::GetInst()->Init("192.168.219.167", 30001)) return false;
+
+	unsigned int threadID;
+	m_hThread = (HANDLE)_beginthreadex(NULL, 0, ThreadFunc, this, 0, &threadID);
+	if (m_hThread == NULL)
+	{
+		OutputDebugStringW(L"Failed BeginThreadEx");
+		return false;
+	}
+	return true;
 }
 
 unsigned int TCPClient::ReceivePacket()
@@ -38,8 +43,11 @@ unsigned int TCPClient::ReceivePacket()
 
 	while (isRunning)
 	{
-		recvSize = m_pConnector->Receive(recvBuffer + curTotalRecvSize, bufferSize - curTotalRecvSize);
-		if (recvSize == -1) break;
+		recvSize = NetworkManager::GetInst()->Receive(recvBuffer + curTotalRecvSize, bufferSize - curTotalRecvSize);
+		if (recvSize == -1) {
+			int error = WSAGetLastError();
+			OutputDebugStringA(("Receive error: " + std::to_string(error)).c_str());
+		}
 
 		curTotalRecvSize += recvSize;
 

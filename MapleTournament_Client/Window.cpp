@@ -1,14 +1,21 @@
 #include "Window.h"
 #include <stdexcept>
+#include "Managers/InputManager.h"
 
 LRESULT CALLBACK WndProc(HWND _hWnd, UINT _msg, WPARAM _wParam, LPARAM _lParam);
 
-Window::Window()
+Window::Window(HINSTANCE _hInst, const wchar_t* _wndClassName)
+	: m_hInst(_hInst), m_wndClassName(_wndClassName), m_hWnd(nullptr)
 {
+
 }
 
-Window::Window(HINSTANCE _hInst, int _nCmdShow, const wchar_t* _wndClassName, const wchar_t* _windowName, UINT _width, UINT _height)
-	: m_hInst(_hInst), m_wndClassName(_wndClassName)
+Window::~Window()
+{
+	UnregisterClass(m_wndClassName, m_hInst);
+}
+
+bool Window::Init(int _nCmdShow, const wchar_t* _windowName, UINT _width, UINT _height)
 {
 	WNDCLASSEX wcex;
 	wcex.cbSize = sizeof(WNDCLASSEX);
@@ -21,25 +28,26 @@ Window::Window(HINSTANCE _hInst, int _nCmdShow, const wchar_t* _wndClassName, co
 	wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
 	wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
 	wcex.lpszMenuName = NULL;
-	wcex.lpszClassName = _wndClassName;
+	wcex.lpszClassName = m_wndClassName;
 	wcex.hIconSm = LoadIcon(m_hInst, IDI_APPLICATION);
 
 	RegisterClassEx(&wcex);
 
-	RECT rc = { 0, 0, (LONG)_width, (LONG)_height};
+	RECT rc = { 0, 0, (LONG)_width, (LONG)_height };
 	AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
 
-	m_hWnd = CreateWindow(_wndClassName, _windowName, WS_OVERLAPPEDWINDOW,
+	m_hWnd = CreateWindow(m_wndClassName, _windowName, WS_OVERLAPPEDWINDOW,
 		CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left, rc.bottom - rc.top, nullptr, nullptr, m_hInst, this);
-	if (!m_hWnd) throw L"CreateWindow가 nullptr을 리턴함";
+	if (!m_hWnd)
+	{
+		OutputDebugStringW(L"CreateWindow 실패");
+		return false;
+	}
 
 	ShowWindow(m_hWnd, _nCmdShow);
 	UpdateWindow(m_hWnd);
-}
 
-Window::~Window()
-{
-	UnregisterClass(m_wndClassName, m_hInst);
+	return true;
 }
 
 LRESULT Window::Proc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -53,6 +61,10 @@ LRESULT Window::Proc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		EndPaint(hWnd, &ps);
 	}
 	break;
+
+	case WM_KEYDOWN:
+		InputManager::GetInst()->AddKeyInput(wParam);
+		break;
 
 	case WM_DESTROY:
 		PostQuitMessage(0);

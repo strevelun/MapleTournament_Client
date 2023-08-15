@@ -1,33 +1,30 @@
 #pragma once
 
 #include <WinSock2.h>
-#include "App.h"
 #include "Window.h"
 
 class Window;
 class Graphics;
 class TCPClient;
 
-class GameApp : public App
+class GameApp
 {
 private:
 	Graphics*	m_pGraphics;
 	Window		m_window;
 	TCPClient*	m_pClient;
 
-	//USHORT		m_id;
-
 public:
-	GameApp(HINSTANCE _hInst, int _nCmdShow, const wchar_t* _wndClassName, const wchar_t* _windowName, UINT _width, UINT _height);
+	GameApp(HINSTANCE _hInst, const wchar_t* _wndClassName);
 	~GameApp();
 
-	bool Init();
+	bool Init(int _nCmdShow, const wchar_t* _windowName, UINT _width, UINT _height);
 
-	int Run() override;
+	int Run();
 
 private:
 	void Input();
-	void Update() override;
+	void Update();
 	void Render();
 };
 

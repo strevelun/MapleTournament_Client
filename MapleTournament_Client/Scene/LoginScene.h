@@ -9,5 +9,9 @@ public:
 	~LoginScene();
 
 	bool Init() override;
+
+public:
+	void LoginButtonCallback();
+	void EndButtonCallback();
 };
 

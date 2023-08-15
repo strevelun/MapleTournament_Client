@@ -5,6 +5,7 @@
 #include <d2d1.h>
 
 class Obj;
+class Graphics;
 
 class Layer
 {
@@ -19,7 +20,7 @@ public:
 
 	void AddObj(Obj* _pObj);
 
-	const std::wstring& GetName() const { return m_layerName; }
-	void Render(ID2D1HwndRenderTarget* _pRenderTarget);
+	const std::wstring& GetName() const { return m_layerName;}
+	void Update();
+	void Render(Graphics* _pGraphics);
 };
-

@@ -11,6 +11,7 @@
 #include <d2d1.h>
 
 class Layer;
+class Graphics;
 
 class Scene
 {
@@ -25,6 +26,7 @@ public:
 	Layer* CreateLayer(const std::wstring& _layerName, uint32_t _zOrder);
 
 	virtual bool Init();
-	void Render(ID2D1HwndRenderTarget* _pRenderTarget);
+	void Update();
+	void Render(Graphics* _pGraphics);
 };
 

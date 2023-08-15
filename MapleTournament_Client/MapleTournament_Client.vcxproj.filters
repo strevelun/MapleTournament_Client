@@ -54,12 +54,6 @@
     <ClCompile Include="NetworkCore\TCPClient.cpp">
       <Filter>NetworkCore</Filter>
     </ClCompile>
-    <ClCompile Include="App.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="NetworkCore\Connector.cpp">
-      <Filter>NetworkCore</Filter>
-    </ClCompile>
     <ClCompile Include="User.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -105,6 +99,18 @@
     <ClCompile Include="Scene\Layer.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
+    <ClCompile Include="NetworkCore\NetworkManager.cpp">
+      <Filter>NetworkCore</Filter>
+    </ClCompile>
+    <ClCompile Include="Obj\UI\UIEditText.cpp">
+      <Filter>Obj\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Managers\InputManager.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Obj\UI\Mouse.cpp">
+      <Filter>Obj\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameApp.h">
@@ -114,12 +120,6 @@
       <Filter>GraphicCore</Filter>
     </ClInclude>
     <ClInclude Include="NetworkCore\TCPClient.h">
-      <Filter>NetworkCore</Filter>
-    </ClInclude>
-    <ClInclude Include="App.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="NetworkCore\Connector.h">
       <Filter>NetworkCore</Filter>
     </ClInclude>
     <ClInclude Include="User.h">
@@ -169,6 +169,18 @@
     </ClInclude>
     <ClInclude Include="Scene\Layer.h">
       <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkCore\NetworkManager.h">
+      <Filter>NetworkCore</Filter>
+    </ClInclude>
+    <ClInclude Include="Obj\UI\UIEditText.h">
+      <Filter>Obj\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Managers\InputManager.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Obj\UI\Mouse.h">
+      <Filter>Obj\UI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -8,7 +8,6 @@ struct ID2D1HwndRenderTarget;
 struct IWICImagingFactory;
 struct ID2D1Bitmap;
 
-
 class ResourceManager
 {
 private:
@@ -37,9 +36,9 @@ public:
 
 	bool Init(IWICImagingFactory* _pImagingFactory, ID2D1HwndRenderTarget* _pRenderTarget);
 
-	Bitmap* GetBitmap(const std::wstring& _fileName, const std::wstring& _path);
+	Bitmap* GetBitmap(const std::wstring& _fileNameWithPath);
 
 private:
-	ID2D1Bitmap* LoadImageFromFile(const std::wstring& _fileName, const std::wstring& _path);
+	ID2D1Bitmap* LoadImageFromFile(const std::wstring& _fileNameWithPath);
 };
 
