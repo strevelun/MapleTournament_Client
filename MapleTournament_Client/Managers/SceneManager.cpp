@@ -26,8 +26,7 @@ void SceneManager::CheckSceneChange()
 	{
 		if (m_pCurScene)
 		{
-			//m_pCurScene->Cleanup();
-			// delete m_pCurScene;
+			delete m_pCurScene;
 		}
 		m_pCurScene = m_pNextScene;
 		m_pCurScene->Init();
@@ -35,6 +34,7 @@ void SceneManager::CheckSceneChange()
 
 	m_pNextScene = nullptr;
 }
+
 
 void SceneManager::Update()
 {

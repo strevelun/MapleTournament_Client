@@ -6,7 +6,7 @@
 // effects
 // ui
 
-#include <list>
+#include <vector>
 #include <string>
 #include <d2d1.h>
 
@@ -16,7 +16,7 @@ class Graphics;
 class Scene
 {
 protected:
-	std::list<Layer*> m_listLayer;
+	std::vector<Layer*> m_vecObjLayer;
 
 public:
 	Scene();
@@ -24,6 +24,9 @@ public:
 
 	Layer* FindLayer(const std::wstring& _layerName);
 	Layer* CreateLayer(const std::wstring& _layerName, uint32_t _zOrder);
+
+
+	static bool SortLayer(const Layer* a, const Layer* b);
 
 	virtual bool Init();
 	void Update();

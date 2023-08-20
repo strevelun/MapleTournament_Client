@@ -6,15 +6,23 @@
 
 class Bitmap;
 
+enum class eColor
+{
+	Black,
+	Blue
+};
+
 class Graphics
 {
 private:
 	ID2D1Factory* m_pD2DFactory = nullptr;
 	IWICImagingFactory* m_pWICFactory = nullptr;
 	ID2D1HwndRenderTarget* m_pRenderTarget = nullptr;
-	ID2D1SolidColorBrush* m_pBrush = nullptr;
 	IDWriteFactory* m_pDWriteFactory = nullptr;
 	IDWriteTextFormat* m_pTextFormat = nullptr;
+
+	ID2D1SolidColorBrush* m_pBlackBrush = nullptr;
+	ID2D1SolidColorBrush* m_pBlueBrush = nullptr;
 
 	HWND					m_hWnd;
 
@@ -32,10 +40,10 @@ public:
 	void DrawMouseCoordinates(int _xpos, int _ypos);
 	void DrawTextRect(const wchar_t* _text, D2D1_RECT_F _rect);
 	void DrawBitmap(Bitmap* _pBitmap, D2D1_RECT_F _rect);
+	void DrawRectangle(D2D1_RECT_F _rect, eColor _color, int _strokeWidth);
 
 	void BeginDraw();
 	void EndDraw();
-	void Render();
 
 	void CleanupDevice();
 };

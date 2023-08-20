@@ -1,6 +1,5 @@
 #include "Graphics.h"
 #include "../Window.h"
-#include "../Managers/SceneManager.h"
 #include "../Managers/InputManager.h"
 #include "../Bitmap.h"
 
@@ -69,7 +68,14 @@ bool Graphics::Init()
 		return false;
 	}
 
-	hr = m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Black), &m_pBrush);
+	hr = m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Black), &m_pBlackBrush);
+	if (FAILED(hr))
+	{
+		OutputDebugStringW((L"CreateSolidColorBrush returned  : " + std::to_wstring(hr)).c_str());
+		return false;
+	}
+
+	hr = m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Blue), &m_pBlueBrush);
 	if (FAILED(hr))
 	{
 		OutputDebugStringW((L"CreateSolidColorBrush returned  : " + std::to_wstring(hr)).c_str());
@@ -89,17 +95,34 @@ void Graphics::DrawMouseCoordinates(int _xpos, int _ypos)
 	wchar_t output[50];
 	wsprintf(output, L"x: %d, y: %d", _xpos, _ypos);
 	D2D1_RECT_F outputRect = D2D1::RectF(5.0f, 5.0f, 500.0f, 20.0f);
-	m_pRenderTarget->DrawText(output, wcslen(output), m_pTextFormat, outputRect, m_pBrush);
+	m_pRenderTarget->DrawText(output, wcslen(output), m_pTextFormat, outputRect, m_pBlackBrush);
 }
 
 void Graphics::DrawTextRect(const wchar_t* _text, D2D1_RECT_F _rect)
 {
-	m_pRenderTarget->DrawTextW(_text, wcslen(_text), m_pTextFormat, _rect, m_pBrush);
+	m_pRenderTarget->DrawTextW(_text, wcslen(_text), m_pTextFormat, _rect, m_pBlackBrush);
 }
 
 void Graphics::DrawBitmap(Bitmap* _pBitmap, D2D1_RECT_F _rect)
 {
 	m_pRenderTarget->DrawBitmap(_pBitmap->GetBitmap(), _rect);
+}
+
+void Graphics::DrawRectangle(D2D1_RECT_F _rect, eColor _color, int _strokeWidth)
+{
+	ID2D1SolidColorBrush* pBrush = nullptr;
+	switch (_color)
+	{
+	case eColor::Black:
+		pBrush = m_pBlackBrush;
+		break;
+	case eColor::Blue:
+		pBrush = m_pBlueBrush;
+		break;
+	default:
+		return;
+	}
+	m_pRenderTarget->DrawRectangle(_rect, pBrush, _strokeWidth);
 }
 
 void Graphics::BeginDraw()
@@ -113,15 +136,15 @@ void Graphics::EndDraw()
 	m_pRenderTarget->EndDraw();
 }
 
-void Graphics::Render()
-{
-	SceneManager::GetInst()->Render(this);
-}
-
 void Graphics::CleanupDevice()
 {
+	// TODO : 순서반대
 	if (m_pD2DFactory) m_pD2DFactory->Release();
 	if (m_pWICFactory) m_pWICFactory->Release();
 	if (m_pRenderTarget) m_pRenderTarget->Release();
+	if (m_pDWriteFactory) m_pDWriteFactory->Release();
+	if (m_pTextFormat) m_pTextFormat->Release();
+	if (m_pBlackBrush) m_pBlackBrush->Release();
+	if (m_pBlueBrush) m_pBlueBrush->Release();
 	CoUninitialize();
 }

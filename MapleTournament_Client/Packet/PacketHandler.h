@@ -10,5 +10,7 @@ public:
 
 public:
 	void S_Connect(char* _packet);
+	void S_FailedLogin();
+	void S_OKLogin();
 };
 

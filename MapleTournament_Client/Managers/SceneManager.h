@@ -32,6 +32,9 @@ public:
 	void ChangeScene(Scene* _pScene);
 	void CheckSceneChange();
 
+	template <typename T>
+	T* GetCurScene() { return dynamic_cast<T*>(m_pCurScene); }
+
 	void Update();
 	void Render(Graphics* _pGraphics);
 };

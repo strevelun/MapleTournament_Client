@@ -75,6 +75,12 @@ void TCPClient::ProcessPacket(char* _packet)
 	case ePacketType::S_Connect:
 		m_packetHandler.S_Connect(tempPacket);
 		break;
+	case ePacketType::S_FailedLogin:
+		m_packetHandler.S_FailedLogin();
+		break;
+	case ePacketType::S_OKLogin:
+		m_packetHandler.S_OKLogin();
+		break;
 	}
 }
 

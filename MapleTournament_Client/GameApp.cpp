@@ -4,6 +4,7 @@
 #include "GameApp.h"
 #include "Managers/ResourceManager.h"
 #include "Managers/SceneManager.h"
+#include "Managers/UIManager.h"
 #include "Managers/InputManager.h"
 #include "Scene/LoginScene.h"
 #include "User.h"
@@ -31,6 +32,7 @@ GameApp::~GameApp()
 	ResourceManager::DestroyInst(); // TODO : m_mapBitmap ÇØÁ¦
 	InputManager::DestroyInst();
 	SceneManager::DestroyInst();
+	UIManager::DestroyInst();
 }
 
 bool GameApp::Init(int _nCmdShow, const wchar_t* _windowName, UINT _width, UINT _height)
@@ -56,6 +58,7 @@ bool GameApp::Init(int _nCmdShow, const wchar_t* _windowName, UINT _width, UINT 
 		return false;
 	}
 	if (!InputManager::GetInst()->Init(m_window.GetHWnd())) return false;
+	if (!UIManager::GetInst()->Init()) return false;
 
 	SceneManager::GetInst()->ChangeScene(new LoginScene);
 
@@ -93,15 +96,17 @@ void GameApp::Input()
 
 void GameApp::Update()
 {
-	InputManager::GetInst()->Update();
 	SceneManager::GetInst()->Update();
+	UIManager::GetInst()->Update();
+	InputManager::GetInst()->Update();
 }
 
 void GameApp::Render()
 {
 	m_pGraphics->BeginDraw();
 
-	m_pGraphics->Render();
+	SceneManager::GetInst()->Render(m_pGraphics);
+	UIManager::GetInst()->Render(m_pGraphics);
 
 	Mouse* pMouse = InputManager::GetInst()->GetMouse();
 	m_pGraphics->DrawMouseCoordinates(pMouse->GetPosX(), pMouse->GetPosY());

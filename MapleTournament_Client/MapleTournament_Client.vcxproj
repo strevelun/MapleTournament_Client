@@ -134,6 +134,7 @@
     <ClCompile Include="Managers\InputManager.cpp" />
     <ClCompile Include="Managers\ResourceManager.cpp" />
     <ClCompile Include="Managers\SceneManager.cpp" />
+    <ClCompile Include="Managers\UIManager.cpp" />
     <ClCompile Include="Managers\UserManager.cpp" />
     <ClCompile Include="NetworkCore\NetworkManager.cpp" />
     <ClCompile Include="NetworkCore\TCPClient.cpp" />
@@ -147,6 +148,7 @@
     <ClCompile Include="Packet\Packet.cpp" />
     <ClCompile Include="Packet\PacketHandler.cpp" />
     <ClCompile Include="Scene\Layer.cpp" />
+    <ClCompile Include="Scene\LobbyScene.cpp" />
     <ClCompile Include="Scene\LoginScene.cpp" />
     <ClCompile Include="Scene\Scene.cpp" />
     <ClCompile Include="Setting.h" />
@@ -160,6 +162,7 @@
     <ClInclude Include="Managers\InputManager.h" />
     <ClInclude Include="Managers\ResourceManager.h" />
     <ClInclude Include="Managers\SceneManager.h" />
+    <ClInclude Include="Managers\UIManager.h" />
     <ClInclude Include="Managers\UserManager.h" />
     <ClInclude Include="NetworkCore\NetworkManager.h" />
     <ClInclude Include="NetworkCore\TCPClient.h" />
@@ -173,6 +176,7 @@
     <ClInclude Include="Packet\Packet.h" />
     <ClInclude Include="Packet\PacketHandler.h" />
     <ClInclude Include="Scene\Layer.h" />
+    <ClInclude Include="Scene\LobbyScene.h" />
     <ClInclude Include="Scene\LoginScene.h" />
     <ClInclude Include="Scene\Scene.h" />
     <ClInclude Include="User.h" />

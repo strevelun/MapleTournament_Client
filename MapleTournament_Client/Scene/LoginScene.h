@@ -11,7 +11,7 @@ public:
 	bool Init() override;
 
 public:
-	void LoginButtonCallback();
+	void LoginButtonCallback(const std::wstring& _str);
 	void EndButtonCallback();
 };
 
