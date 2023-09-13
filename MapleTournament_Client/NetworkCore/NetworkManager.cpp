@@ -1,5 +1,4 @@
 #include "NetworkManager.h"
-#include "../Packet/Packet.h"
 
 #include <WS2tcpip.h>
 #include <Windows.h>
@@ -45,8 +44,7 @@ int NetworkManager::Receive(char* _buffer, int _bufferSize)
 	return recv(m_hClientSocket, _buffer, _bufferSize, 0);
 }
 
-int NetworkManager::Send(Packet* _packet)
+int NetworkManager::Send(char* _buffer)
 {
-	const char* buffer = _packet->GetPacketBuffer();
-	return send(m_hClientSocket, buffer, _packet->GetPacketSize(), 0);
+	return send(m_hClientSocket, _buffer, *(USHORT*)_buffer, 0);
 }

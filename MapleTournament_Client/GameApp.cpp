@@ -6,9 +6,11 @@
 #include "Managers/SceneManager.h"
 #include "Managers/UIManager.h"
 #include "Managers/InputManager.h"
+#include "Managers/ObjectManager.h"
 #include "Scene/LoginScene.h"
-#include "User.h"
 #include "Obj/UI/Mouse.h"
+
+typedef unsigned short ushort;
 
 #include <d2d1.h>
 
@@ -17,6 +19,7 @@ GameApp::GameApp(HINSTANCE _hInst, const wchar_t* _wndClassName)
 	m_pClient(nullptr),
 	m_pGraphics(nullptr)
 {
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 }
 
 GameApp::~GameApp()
@@ -33,6 +36,7 @@ GameApp::~GameApp()
 	InputManager::DestroyInst();
 	SceneManager::DestroyInst();
 	UIManager::DestroyInst();
+	ObjectManager::DestroyInst();
 }
 
 bool GameApp::Init(int _nCmdShow, const wchar_t* _windowName, UINT _width, UINT _height)
@@ -59,6 +63,7 @@ bool GameApp::Init(int _nCmdShow, const wchar_t* _windowName, UINT _width, UINT 
 	}
 	if (!InputManager::GetInst()->Init(m_window.GetHWnd())) return false;
 	if (!UIManager::GetInst()->Init()) return false;
+	if (!ObjectManager::GetInst()->Init()) return false;
 
 	SceneManager::GetInst()->ChangeScene(new LoginScene);
 
@@ -73,7 +78,15 @@ int GameApp::Run()
 	{
 		if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
 		{
-			if (msg.message == WM_QUIT) break;
+			if (msg.message == WM_QUIT)
+			{
+				char buffer[255];
+				ushort count = sizeof(ushort);
+				*(ushort*)(buffer + count) = (ushort)ePacketType::C_Exit;					count += sizeof(ushort);
+				*(ushort*)buffer = count;
+				NetworkManager::GetInst()->Send(buffer);
+				break;
+			}
 
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);

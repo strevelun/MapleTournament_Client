@@ -28,5 +28,5 @@ public:
 
 	bool Init(const char* _serverIP, int _serverPort);
 	int Receive(char* _buffer, int _bufferSize);
-	int Send(class Packet* _packet);
+	int Send(char* _buffer);
 };

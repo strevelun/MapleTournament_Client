@@ -6,12 +6,12 @@ class LoginScene : public Scene
 {
 public:
 	LoginScene();
-	~LoginScene();
+	virtual ~LoginScene();
 
 	bool Init() override;
 
 public:
-	void LoginButtonCallback(const std::wstring& _str);
+	void LoginButtonCallback(class UIEditText* _pEditText, const std::wstring& _str);
 	void EndButtonCallback();
 };
 

@@ -29,7 +29,7 @@ public:
 		m_pInst = nullptr;
 	}
 
-	void ChangeScene(Scene* _pScene);
+	void ChangeScene(Scene* _pScene) { m_pNextScene = _pScene; }
 	void CheckSceneChange();
 
 	template <typename T>

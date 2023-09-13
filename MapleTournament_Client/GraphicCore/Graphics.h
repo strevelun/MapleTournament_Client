@@ -19,7 +19,8 @@ private:
 	IWICImagingFactory* m_pWICFactory = nullptr;
 	ID2D1HwndRenderTarget* m_pRenderTarget = nullptr;
 	IDWriteFactory* m_pDWriteFactory = nullptr;
-	IDWriteTextFormat* m_pTextFormat = nullptr;
+	IDWriteTextFormat* m_pTextFormatLarge = nullptr;
+	IDWriteTextFormat* m_pTextFormatSmall = nullptr;
 
 	ID2D1SolidColorBrush* m_pBlackBrush = nullptr;
 	ID2D1SolidColorBrush* m_pBlueBrush = nullptr;
@@ -38,7 +39,8 @@ public:
 	ID2D1HwndRenderTarget* GetRenderTarget() const { return m_pRenderTarget; }
 
 	void DrawMouseCoordinates(int _xpos, int _ypos);
-	void DrawTextRect(const wchar_t* _text, D2D1_RECT_F _rect);
+	void DrawTextRectLarge(const wchar_t* _text, D2D1_RECT_F _rect);
+	void DrawTextRectSmall(const wchar_t* _text, D2D1_RECT_F _rect);
 	void DrawBitmap(Bitmap* _pBitmap, D2D1_RECT_F _rect);
 	void DrawRectangle(D2D1_RECT_F _rect, eColor _color, int _strokeWidth);
 

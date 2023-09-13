@@ -12,6 +12,7 @@ private:
 	static InputManager* m_pInst;
 
 	std::vector<WPARAM> m_vecKeyInput;
+	std::vector<int>		m_vkInput;
 
 	HWND	m_hWnd;
 	Mouse* m_pMouse;
@@ -36,7 +37,8 @@ public:
 	void Update();
 
 	const std::vector<WPARAM>& GetVecKeyInput() const { return m_vecKeyInput; }
-	void AddKeyInput(WPARAM _input);
+	void RegisterVKKey(int _vkKey);
+	void AddChar(WPARAM _input);
 	void ClearVecKeyInput() { m_vecKeyInput.clear(); }
 
 	Mouse* GetMouse() const { return m_pMouse; }

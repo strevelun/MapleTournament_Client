@@ -11,6 +11,12 @@ UIManager::UIManager()
 
 UIManager::~UIManager()
 {
+    std::vector<UI*>::iterator iter = m_vecUI.begin();
+    std::vector<UI*>::iterator iterEnd = m_vecUI.end();
+    for (; iter != iterEnd; iter++)
+    {
+        delete* iter;
+    }
 }
 
 
@@ -97,7 +103,6 @@ void UIManager::Cleanup()
     {
         delete* iter;
     }
-
     m_vecUI.clear();
     m_vecPopupUI.clear();
 }

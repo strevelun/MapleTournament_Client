@@ -3,14 +3,17 @@
 #include "../Setting.h"
 #include "../Packet/PacketHandler.h"
 
+#include <winsock2.h>
+#include <map>
+
 class Packet;
 
 class TCPClient
 {
 private:
 	HANDLE m_hThread;
-
-	PacketHandler		m_packetHandler;
+	
+	static std::map<ePacketType, void(*)(char*)> m_mapPacketHandlerCallback;
 
 	bool				m_bIsRunning;
 

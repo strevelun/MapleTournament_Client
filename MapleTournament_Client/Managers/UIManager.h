@@ -6,6 +6,7 @@
 
 class UI;
 class UIPanel;
+class UIPopup;
 class UIEditText;
 class Graphics;
 
@@ -15,7 +16,7 @@ private:
 	static UIManager* m_pInst;
 
 	std::vector<UI*>				m_vecUI;
-	std::vector<UIPanel*>			m_vecPopupUI;
+	std::vector<UIPanel*>			m_vecPopupUI; // UIPopup
 
 	UIManager();
 	~UIManager();
@@ -38,7 +39,9 @@ public:
 
 	UI* FindUI(const std::wstring& _strName);
 
+	//
 	void PopPopupUI();
+	//void DelPopupUI();
 
 	bool Init();
 	void Update();

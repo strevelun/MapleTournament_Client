@@ -54,19 +54,7 @@
     <ClCompile Include="NetworkCore\TCPClient.cpp">
       <Filter>NetworkCore</Filter>
     </ClCompile>
-    <ClCompile Include="User.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Packet\Packet.cpp">
-      <Filter>Packet</Filter>
-    </ClCompile>
     <ClCompile Include="Packet\PacketHandler.cpp">
-      <Filter>Packet</Filter>
-    </ClCompile>
-    <ClCompile Include="Managers\UserManager.cpp">
-      <Filter>Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="Packet\EnterPacket.cpp">
       <Filter>Packet</Filter>
     </ClCompile>
     <ClCompile Include="Managers\ResourceManager.cpp">
@@ -117,6 +105,21 @@
     <ClCompile Include="Scene\LobbyScene.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
+    <ClCompile Include="Obj\UI\UIList.cpp">
+      <Filter>Obj\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Obj\UI\UIText.cpp">
+      <Filter>Obj\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Managers\ObjectManager.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Obj\Player.cpp">
+      <Filter>Obj</Filter>
+    </ClCompile>
+    <ClCompile Include="Obj\MyPlayer.cpp">
+      <Filter>Obj</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameApp.h">
@@ -128,19 +131,7 @@
     <ClInclude Include="NetworkCore\TCPClient.h">
       <Filter>NetworkCore</Filter>
     </ClInclude>
-    <ClInclude Include="User.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Packet\Packet.h">
-      <Filter>Packet</Filter>
-    </ClInclude>
     <ClInclude Include="Packet\PacketHandler.h">
-      <Filter>Packet</Filter>
-    </ClInclude>
-    <ClInclude Include="Managers\UserManager.h">
-      <Filter>Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="Packet\EnterPacket.h">
       <Filter>Packet</Filter>
     </ClInclude>
     <ClInclude Include="Managers\ResourceManager.h">
@@ -193,6 +184,24 @@
     </ClInclude>
     <ClInclude Include="Scene\LobbyScene.h">
       <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Obj\UI\UIList.h">
+      <Filter>Obj\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Constants.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Obj\UI\UIText.h">
+      <Filter>Obj\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Managers\ObjectManager.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Obj\Player.h">
+      <Filter>Obj</Filter>
+    </ClInclude>
+    <ClInclude Include="Obj\MyPlayer.h">
+      <Filter>Obj</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

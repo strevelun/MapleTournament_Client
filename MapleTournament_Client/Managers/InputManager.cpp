@@ -23,11 +23,16 @@ bool InputManager::Init(HWND _hWnd)
 
 void InputManager::Update()
 {
+	
 	m_pMouse->Update();
 	ClearVecKeyInput();
 }
 
-void InputManager::AddKeyInput(WPARAM _input)
+void InputManager::RegisterVKKey(int _vkKey)
+{
+}
+
+void InputManager::AddChar(WPARAM _input)
 {
 	m_vecKeyInput.push_back(_input);
 }

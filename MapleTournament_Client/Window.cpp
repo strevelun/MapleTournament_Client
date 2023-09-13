@@ -62,8 +62,8 @@ LRESULT Window::Proc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	}
 	break;
 	
-	case WM_KEYDOWN:
-		InputManager::GetInst()->AddKeyInput(wParam);
+	case WM_KEYDOWN: // WM_CHAR : 대소문자 구별
+		InputManager::GetInst()->AddChar(wParam);
 		break;
 
 	case WM_DESTROY:

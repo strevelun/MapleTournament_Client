@@ -61,7 +61,15 @@ bool Graphics::Init()
 	}
 
 	hr = m_pDWriteFactory->CreateTextFormat(L"Arial", nullptr, DWRITE_FONT_WEIGHT_NORMAL, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL,
-		25.0f, L"en-US", &m_pTextFormat);
+		25.0f, L"en-US", &m_pTextFormatLarge);
+	if (FAILED(hr))
+	{
+		OutputDebugStringW((L"CreateTextFormat returned : " + std::to_wstring(hr)).c_str());
+		return false;
+	}
+
+	hr = m_pDWriteFactory->CreateTextFormat(L"Arial", nullptr, DWRITE_FONT_WEIGHT_NORMAL, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL,
+		15.0f, L"en-US", &m_pTextFormatSmall);
 	if (FAILED(hr))
 	{
 		OutputDebugStringW((L"CreateTextFormat returned : " + std::to_wstring(hr)).c_str());
@@ -95,12 +103,17 @@ void Graphics::DrawMouseCoordinates(int _xpos, int _ypos)
 	wchar_t output[50];
 	wsprintf(output, L"x: %d, y: %d", _xpos, _ypos);
 	D2D1_RECT_F outputRect = D2D1::RectF(5.0f, 5.0f, 500.0f, 20.0f);
-	m_pRenderTarget->DrawText(output, wcslen(output), m_pTextFormat, outputRect, m_pBlackBrush);
+	m_pRenderTarget->DrawText(output, wcslen(output), m_pTextFormatSmall, outputRect, m_pBlackBrush);
 }
 
-void Graphics::DrawTextRect(const wchar_t* _text, D2D1_RECT_F _rect)
+void Graphics::DrawTextRectLarge(const wchar_t* _text, D2D1_RECT_F _rect)
 {
-	m_pRenderTarget->DrawTextW(_text, wcslen(_text), m_pTextFormat, _rect, m_pBlackBrush);
+	m_pRenderTarget->DrawTextW(_text, wcslen(_text), m_pTextFormatLarge, _rect, m_pBlackBrush);
+}
+
+void Graphics::DrawTextRectSmall(const wchar_t* _text, D2D1_RECT_F _rect)
+{
+	m_pRenderTarget->DrawTextW(_text, wcslen(_text), m_pTextFormatSmall, _rect, m_pBlackBrush);
 }
 
 void Graphics::DrawBitmap(Bitmap* _pBitmap, D2D1_RECT_F _rect)
@@ -139,12 +152,13 @@ void Graphics::EndDraw()
 void Graphics::CleanupDevice()
 {
 	// TODO : 순서반대
-	if (m_pD2DFactory) m_pD2DFactory->Release();
+	if (m_pBlueBrush) m_pBlueBrush->Release();
+	if (m_pBlackBrush) m_pBlackBrush->Release();
+	if (m_pTextFormatSmall) m_pTextFormatSmall->Release();
+	if (m_pTextFormatLarge) m_pTextFormatLarge->Release();
+	if (m_pDWriteFactory) m_pDWriteFactory->Release();
 	if (m_pWICFactory) m_pWICFactory->Release();
 	if (m_pRenderTarget) m_pRenderTarget->Release();
-	if (m_pDWriteFactory) m_pDWriteFactory->Release();
-	if (m_pTextFormat) m_pTextFormat->Release();
-	if (m_pBlackBrush) m_pBlackBrush->Release();
-	if (m_pBlueBrush) m_pBlueBrush->Release();
+	if (m_pD2DFactory) m_pD2DFactory->Release();
 	CoUninitialize();
 }

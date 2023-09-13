@@ -13,11 +13,6 @@ SceneManager::~SceneManager()
 	if (m_pCurScene) delete m_pCurScene;
 }
 
-void SceneManager::ChangeScene(Scene* _pScene)
-{
-	m_pNextScene = _pScene;
-}
-
 void SceneManager::CheckSceneChange()
 {
 	if (m_pNextScene == nullptr) return;

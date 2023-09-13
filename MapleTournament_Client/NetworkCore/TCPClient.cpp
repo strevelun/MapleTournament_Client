@@ -1,10 +1,21 @@
 #include "NetworkManager.h"
 #include "TCPClient.h"
-#include "../Packet/Packet.h"
-#include "../Packet/EnterPacket.h"
 
+#include <iostream>
 #include <thread>
 #include <string>
+
+std::map<ePacketType, void(*)(char*)> TCPClient::m_mapPacketHandlerCallback = {
+	{ ePacketType::S_Exit, PacketHandler::S_Exit },
+	{ ePacketType::S_OKLogin, PacketHandler::S_OKLogin },
+	{ ePacketType::S_FailedLogin, PacketHandler::S_FailedLogin },
+	{ ePacketType::S_CreateRoom, PacketHandler::S_CreateRoom },
+	{ ePacketType::S_SendSessions, PacketHandler::S_SendSessions },
+	{ ePacketType::S_SendRooms, PacketHandler::S_SendRooms },
+	{ ePacketType::S_EnterOtherUser, PacketHandler::S_EnterOtherUser },
+	{ ePacketType::S_Chat, PacketHandler::S_Chat },
+	{ ePacketType::S_JoinRoom, PacketHandler::S_JoinRoom },
+};
 
 TCPClient::TCPClient()
 	: m_bIsRunning(true), m_hThread(nullptr)
@@ -34,7 +45,7 @@ bool TCPClient::Init()
 
 unsigned int TCPClient::ReceivePacket()
 {
-	int							recvSize, curTotalRecvSize = 0;
+	int							recvSize, totalSize = 0;
 	u_short						packetSize;
 	char						recvBuffer[255];
 	int bufferSize = sizeof(recvBuffer);
@@ -43,23 +54,25 @@ unsigned int TCPClient::ReceivePacket()
 
 	while (isRunning)
 	{
-		recvSize = NetworkManager::GetInst()->Receive(recvBuffer + curTotalRecvSize, bufferSize - curTotalRecvSize);
+		recvSize = NetworkManager::GetInst()->Receive(recvBuffer + totalSize, bufferSize - totalSize);
 		if (recvSize == -1) {
 			int error = WSAGetLastError();
-			OutputDebugStringA(("Receive error: " + std::to_string(error)).c_str());
+			std::cout << ("Receive error: " + std::to_string(error)).c_str();
+			// TODO : MEssagebox
+			break;
 		}
 
-		curTotalRecvSize += recvSize;
+		totalSize += recvSize;
 
 		while (1)
 		{
 			packetSize = *(u_short*)recvBuffer;
-			if (curTotalRecvSize < 2 || packetSize > curTotalRecvSize) break;
+			if ( packetSize > totalSize) break;
 
 			ProcessPacket(recvBuffer);
 
-			curTotalRecvSize -= packetSize;
-			memcpy(recvBuffer, recvBuffer + packetSize, curTotalRecvSize);                     
+			totalSize -= packetSize;
+			memcpy(recvBuffer, recvBuffer + packetSize, totalSize);                     
 		}
 	}
 	return 0;
@@ -70,18 +83,7 @@ void TCPClient::ProcessPacket(char* _packet)
 	char* tempPacket = _packet;						tempPacket += sizeof(u_short);
 	u_short type = *(u_short*)tempPacket;			tempPacket += sizeof(u_short);
 
-	switch ((ePacketType)type)
-	{
-	case ePacketType::S_Connect:
-		m_packetHandler.S_Connect(tempPacket);
-		break;
-	case ePacketType::S_FailedLogin:
-		m_packetHandler.S_FailedLogin();
-		break;
-	case ePacketType::S_OKLogin:
-		m_packetHandler.S_OKLogin();
-		break;
-	}
+	m_mapPacketHandlerCallback[(ePacketType)type](tempPacket);
 }
 
 unsigned int __stdcall TCPClient::ThreadFunc(void* _pArgs)
