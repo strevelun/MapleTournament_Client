@@ -18,6 +18,9 @@ public:
 	bool ShowLobbyUI();
 	bool ShowWaitingRoomUI();
 
+	bool HideLobbyUI();
+	bool HideWaitingRoomUI();
+
 private:
 	bool InitLobbyUI();
 	bool InitWaitingRoomUI();

@@ -1,8 +1,11 @@
 #pragma once
 
 #include <vector>
+#include <map>
 #include <type_traits>
 #include <string>
+
+#include "../Defines.h"
 
 class UI;
 class UIPanel;
@@ -13,28 +16,11 @@ class Graphics;
 class UIManager
 {
 private:
-	static UIManager* m_pInst;
-
-	std::vector<UI*>				m_vecUI;
+	std::map<std::wstring, UI*>				m_mapUI;
 	std::vector<UIPanel*>			m_vecPopupUI; // UIPopup
 
-	UIManager();
-	~UIManager();
-
 public:
-	static UIManager* GetInst()
-	{
-		if (!m_pInst) m_pInst = new UIManager;
-		return m_pInst;
-	}
-
-	static void DestroyInst()
-	{
-		if (m_pInst) delete m_pInst;
-		m_pInst = nullptr;
-	}
-
-	void AddUI(UI* _pUI);
+	bool AddUI(UI* _pUI);
 	void AddPopupUI(UIPanel* _pUI);
 
 	UI* FindUI(const std::wstring& _strName);
@@ -48,5 +34,7 @@ public:
 	void Render(Graphics* _pGraphics);
 
 	void Cleanup();
+
+	SINGLETON(UIManager)
 };
 

@@ -12,6 +12,7 @@
 #include "../Constants.h"
 
 #include <string>
+#include <algorithm>
 
 typedef unsigned short ushort;
 
@@ -83,7 +84,7 @@ bool LoginScene::Init()
 
 void LoginScene::LoginButtonCallback(UIEditText* _pEditText, const std::wstring& _str)
 {
-    if (_str.length() <= 0 || std::find(_str.begin(), _str.end(), L' ') != _str.end())
+    if (_str.length() <= 0 || std::all_of(_str.begin(), _str.end(), [](wchar_t c) { return c == L' '; }))
     {
         UI* pUI = UIManager::GetInst()->FindUI(L"FailedLogin");
         if (!pUI) return;

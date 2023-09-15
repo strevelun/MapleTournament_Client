@@ -11,19 +11,23 @@ UIManager::UIManager()
 
 UIManager::~UIManager()
 {
-    std::vector<UI*>::iterator iter = m_vecUI.begin();
-    std::vector<UI*>::iterator iterEnd = m_vecUI.end();
+    std::map<std::wstring, UI*>::iterator iter = m_mapUI.begin();
+    std::map<std::wstring, UI*>::iterator iterEnd = m_mapUI.end();
     for (; iter != iterEnd; iter++)
     {
-        delete* iter;
+        delete iter->second;
     }
 }
 
 
-void UIManager::AddUI(UI* _pUI)
+bool UIManager::AddUI(UI* _pUI)
 {
-    if (!_pUI) return;
-    m_vecUI.push_back(_pUI);
+    if (!_pUI) return false;
+    const std::wstring& name = _pUI->GetName();
+    if (FindUI(name) != nullptr)
+        return false;
+    m_mapUI.insert({ name, _pUI });
+    return true;
 }
 
 void UIManager::AddPopupUI(UIPanel* _pUI)
@@ -34,14 +38,9 @@ void UIManager::AddPopupUI(UIPanel* _pUI)
 
 UI* UIManager::FindUI(const std::wstring& _strName)
 {
-    std::vector<UI*>::iterator iter = m_vecUI.begin();
-    std::vector<UI*>::iterator iterEnd = m_vecUI.end();
-
-    for (; iter != iterEnd; iter++)
-    {
-        if ((*iter)->GetName() == _strName)
-            return *iter;
-    }
+    std::map<std::wstring, UI*>::iterator iter = m_mapUI.find(_strName);
+    if (iter != m_mapUI.end())
+        return iter->second;
     return nullptr;
 }
 
@@ -64,25 +63,25 @@ void UIManager::Update()
         return;
     }
 
-    std::vector<UI*>::iterator iter = m_vecUI.begin();
-    std::vector<UI*>::iterator iterEnd = m_vecUI.end();
+    std::map<std::wstring, UI*>::iterator iter = m_mapUI.begin();
+    std::map<std::wstring, UI*>::iterator iterEnd = m_mapUI.end();
 
     for (; iter != iterEnd; iter++)
     {
-        if ((*iter)->IsActive())
-            (*iter)->Update();
+        if ((iter->second)->IsActive())
+            (iter->second)->Update();
     }
 }
 
 void UIManager::Render(Graphics* _pGraphics)
 {
-    std::vector<UI*>::iterator iter = m_vecUI.begin();
-    std::vector<UI*>::iterator iterEnd = m_vecUI.end();
+    std::map<std::wstring, UI*>::iterator iter = m_mapUI.begin();
+    std::map<std::wstring, UI*>::iterator iterEnd = m_mapUI.end();
 
     for (; iter != iterEnd; iter++)
     {
-        if ((*iter)->IsActive())
-            (*iter)->Render(_pGraphics);
+        if ((iter->second)->IsActive())
+            (iter->second)->Render(_pGraphics);
     }
 
     std::vector<UIPanel*>::iterator iter2 = m_vecPopupUI.begin();
@@ -97,12 +96,12 @@ void UIManager::Render(Graphics* _pGraphics)
 
 void UIManager::Cleanup()
 {
-    std::vector<UI*>::iterator iter = m_vecUI.begin();
-    std::vector<UI*>::iterator iterEnd = m_vecUI.end();
+    std::map<std::wstring, UI*>::iterator iter = m_mapUI.begin();
+    std::map<std::wstring, UI*>::iterator iterEnd = m_mapUI.end();
     for (; iter != iterEnd; iter++)
     {
-        delete* iter;
+        delete iter->second;
     }
-    m_vecUI.clear();
+    m_mapUI.clear();
     m_vecPopupUI.clear();
 }

@@ -154,11 +154,13 @@
     <ClCompile Include="Scene\LoginScene.cpp" />
     <ClCompile Include="Scene\Scene.cpp" />
     <ClCompile Include="Setting.h" />
+    <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Bitmap.h" />
     <ClInclude Include="Constants.h" />
+    <ClInclude Include="Defines.h" />
     <ClInclude Include="GameApp.h" />
     <ClInclude Include="GraphicCore\Graphics.h" />
     <ClInclude Include="Managers\InputManager.h" />
@@ -183,6 +185,7 @@
     <ClInclude Include="Scene\LobbyScene.h" />
     <ClInclude Include="Scene\LoginScene.h" />
     <ClInclude Include="Scene\Scene.h" />
+    <ClInclude Include="Timer.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

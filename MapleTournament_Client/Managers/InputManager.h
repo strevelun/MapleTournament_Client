@@ -4,35 +4,20 @@
 #include <vector>
 #include <functional>
 
+#include "../Defines.h"
+
 class Mouse;
 
 class InputManager
 {
 private:
-	static InputManager* m_pInst;
-
 	std::vector<WPARAM> m_vecKeyInput;
 	std::vector<int>		m_vkInput;
 
 	HWND	m_hWnd;
 	Mouse* m_pMouse;
 
-	InputManager();
-	~InputManager();
-
 public:
-	static InputManager* GetInst()
-	{
-		if (!m_pInst) m_pInst = new InputManager;
-		return m_pInst;
-	}
-
-	static void DestroyInst()
-	{
-		if (m_pInst) delete m_pInst;
-		m_pInst = nullptr;
-	}
-
 	bool Init(HWND _hWnd);
 	void Update();
 
@@ -42,5 +27,8 @@ public:
 	void ClearVecKeyInput() { m_vecKeyInput.clear(); }
 
 	Mouse* GetMouse() const { return m_pMouse; }
+	HWND GetHwnd() const { return m_hWnd; }
+
+	SINGLETON(InputManager)
 };
 

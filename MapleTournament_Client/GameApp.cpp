@@ -9,6 +9,7 @@
 #include "Managers/ObjectManager.h"
 #include "Scene/LoginScene.h"
 #include "Obj/UI/Mouse.h"
+#include "Timer.h"
 
 typedef unsigned short ushort;
 
@@ -37,6 +38,7 @@ GameApp::~GameApp()
 	SceneManager::DestroyInst();
 	UIManager::DestroyInst();
 	ObjectManager::DestroyInst();
+	Timer::DestroyInst();
 }
 
 bool GameApp::Init(int _nCmdShow, const wchar_t* _windowName, UINT _width, UINT _height)
@@ -64,6 +66,7 @@ bool GameApp::Init(int _nCmdShow, const wchar_t* _windowName, UINT _width, UINT 
 	if (!InputManager::GetInst()->Init(m_window.GetHWnd())) return false;
 	if (!UIManager::GetInst()->Init()) return false;
 	if (!ObjectManager::GetInst()->Init()) return false;
+	if (!Timer::GetInst()->Init(120)) return false;
 
 	SceneManager::GetInst()->ChangeScene(new LoginScene);
 
@@ -93,10 +96,13 @@ int GameApp::Run()
 		}
 		else
 		{
-			SceneManager::GetInst()->CheckSceneChange();
-			Input();
-			Update();
-			Render();
+			if (Timer::GetInst()->Update())
+			{
+				SceneManager::GetInst()->CheckSceneChange();
+				Input();
+				Update();
+				Render();
+			}
 		}
 	}
 

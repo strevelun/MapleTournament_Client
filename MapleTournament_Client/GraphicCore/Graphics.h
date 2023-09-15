@@ -43,6 +43,7 @@ public:
 	void DrawTextRectSmall(const wchar_t* _text, D2D1_RECT_F _rect);
 	void DrawBitmap(Bitmap* _pBitmap, D2D1_RECT_F _rect);
 	void DrawRectangle(D2D1_RECT_F _rect, eColor _color, int _strokeWidth);
+	HWND GetHwnd() const { return m_hWnd; }
 
 	void BeginDraw();
 	void EndDraw();
