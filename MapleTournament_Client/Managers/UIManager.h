@@ -24,6 +24,7 @@ public:
 	void AddPopupUI(UIPanel* _pUI);
 
 	UI* FindUI(const std::wstring& _strName);
+	bool RemoveUI(const std::wstring& _strName);
 
 	//
 	void PopPopupUI();

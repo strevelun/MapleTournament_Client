@@ -123,6 +123,9 @@
     <ClCompile Include="Timer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Scene\InGameScene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameApp.h">
@@ -211,6 +214,9 @@
     </ClInclude>
     <ClInclude Include="Defines.h">
       <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\InGameScene.h">
+      <Filter>Scene</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -17,6 +17,10 @@ std::map<ePacketType, void(*)(char*)> TCPClient::m_mapPacketHandlerCallback = {
 	{ ePacketType::S_Chat, PacketHandler::S_Chat },
 	{ ePacketType::S_JoinRoom, PacketHandler::S_JoinRoom },
 	{ ePacketType::S_NotifyJoinedUser, PacketHandler::S_NotifyJoinedUser },
+	{ ePacketType::S_CheckRoomReadyOK, PacketHandler::S_CheckRoomReadyOK },
+	{ ePacketType::S_CheckRoomReadyFail, PacketHandler::S_CheckRoomReadyFail },
+	{ ePacketType::S_EnterLobby, PacketHandler::S_EnterLobby },
+	{ ePacketType::S_LeaveRoom, PacketHandler::S_LeaveRoom },
 };
 
 TCPClient::TCPClient()
@@ -27,7 +31,6 @@ TCPClient::TCPClient()
 TCPClient::~TCPClient()
 {
     CloseHandle(m_hThread);
-
 	NetworkManager::DestroyInst();
 }
 

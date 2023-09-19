@@ -44,6 +44,17 @@ UI* UIManager::FindUI(const std::wstring& _strName)
     return nullptr;
 }
 
+bool UIManager::RemoveUI(const std::wstring& _strName)
+{
+    UI* pUI = FindUI(_strName);
+    if (!pUI) return false;
+
+    delete pUI;
+    m_mapUI.erase(_strName);
+
+    return true;
+}
+
 void UIManager::PopPopupUI()
 {
     if (m_vecPopupUI.empty()) return;

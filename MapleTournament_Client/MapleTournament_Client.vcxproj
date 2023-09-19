@@ -149,6 +149,7 @@
     <ClCompile Include="Obj\UI\UIPanel.cpp" />
     <ClCompile Include="Obj\UI\UIText.cpp" />
     <ClCompile Include="Packet\PacketHandler.cpp" />
+    <ClCompile Include="Scene\InGameScene.cpp" />
     <ClCompile Include="Scene\Layer.cpp" />
     <ClCompile Include="Scene\LobbyScene.cpp" />
     <ClCompile Include="Scene\LoginScene.cpp" />
@@ -181,6 +182,7 @@
     <ClInclude Include="Obj\UI\UIPanel.h" />
     <ClInclude Include="Obj\UI\UIText.h" />
     <ClInclude Include="Packet\PacketHandler.h" />
+    <ClInclude Include="Scene\InGameScene.h" />
     <ClInclude Include="Scene\Layer.h" />
     <ClInclude Include="Scene\LobbyScene.h" />
     <ClInclude Include="Scene\LoginScene.h" />

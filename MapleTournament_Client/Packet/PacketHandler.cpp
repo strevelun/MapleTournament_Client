@@ -4,6 +4,7 @@
 #include "../Managers/ResourceManager.h"
 #include "../Scene/LoginScene.h"
 #include "../Scene/LobbyScene.h"
+#include "../Scene/InGameScene.h"
 #include "../Obj/UI/UIPanel.h"
 #include "../Obj/UI/UIButton.h"
 #include "../Obj/UI/UIList.h"
@@ -168,6 +169,7 @@ void PacketHandler::S_SendSessions(char* _packet)
 	}
 }
 
+// S_RoomList
 void PacketHandler::S_SendRooms(char* _packet)
 {
 	u_short size = *(ushort*)_packet;						_packet += sizeof(ushort);
@@ -188,6 +190,7 @@ void PacketHandler::S_SendRooms(char* _packet)
 		pUI = pRoomListPanel->FindChildUI(L"RoomList");
 		UIList* pRoomList = static_cast<UIList*>(pUI);
 		UIPanel* pPanel = new UIPanel(pRoomList, 660, 15);
+		pPanel->SetName(strRoomId);
 		UIButton* pBtn = new UIButton(pPanel, 660, 15);
 		pBtn->SetName(strRoomId);
 		pBtn->SetClickable(true);
@@ -250,7 +253,7 @@ void PacketHandler::S_JoinRoom(char* _packet)
 	int userCount = *(ushort*)_packet;				_packet += sizeof(ushort);
 	for (int i = 0; i < userCount; i++)
 	{
-		ushort slotLocation = *(ushort*)_packet;				_packet += sizeof(ushort);
+		char slotLocation = *(char*)_packet;				_packet += sizeof(char);
 		eMemberType eType = (eMemberType) * (ushort*)_packet;				_packet += sizeof(ushort);
 		std::wstring nickname((wchar_t*)_packet);			_packet += (ushort)wcslen((wchar_t*)_packet) * 2 + 2;
 
@@ -319,7 +322,7 @@ void PacketHandler::S_JoinRoomFail(char* _packet)
 
 void PacketHandler::S_NotifyJoinedUser(char* _packet)
 {
-	ushort slotLocation = *(ushort*)_packet;				_packet += sizeof(ushort);
+	char slotLocation = *(char*)_packet;				_packet += sizeof(char);
 	eMemberType eType = (eMemberType) * (ushort*)_packet;				_packet += sizeof(ushort);
 	std::wstring nickname((wchar_t*)_packet);
 
@@ -332,5 +335,37 @@ void PacketHandler::S_NotifyJoinedUser(char* _packet)
 	UIText* pTextNickname = static_cast<UIText*>(pUI);
 	pTextNickname->ReassignText(nickname, eTextSize::Small);
 	pSlot->SetActive(true);
+}
+
+void PacketHandler::S_CheckRoomReadyOK(char* _packet)
+{
+	SceneManager::GetInst()->ChangeScene(new InGameScene);
+
+
+}
+
+void PacketHandler::S_CheckRoomReadyFail(char* _packet)
+{
+
+}
+
+void PacketHandler::S_EnterLobby(char* _packet)
+{
+	LobbyScene* pLobbyScene = SceneManager::GetInst()->GetCurScene<LobbyScene>();
+	pLobbyScene->HideWaitingRoomUI();
+	pLobbyScene->ShowLobbyUI();
+}
+
+void PacketHandler::S_LeaveRoom(char* _packet)
+{
+	unsigned int roomId = *(unsigned int*)_packet;			_packet += sizeof(unsigned int);
+	std::wstring strRoomId = std::to_wstring(roomId);
+
+	UI* pUI = UIManager::GetInst()->FindUI(L"RoomListPanel");
+	if (!pUI) return;
+	UIPanel* pRoomListPanel = static_cast<UIPanel*>(pUI);
+	pUI = pRoomListPanel->FindChildUI(L"RoomList");
+	UIList* pList = static_cast<UIList*>(pUI);
+	pList->RemoveItem(strRoomId);
 }
 

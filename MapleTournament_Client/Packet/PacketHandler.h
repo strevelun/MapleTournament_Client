@@ -17,5 +17,9 @@ public:
 	static void S_JoinRoom(char* _packet);
 	static void S_JoinRoomFail(char* _packet);
 	static void S_NotifyJoinedUser(char* _packet);
+	static void S_CheckRoomReadyOK(char* _packet);
+	static void S_CheckRoomReadyFail(char* _packet);
+	static void S_EnterLobby(char* _packet);
+	static void S_LeaveRoom(char* _packet);
 };
 

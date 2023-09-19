@@ -3,6 +3,7 @@
 #include "../Managers/UIManager.h"
 #include "../Managers/ResourceManager.h"
 #include "../Managers/ObjectManager.h"
+#include "../Managers/SceneManager.h"
 #include "../Bitmap.h"
 #include "../Obj/UI/UIPanel.h"
 #include "../Obj/UI/UIButton.h"
@@ -123,27 +124,12 @@ bool LobbyScene::ShowWaitingRoomUI()
     if (!pUI) return false;
     UIButton* pBtn = static_cast<UIButton*>(pUI);
     pBtn->SetActive(true);
-    /*
-    pUI = UIManager::GetInst()->FindUI(L"UserSlot1");
+  
+    pUI = UIManager::GetInst()->FindUI(L"WaitingRoomBackBtn");
     if (!pUI) return false;
-    UIPanel* pSlot01 = static_cast<UIPanel*>(pUI);
-    pSlot01->SetActive(true);
+    UIButton* pBackBtn = static_cast<UIButton*>(pUI);
+    pBackBtn->SetActive(true);
 
-    pUI = UIManager::GetInst()->FindUI(L"UserSlot2");
-    if (!pUI) return false;
-    UIPanel* pSlot02 = static_cast<UIPanel*>(pUI);
-    pSlot02->SetActive(true);
-
-    pUI = UIManager::GetInst()->FindUI(L"UserSlot3");
-    if (!pUI) return false;
-    UIPanel* pSlot03 = static_cast<UIPanel*>(pUI);
-    pSlot03->SetActive(true);
-
-    pUI = UIManager::GetInst()->FindUI(L"UserSlot4");
-    if (!pUI) return false;
-    UIPanel* pSlot04 = static_cast<UIPanel*>(pUI);
-    pSlot04->SetActive(true);
-    */
     return true;
 }
 
@@ -178,6 +164,41 @@ bool LobbyScene::HideLobbyUI()
 
 bool LobbyScene::HideWaitingRoomUI()
 {
+    UI* pUI = UIManager::GetInst()->FindUI(L"WaitingRoomBackground");
+    if (!pUI) return false;
+    pUI->SetActive(false);
+
+    pUI = UIManager::GetInst()->FindUI(L"StartGame");
+    if (!pUI) return false;
+    UIButton* pBtn = static_cast<UIButton*>(pUI);
+    pBtn->SetActive(false);
+
+    
+    pUI = UIManager::GetInst()->FindUI(L"UserSlot0");
+    if (!pUI) return false;
+    UIPanel* pSlot01 = static_cast<UIPanel*>(pUI);
+    pSlot01->SetActive(false);
+
+    pUI = UIManager::GetInst()->FindUI(L"UserSlot1");
+    if (!pUI) return false;
+    UIPanel* pSlot02 = static_cast<UIPanel*>(pUI);
+    pSlot02->SetActive(false);
+
+    pUI = UIManager::GetInst()->FindUI(L"UserSlot2");
+    if (!pUI) return false;
+    UIPanel* pSlot03 = static_cast<UIPanel*>(pUI);
+    pSlot03->SetActive(false);
+
+    pUI = UIManager::GetInst()->FindUI(L"UserSlot3");
+    if (!pUI) return false;
+    UIPanel* pSlot04 = static_cast<UIPanel*>(pUI);
+    pSlot04->SetActive(false);    
+    
+    pUI = UIManager::GetInst()->FindUI(L"WaitingRoomBackBtn");
+    if (!pUI) return false;
+    UIButton* pBackBtn = static_cast<UIButton*>(pUI);
+    pBackBtn->SetActive(false);
+
     return true;
 }
 
@@ -358,7 +379,11 @@ bool LobbyScene::InitWaitingRoomUI()
     pRoomBtn->SetUIText(pText);
     pRoomBtn->SetCallback([]() {
         // 유저들 모두 레디가 되었는지 서버에서 확인 후 ok신호 떨어지면 packethandler에서 씬전환
-
+        char buffer[255];
+        ushort count = sizeof(ushort);
+        *(ushort*)(buffer + count) = (ushort)ePacketType::C_CheckRoomReady;          count += sizeof(ushort);
+        *(ushort*)buffer = count;
+        NetworkManager::GetInst()->Send(buffer);
         });
     pRoomBtn->SetClickable(true);
     pRoomBtn->SetActive(false);
@@ -366,7 +391,7 @@ bool LobbyScene::InitWaitingRoomUI()
 
     /* 유저 슬롯 01 */
     UIPanel* pUserPanel = new UIPanel(nullptr, 138, 174, 52, 160);
-    pUserPanel->SetName(L"UserSlot1");
+    pUserPanel->SetName(L"UserSlot0");
     pUserPanel->SetActive(false);
     UIManager::GetInst()->AddUI(pUserPanel);
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\profile_character.png");
@@ -386,7 +411,7 @@ bool LobbyScene::InitWaitingRoomUI()
 
     /* 유저 슬롯 02 */
     pUserPanel = new UIPanel(nullptr, 138, 174, 222, 160);
-    pUserPanel->SetName(L"UserSlot2");
+    pUserPanel->SetName(L"UserSlot1");
     pUserPanel->SetActive(false);
     UIManager::GetInst()->AddUI(pUserPanel);
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\profile_character.png");
@@ -406,7 +431,7 @@ bool LobbyScene::InitWaitingRoomUI()
 
     /* 유저 슬롯 03 */
     pUserPanel = new UIPanel(nullptr, 138, 174, 392, 160);
-    pUserPanel->SetName(L"UserSlot3");
+    pUserPanel->SetName(L"UserSlot2");
     pUserPanel->SetActive(false);
     UIManager::GetInst()->AddUI(pUserPanel);
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\profile_character.png");
@@ -426,7 +451,7 @@ bool LobbyScene::InitWaitingRoomUI()
 
     /* 유저 슬롯 04 */
     pUserPanel = new UIPanel(nullptr, 138, 174, 562, 160);
-    pUserPanel->SetName(L"UserSlot4");
+    pUserPanel->SetName(L"UserSlot3");
     pUserPanel->SetActive(false);
     UIManager::GetInst()->AddUI(pUserPanel);
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\profile_character.png");
@@ -446,6 +471,7 @@ bool LobbyScene::InitWaitingRoomUI()
 
     /* 방에서 나가기 버튼 */
     UIButton* pBackBtn = new UIButton(nullptr, 47, 30, 1200, 764);
+    pBackBtn->SetName(L"WaitingRoomBackBtn");
     pBackBtn->SetCallback([]() 
         {
             char buffer[255];
@@ -457,11 +483,39 @@ bool LobbyScene::InitWaitingRoomUI()
             count = sizeof(ushort);
             *(ushort*)(buffer + count) = (ushort)ePacketType::C_EnterLobby;		count += sizeof(ushort);
             *(ushort*)buffer = count;
-
         });
     pBackBtn->SetClickable(true);
     pBackBtn->SetActive(false);
     UIManager::GetInst()->AddUI(pBackBtn);
+
+    /* 게임 시작 불가 팝업 */
+    pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_board.png");
+    if (!pBitmap) return false;
+    UIPanel* pPanel = new UIPanel(pBackground, 500, 400, ScreenWidth / 2, ScreenHeight / 2, 0.5f, 0.5f);
+    pPanel->SetName(L"StartGameFail");
+    pPanel->SetBitmap(pBitmap);
+    UIManager::GetInst()->AddUI(pPanel);
+    pText = new UIText(pPanel, L"방이 꽉 찼습니다!",
+        wcslen(L"방이 꽉 찼습니다!") * 25, 25, pPanel->GetWidth() / 2, 100, 0.5f, 0.5f);
+    pPanel->AddChildUI(pText);
+
+    pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_button.png");
+    if (!pBitmap) return false;
+    UIButton* pOKButton = new UIButton(pPanel, 150, 100, pPanel->GetWidth() / 2, pPanel->GetHeight() / 2 + (pPanel->GetHeight() / 4), 0.5f, 0.5f);
+    pOKButton->SetBitmap(pBitmap);
+    pOKButton->SetCallback([this, pPanel]()
+        {
+            pPanel->SetActive(false);
+            UIManager::GetInst()->PopPopupUI();
+        });
+    pText = new UIText(pOKButton, L"네",
+        wcslen(L"네") * 25, 25, pOKButton->GetWidth() / 2, 50, 0.5f, 0.5f);
+    pOKButton->SetUIText(pText);
+    pOKButton->SetClickable(true);
+
+    pPanel->AddChildUI(pOKButton);
+    pPanel->SetActive(false);
+
 
     return true;
 }
