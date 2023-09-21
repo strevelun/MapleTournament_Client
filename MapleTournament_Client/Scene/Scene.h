@@ -18,13 +18,14 @@ class Scene
 protected:
 	std::vector<Layer*> m_vecObjLayer;
 
+	bool m_bLoading = false;
+
 public:
 	Scene();
 	virtual ~Scene();
 
 	Layer* FindLayer(const std::wstring& _layerName);
 	Layer* CreateLayer(const std::wstring& _layerName, uint32_t _zOrder);
-
 
 	static bool SortLayer(const Layer* a, const Layer* b);
 

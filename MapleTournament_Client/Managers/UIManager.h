@@ -17,6 +17,7 @@ class UIManager
 {
 private:
 	std::map<std::wstring, UI*>				m_mapUI;
+	std::vector<UI*>						m_vecUI;
 	std::vector<UIPanel*>			m_vecPopupUI; // UIPopup
 
 public:

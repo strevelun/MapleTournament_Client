@@ -21,5 +21,8 @@ public:
 	static void S_CheckRoomReadyFail(char* _packet);
 	static void S_EnterLobby(char* _packet);
 	static void S_LeaveRoom(char* _packet);
+	static void S_UpdateRoomMemberLeave(char* _packet);
+	static void S_UpdateLobbyRoomList(char* _packet);
+	static void S_UpdateLobbyRoomMemberCount(char* _packet);
 };
 

@@ -21,6 +21,9 @@ std::map<ePacketType, void(*)(char*)> TCPClient::m_mapPacketHandlerCallback = {
 	{ ePacketType::S_CheckRoomReadyFail, PacketHandler::S_CheckRoomReadyFail },
 	{ ePacketType::S_EnterLobby, PacketHandler::S_EnterLobby },
 	{ ePacketType::S_LeaveRoom, PacketHandler::S_LeaveRoom },
+	{ ePacketType::S_UpdateRoomMemberLeave, PacketHandler::S_UpdateRoomMemberLeave },
+	{ ePacketType::S_UpdateLobbyRoomList, PacketHandler::S_UpdateLobbyRoomList },
+	{ ePacketType::S_UpdateLobbyRoomMemberCount, PacketHandler::S_UpdateLobbyRoomMemberCount },
 };
 
 TCPClient::TCPClient()
@@ -69,7 +72,7 @@ unsigned int TCPClient::ReceivePacket()
 
 		totalSize += recvSize;
 
-		while (1)
+		while (totalSize >= sizeof(u_short))
 		{
 			packetSize = *(u_short*)recvBuffer;
 			if ( packetSize > totalSize) break;

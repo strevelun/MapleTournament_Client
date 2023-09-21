@@ -483,6 +483,7 @@ bool LobbyScene::InitWaitingRoomUI()
             count = sizeof(ushort);
             *(ushort*)(buffer + count) = (ushort)ePacketType::C_EnterLobby;		count += sizeof(ushort);
             *(ushort*)buffer = count;
+            NetworkManager::GetInst()->Send(buffer);
         });
     pBackBtn->SetClickable(true);
     pBackBtn->SetActive(false);

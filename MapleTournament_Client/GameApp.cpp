@@ -46,7 +46,7 @@ bool GameApp::Init(int _nCmdShow, const wchar_t* _windowName, UINT _width, UINT 
 	WSADATA  wsaData;
 	if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
 	{
-		OutputDebugStringW(L"WASStartup 에러");
+		OutputDebug(L"WASStartup 에러\n");
 		return false;
 	}
 
@@ -60,7 +60,7 @@ bool GameApp::Init(int _nCmdShow, const wchar_t* _windowName, UINT _width, UINT 
 
 	if (!ResourceManager::GetInst()->Init(m_pGraphics->GetImagingFactory(), m_pGraphics->GetRenderTarget()))
 	{
-		OutputDebugStringW(L"NetworkManager 초기화 에러");
+		OutputDebug(L"NetworkManager 초기화 에러\n");
 		return false;
 	}
 	if (!InputManager::GetInst()->Init(m_window.GetHWnd())) return false;
@@ -118,6 +118,7 @@ void GameApp::Update()
 	SceneManager::GetInst()->Update();
 	UIManager::GetInst()->Update();
 	InputManager::GetInst()->Update();
+
 }
 
 void GameApp::Render()

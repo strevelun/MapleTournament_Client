@@ -24,7 +24,7 @@ bool Graphics::Init()
 	HRESULT hr = D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &m_pD2DFactory);
 	if (FAILED(hr))
 	{
-		OutputDebugStringW((L"D2D1CreateFactory returned : " + std::to_wstring(hr)).c_str());
+		OutputDebug((L"D2D1CreateFactory returned : \n" + std::to_wstring(hr)).c_str());
 		return false;
 	}
 
