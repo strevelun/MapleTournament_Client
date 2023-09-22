@@ -31,6 +31,10 @@ enum class ePacketType
 	C_CheckRoomReady,
 	S_CheckRoomReadyOK,
 	S_CheckRoomReadyFail,
+	C_UserRoomReady,
+	S_UpdateUserState,
+	S_UpdateWaitingRoomBtn,
+	S_UpdateUserType,
 };
 
 enum class eMemberType
@@ -38,6 +42,13 @@ enum class eMemberType
 	None,
 	Member,
 	Owner
+};
+
+enum class eMemberState
+{
+	None,
+	Wait,
+	Ready
 };
 
 #endif

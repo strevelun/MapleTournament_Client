@@ -24,6 +24,9 @@ std::map<ePacketType, void(*)(char*)> TCPClient::m_mapPacketHandlerCallback = {
 	{ ePacketType::S_UpdateRoomMemberLeave, PacketHandler::S_UpdateRoomMemberLeave },
 	{ ePacketType::S_UpdateLobbyRoomList, PacketHandler::S_UpdateLobbyRoomList },
 	{ ePacketType::S_UpdateLobbyRoomMemberCount, PacketHandler::S_UpdateLobbyRoomMemberCount },
+	{ ePacketType::S_UpdateUserState, PacketHandler::S_UpdateUserState },
+	{ ePacketType::S_UpdateUserType, PacketHandler::S_UpdateUserType },
+	{ ePacketType::S_UpdateWaitingRoomBtn, PacketHandler::S_UpdateWaitingRoomBtn },
 };
 
 TCPClient::TCPClient()

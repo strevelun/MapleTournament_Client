@@ -24,5 +24,8 @@ public:
 	static void S_UpdateRoomMemberLeave(char* _packet);
 	static void S_UpdateLobbyRoomList(char* _packet);
 	static void S_UpdateLobbyRoomMemberCount(char* _packet);
+	static void S_UpdateUserState(char* _packet);
+	static void S_UpdateUserType(char* _packet);
+	static void S_UpdateWaitingRoomBtn(char* _packet);
 };
 

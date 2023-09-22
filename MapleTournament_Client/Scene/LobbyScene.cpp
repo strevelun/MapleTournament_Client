@@ -284,8 +284,8 @@ bool LobbyScene::InitLobbyUI()
     pPanel->SetName(L"JoinRoomFail");
     pPanel->SetBitmap(pBitmap);
     pUIManager->AddUI(pPanel);
-    pText = new UIText(pPanel, L"방이 꽉 찼습니다!",
-        wcslen(L"방이 꽉 찼습니다!") * 25, 25, pPanel->GetWidth() / 2, 100, 0.5f, 0.5f);
+    pText = new UIText(pPanel, L"방이 꽉 차거나 게임중입니다!",
+        wcslen(L"방이 꽉 차거나 게임중입니다!") * 25, 25, pPanel->GetWidth() / 2, 100, 0.5f, 0.5f);
     pPanel->AddChildUI(pText);
 
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_button.png");
@@ -377,14 +377,6 @@ bool LobbyScene::InitWaitingRoomUI()
     UIText* pText = new UIText(pRoomBtn, L"게임 시작",
         wcslen(L"게임 시작") * 25, 25, pRoomBtn->GetWidth() / 2, pRoomBtn->GetHeight() / 2, 0.4f, 0.7f);
     pRoomBtn->SetUIText(pText);
-    pRoomBtn->SetCallback([]() {
-        // 유저들 모두 레디가 되었는지 서버에서 확인 후 ok신호 떨어지면 packethandler에서 씬전환
-        char buffer[255];
-        ushort count = sizeof(ushort);
-        *(ushort*)(buffer + count) = (ushort)ePacketType::C_CheckRoomReady;          count += sizeof(ushort);
-        *(ushort*)buffer = count;
-        NetworkManager::GetInst()->Send(buffer);
-        });
     pRoomBtn->SetClickable(true);
     pRoomBtn->SetActive(false);
     UIManager::GetInst()->AddUI(pRoomBtn);
@@ -496,8 +488,8 @@ bool LobbyScene::InitWaitingRoomUI()
     pPanel->SetName(L"StartGameFail");
     pPanel->SetBitmap(pBitmap);
     UIManager::GetInst()->AddUI(pPanel);
-    pText = new UIText(pPanel, L"방이 꽉 찼습니다!",
-        wcslen(L"방이 꽉 찼습니다!") * 25, 25, pPanel->GetWidth() / 2, 100, 0.5f, 0.5f);
+    pText = new UIText(pPanel, L"전부 레디하지 않았음!",
+        wcslen(L"전부 레디하지 않았음!") * 25, 25, pPanel->GetWidth() / 2, 100, 0.5f, 0.5f);
     pPanel->AddChildUI(pText);
 
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_button.png");
@@ -519,4 +511,22 @@ bool LobbyScene::InitWaitingRoomUI()
 
 
     return true;
+}
+
+void LobbyScene::GameStartCallback()
+{
+    char buffer[255];
+    ushort count = sizeof(ushort);
+    *(ushort*)(buffer + count) = (ushort)ePacketType::C_CheckRoomReady;          count += sizeof(ushort);
+    *(ushort*)buffer = count;
+    NetworkManager::GetInst()->Send(buffer);
+}
+
+void LobbyScene::GameReadyCallback()
+{
+    char buffer[255];
+    ushort count = sizeof(ushort);
+    *(ushort*)(buffer + count) = (ushort)ePacketType::C_UserRoomReady;          count += sizeof(ushort);
+    *(ushort*)buffer = count;
+    NetworkManager::GetInst()->Send(buffer);
 }

@@ -21,8 +21,12 @@ public:
 	bool HideLobbyUI();
 	bool HideWaitingRoomUI();
 
+	void GameStartCallback();
+	void GameReadyCallback();
+
 private:
 	bool InitLobbyUI();
 	bool InitWaitingRoomUI();
+
 };
 

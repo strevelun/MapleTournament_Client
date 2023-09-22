@@ -106,6 +106,11 @@ void PacketHandler::S_CreateRoom(char* _packet)
 	pTextState->SetBitmap(pBitmap);
 	pSlot->SetActive(true);
 
+	pUI = UIManager::GetInst()->FindUI(L"StartGame");
+	if (!pUI) return;
+	UIButton* pBtn = static_cast<UIButton*>(pUI);
+	pBtn->SetCallback(&LobbyScene::GameStartCallback, pLobbyScene);
+
 	OutputDebug(L"PacketHandler::S_CreateRoom\n");
 }
 
@@ -339,9 +344,15 @@ void PacketHandler::S_JoinRoom(char* _packet)
 	pUI->SetActive(true);
 
 	LobbyScene* pLobbyScene = SceneManager::GetInst()->GetCurScene<LobbyScene>();
-	
 	pLobbyScene->HideLobbyUI();
 	pLobbyScene->ShowWaitingRoomUI();
+
+	pUI = UIManager::GetInst()->FindUI(L"StartGame");
+	if (!pUI) return;
+	UIButton* pBtn = static_cast<UIButton*>(pUI);
+	pBtn->SetCallback(&LobbyScene::GameReadyCallback, pLobbyScene);
+	UIText* pText = pBtn->GetUIText();
+	pText->ReassignText(L"준비");
 
 	OutputDebug(L"PacketHandler::S_JoinRoom\n");
 }
@@ -403,6 +414,11 @@ void PacketHandler::S_CheckRoomReadyOK(char* _packet)
 
 void PacketHandler::S_CheckRoomReadyFail(char* _packet)
 {
+	UI* pUI = UIManager::GetInst()->FindUI(L"StartGameFail");
+	if (!pUI) return;
+	UIPanel* popup = static_cast<UIPanel*>(pUI);
+	popup->SetActive(true);
+	UIManager::GetInst()->AddPopupUI(popup);
 
 	OutputDebug(L"PacketHandler::S_CheckRoomReadyFail\n");
 }
@@ -488,5 +504,58 @@ void PacketHandler::S_UpdateLobbyRoomMemberCount(char* _packet)
 	UIPanel* uiItem = static_cast<UIPanel*>(pUI);
 	UIText* pCount = static_cast<UIText*>(uiItem->FindChildUI(L"Count"));
 	pCount->ReassignText(std::to_wstring(roomMemberCount) + L" / 4", eTextSize::Small);
+}
+
+void PacketHandler::S_UpdateUserState(char* _packet)
+{
+	eMemberState state = (eMemberState)*(char*)_packet;				_packet += sizeof(char);
+	char slot = *(char*)_packet;				_packet += sizeof(char);
+
+	UI* pUI = UIManager::GetInst()->FindUI(L"UserSlot" + std::to_wstring(slot));
+	if (!pUI) return;
+	UIPanel* pSlot = static_cast<UIPanel*>(pUI);
+	pUI = pSlot->FindChildUI(L"State");
+	if (!pUI) return;
+	UIPanel* pTextState = static_cast<UIPanel*>(pUI);
+	Bitmap* pBitmap = nullptr;
+	if(state == eMemberState::Wait)
+		pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_waitingroomscene_wait.png");
+	else if(state == eMemberState::Ready)
+		pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_waitingroomscene_ready.png");
+	if (pBitmap)
+		pTextState->SetBitmap(pBitmap);
+}
+
+void PacketHandler::S_UpdateUserType(char* _packet)
+{
+	eMemberType type = (eMemberType)*(char*)_packet;
+
+	LobbyScene* pLobbyScene = SceneManager::GetInst()->GetCurScene<LobbyScene>();
+	if (type == eMemberType::Owner)
+	{
+		UI* pUI = UIManager::GetInst()->FindUI(L"StartGame");
+		if (!pUI) return;
+		UIButton* pBtn = static_cast<UIButton*>(pUI);
+		pBtn->SetCallback(&LobbyScene::GameStartCallback, pLobbyScene);
+		UIText* pText = pBtn->GetUIText();
+		pText->ReassignText(L"게임 시작");
+	}
+}
+
+void PacketHandler::S_UpdateWaitingRoomBtn(char* _packet)
+{
+	eMemberState state = (eMemberState) * (char*)_packet;
+	UI* pUI = UIManager::GetInst()->FindUI(L"StartGame");
+	if (!pUI) return;
+	UIButton* pBtn = static_cast<UIButton*>(pUI);
+	UIText* pText = pBtn->GetUIText();
+	if (state == eMemberState::Wait)
+	{
+		pText->ReassignText(L"준비");
+	}
+	else if (state == eMemberState::Ready)
+	{
+		pText->ReassignText(L"대기");
+	}
 }
 
