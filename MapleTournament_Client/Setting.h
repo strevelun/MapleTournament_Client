@@ -1,6 +1,8 @@
 #ifndef __SETTING_H__
 #define __SETTING_H__
 
+#include <d2d1.h>
+
 enum class ePacketType
 {
 	None,
@@ -49,6 +51,40 @@ enum class eMemberState
 	None,
 	Wait,
 	Ready
+}; 
+
+enum class eType
+{
+	Tile,
+	Block,
+	Character,
+	None
 };
+
+typedef struct _tSpriteData
+{
+	float pivotX = 0.5f, pivotY = 0.5f;
+	D2D1_RECT_F rect = {};
+	D2D1_SIZE_F size = {};
+	DWORD* pixel = nullptr;
+	ID2D1Bitmap* bitmap = nullptr;
+	eType type;
+} tSpriteData;
+
+typedef struct _tAnimationFrame
+{
+	float pivotX = 0.5f, pivotY = 0.5f;
+	D2D1_RECT_F rect = {};
+	D2D1_SIZE_F size = {};
+	u_int bitmapIdx;
+
+	_tAnimationFrame(const _tSpriteData& sprite)
+	{
+		pivotX = sprite.pivotX;
+		pivotY = sprite.pivotY;
+		rect = sprite.rect;
+		size = sprite.size;
+	}
+} tAnimationFrame;
 
 #endif

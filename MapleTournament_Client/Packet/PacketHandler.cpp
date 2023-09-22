@@ -1,5 +1,5 @@
-#include "PacketHandler.h"
 #include "../NetworkCore/NetworkManager.h"
+#include "PacketHandler.h"
 #include "../Managers/SceneManager.h"
 #include "../Managers/ResourceManager.h"
 #include "../Scene/LoginScene.h"
@@ -313,6 +313,7 @@ void PacketHandler::S_JoinRoom(char* _packet)
 	Mouse* pMouse = InputManager::GetInst()->GetMouse();
 	pMouse->SetActive(true);
 
+	// TODO : 쓰레드 옮기기 
 	// UserList, Chat, Roomlist 전부 삭제
 	pUI = UIManager::GetInst()->FindUI(L"Chat");
 	if (!pUI) return;

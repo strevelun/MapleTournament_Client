@@ -127,6 +127,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Animation\AnimationClip.cpp" />
+    <ClCompile Include="Animation\Animator.cpp" />
     <ClCompile Include="Bitmap.cpp" />
     <ClCompile Include="GameApp.cpp" />
     <ClCompile Include="GraphicCore\Graphics.cpp" />
@@ -138,6 +140,7 @@
     <ClCompile Include="Managers\UIManager.cpp" />
     <ClCompile Include="NetworkCore\NetworkManager.cpp" />
     <ClCompile Include="NetworkCore\TCPClient.cpp" />
+    <ClCompile Include="Obj\GameObj.cpp" />
     <ClCompile Include="Obj\MyPlayer.cpp" />
     <ClCompile Include="Obj\Obj.cpp" />
     <ClCompile Include="Obj\Player.cpp" />
@@ -159,6 +162,8 @@
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Animation\AnimationClip.h" />
+    <ClInclude Include="Animation\Animator.h" />
     <ClInclude Include="Bitmap.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="Defines.h" />
@@ -171,6 +176,7 @@
     <ClInclude Include="Managers\UIManager.h" />
     <ClInclude Include="NetworkCore\NetworkManager.h" />
     <ClInclude Include="NetworkCore\TCPClient.h" />
+    <ClInclude Include="Obj\GameObj.h" />
     <ClInclude Include="Obj\MyPlayer.h" />
     <ClInclude Include="Obj\Obj.h" />
     <ClInclude Include="Obj\Player.h" />

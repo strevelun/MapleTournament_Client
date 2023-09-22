@@ -8,8 +8,6 @@ private:
 	ID2D1Bitmap* m_pD2DBitmap;
 	D2D1_SIZE_F m_bitmapSize;
 
-	unsigned int m_sliceX = 1;
-
 public:
 	Bitmap();
 	Bitmap(ID2D1Bitmap* _bitmap);

@@ -1,10 +1,11 @@
 #pragma once
 
+#include <winsock2.h>
+#include <map>
+
 #include "../Setting.h"
 #include "../Packet/PacketHandler.h"
 
-#include <winsock2.h>
-#include <map>
 
 class Packet;
 
