@@ -31,14 +31,14 @@ bool LoginScene::Init()
 {
     UIManager* pUIManager = UIManager::GetInst();
     /* Background */;
-    Bitmap* pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_loginscene_background.png");
+    Bitmap* pBitmap = ResourceManager::GetInst()->GetBitmap(L"ui_loginscene_background");
     if (!pBitmap) return false;
     UIPanel* pBackground = new UIPanel(nullptr, ScreenWidth, ScreenHeight);
     pBackground->SetBitmap(pBitmap);
     pUIManager->AddUI(pBackground);
 
     /* UI */
-    pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_login_edittext.png");
+    pBitmap = ResourceManager::GetInst()->GetBitmap(L"ui_login_edittext");
     if (!pBitmap) return false;
     UIEditText* pInputNickname = new UIEditText(pBackground, 500, 50, pBackground->GetWidth() / 2, pBackground->GetHeight() / 2, 0.5f, 0.5f);
     pInputNickname->SetBitmap(pBitmap);
@@ -46,7 +46,7 @@ bool LoginScene::Init()
     pInputNickname->SetCallback(&LoginScene::LoginButtonCallback, this);
     pBackground->AddChildUI(pInputNickname);
 
-    pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_button.png");
+    pBitmap = ResourceManager::GetInst()->GetBitmap(L"ui_button");
     if (!pBitmap) return false;
     UIButton* pLoginButton = new UIButton(pBackground, 100, 50,
          (pInputNickname->GetPosX()) + pInputNickname->GetWidth() + 10.f, pInputNickname->GetPosY(), 0.f, 0.f);
@@ -59,14 +59,14 @@ bool LoginScene::Init()
     pBackground->AddChildUI(pLoginButton);
 
     /* PopupUI 로그인 실패(잘못입력) */
-    pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_board.png");
+    pBitmap = ResourceManager::GetInst()->GetBitmap(L"ui_board");
     if (!pBitmap) return false;
     UIPanel* pPanel = new UIPanel(nullptr, 500, 400, ScreenWidth / 2, ScreenHeight / 2, 0.5f, 0.5f);
     pPanel->SetName(L"FailedLogin");
     pPanel->SetBitmap(pBitmap);
     pUIManager->AddUI(pPanel);
 
-    pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_button.png");
+    pBitmap = ResourceManager::GetInst()->GetBitmap(L"ui_button");
     if (!pBitmap) return false;
     UIButton* pOKButton = new UIButton(pPanel, 150, 100, pPanel->GetWidth() / 2, pPanel->GetHeight() / 2 + (pPanel->GetHeight() / 4), 0.5f, 0.5f);
     pOKButton->SetBitmap(pBitmap);

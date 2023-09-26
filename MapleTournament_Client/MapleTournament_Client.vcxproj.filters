@@ -138,6 +138,9 @@
     <ClCompile Include="Obj\GameObj.cpp">
       <Filter>Obj</Filter>
     </ClCompile>
+    <ClCompile Include="Debug.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameApp.h">
@@ -238,6 +241,9 @@
     </ClInclude>
     <ClInclude Include="Obj\GameObj.h">
       <Filter>Obj</Filter>
+    </ClInclude>
+    <ClInclude Include="Debug.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

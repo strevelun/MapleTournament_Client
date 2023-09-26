@@ -16,6 +16,7 @@
 #include "../Managers/ObjectManager.h"
 #include "../Managers/InputManager.h"
 #include "../Obj/MyPlayer.h"
+#include "../Debug.h"
 
 typedef unsigned short ushort;
 
@@ -28,7 +29,7 @@ void PacketHandler::S_Exit(char* _packet)
 	UIList* pUserList = static_cast<UIList*>(pUI);
 	pUserList->RemoveItem((wchar_t*)_packet);
 
-	OutputDebug(L"PacketHandler::S_Exit\n");
+	Debug::Log(L"PacketHandler::S_Exit");
 }
 
 void PacketHandler::S_OKLogin(char* _packet)
@@ -39,7 +40,7 @@ void PacketHandler::S_OKLogin(char* _packet)
 
 	SceneManager::GetInst()->ChangeScene(new LobbyScene);
 
-	OutputDebug(L"PacketHandler::S_OKLogin\n");
+	Debug::Log(L"PacketHandler::S_OKLogin");
 }
 
 void PacketHandler::S_FailedLogin(char* _packet) // 누가 이 닉네임으로 로그인 중 or 회원가입 안된 닉네임
@@ -53,7 +54,7 @@ void PacketHandler::S_FailedLogin(char* _packet) // 누가 이 닉네임으로 로그인 중
 	pFailedLoginUI->AddChildUI(pText);
 	UIManager::GetInst()->AddPopupUI(pFailedLoginUI);
 
-	OutputDebug(L"PacketHandler::S_FailedLogin\n");
+	Debug::Log(L"PacketHandler::S_FailedLogin");
 }
 
 void PacketHandler::S_CreateRoom(char* _packet)
@@ -101,7 +102,7 @@ void PacketHandler::S_CreateRoom(char* _packet)
 	pUI = pSlot->FindChildUI(L"State");
 	if (!pUI) return;
 	UIPanel* pTextState = static_cast<UIPanel*>(pUI);
-	Bitmap* pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_waitingroomscene_owner.png");
+	Bitmap* pBitmap = ResourceManager::GetInst()->GetBitmap(L"ui_waitingroomscene_owner");
 	if (!pBitmap) return;
 	pTextState->SetBitmap(pBitmap);
 	pSlot->SetActive(true);
@@ -111,7 +112,7 @@ void PacketHandler::S_CreateRoom(char* _packet)
 	UIButton* pBtn = static_cast<UIButton*>(pUI);
 	pBtn->SetCallback(&LobbyScene::GameStartCallback, pLobbyScene);
 
-	OutputDebug(L"PacketHandler::S_CreateRoom\n");
+	Debug::Log(L"PacketHandler::S_CreateRoom");
 }
 
 // 1 : Ready, 2 : InGame
@@ -159,7 +160,7 @@ void PacketHandler::S_NotifyCreateRoom(char* _packet)
 	pPanel->AddChildUI(pTextParticipants);
 	pRoomList->AddItem(pPanel);
 
-	OutputDebug(L"PacketHandler::S_NotifyCreateRoom\n");
+	Debug::Log(L"PacketHandler::S_NotifyCreateRoom");
 }
 
 
@@ -183,7 +184,7 @@ void PacketHandler::S_SendSessions(char* _packet)
 		_packet += (ushort)wcslen((wchar_t*)_packet) * 2 + 2;
 		pList->AddItem(pText);
 	}
-	OutputDebug(L"PacketHandler::S_SendSessions\n");
+	Debug::Log(L"PacketHandler::S_SendSessions");
 }
 
 // S_RoomList
@@ -241,7 +242,7 @@ void PacketHandler::S_SendRooms(char* _packet)
 		pRoomList->AddItem(pPanel);
 	}
 
-	OutputDebug(L"PacketHandler::S_SendRooms\n");
+	Debug::Log(L"PacketHandler::S_SendRooms");
 }
 
 // TODO : EnterLobbyOtherUser
@@ -256,7 +257,7 @@ void PacketHandler::S_EnterOtherUser(char* _packet)
 	pText->SetName((wchar_t*)_packet);
 	pList->AddItem(pText);
 
-	OutputDebug(L"PacketHandler::S_EnterOtherUser\n");
+	Debug::Log(L"PacketHandler::S_EnterOtherUser");
 }
 
 void PacketHandler::S_Chat(char* _packet)
@@ -273,7 +274,7 @@ void PacketHandler::S_Chat(char* _packet)
 	UIText* pText = new UIText(pList, message, message.length() * 15, 15, 10, 50, 0.f, 0.f, eTextSize::Small);
 	pList->AddItem(pText);
 
-	OutputDebug(L"PacketHandler::S_Chat\n");
+	Debug::Log(L"PacketHandler::S_Chat");
 }
 
 void PacketHandler::S_JoinRoom(char* _packet)
@@ -299,11 +300,11 @@ void PacketHandler::S_JoinRoom(char* _packet)
 		UIPanel* pTextState = static_cast<UIPanel*>(pUI);
 		if (eType == eMemberType::Owner)
 		{
-			pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_waitingroomscene_owner.png");
+			pBitmap = ResourceManager::GetInst()->GetBitmap(L"ui_waitingroomscene_owner");
 		}
 		else if (eType == eMemberType::Member)
 		{
-			pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_waitingroomscene_wait.png");
+			pBitmap = ResourceManager::GetInst()->GetBitmap(L"ui_waitingroomscene_wait");
 		}
 		if (!pBitmap) return;
 		pTextState->SetBitmap(pBitmap);
@@ -355,7 +356,7 @@ void PacketHandler::S_JoinRoom(char* _packet)
 	UIText* pText = pBtn->GetUIText();
 	pText->ReassignText(L"준비");
 
-	OutputDebug(L"PacketHandler::S_JoinRoom\n");
+	Debug::Log(L"PacketHandler::S_JoinRoom");
 }
 
 void PacketHandler::S_JoinRoomFail(char* _packet)
@@ -369,7 +370,7 @@ void PacketHandler::S_JoinRoomFail(char* _packet)
 	UIManager::GetInst()->AddPopupUI(pPanel);
 	pUI->SetActive(true);
 
-	OutputDebug(L"PacketHandler::S_JoinRoomFail\n");
+	Debug::Log(L"PacketHandler::S_JoinRoomFail");
 }
 
 void PacketHandler::S_NotifyJoinedUser(char* _packet)
@@ -392,17 +393,17 @@ void PacketHandler::S_NotifyJoinedUser(char* _packet)
 	UIPanel* pTextState = static_cast<UIPanel*>(pUI);
 	if (eType == eMemberType::Owner)
 	{
-		pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_waitingroomscene_owner.png");
+		pBitmap = ResourceManager::GetInst()->GetBitmap(L"ui_waitingroomscene_owner");
 	}
 	else if (eType == eMemberType::Member)
 	{
-		pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_waitingroomscene_wait.png");
+		pBitmap = ResourceManager::GetInst()->GetBitmap(L"ui_waitingroomscene_wait");
 	}
 	if (!pBitmap) return;
 	pTextState->SetBitmap(pBitmap);
 	pSlot->SetActive(true);
 
-	OutputDebug(L"PacketHandler::S_NotifyJoinedUser\n");
+	Debug::Log(L"PacketHandler::S_NotifyJoinedUser");
 }
 
 void PacketHandler::S_CheckRoomReadyOK(char* _packet)
@@ -410,7 +411,7 @@ void PacketHandler::S_CheckRoomReadyOK(char* _packet)
 	SceneManager::GetInst()->ChangeScene(new InGameScene);
 
 
-	OutputDebug(L"PacketHandler::S_CheckRoomReadyOK\n");
+	Debug::Log(L"PacketHandler::S_CheckRoomReadyOK");
 }
 
 void PacketHandler::S_CheckRoomReadyFail(char* _packet)
@@ -421,7 +422,7 @@ void PacketHandler::S_CheckRoomReadyFail(char* _packet)
 	popup->SetActive(true);
 	UIManager::GetInst()->AddPopupUI(popup);
 
-	OutputDebug(L"PacketHandler::S_CheckRoomReadyFail\n");
+	Debug::Log(L"PacketHandler::S_CheckRoomReadyFail");
 }
 
 void PacketHandler::S_EnterLobby(char* _packet)
@@ -430,7 +431,7 @@ void PacketHandler::S_EnterLobby(char* _packet)
 	pLobbyScene->HideWaitingRoomUI();
 	pLobbyScene->ShowLobbyUI();
 
-	OutputDebug(L"PacketHandler::S_EnterLobby\n");
+	Debug::Log(L"PacketHandler::S_EnterLobby");
 }
 
 void PacketHandler::S_LeaveRoom(char* _packet)
@@ -446,7 +447,7 @@ void PacketHandler::S_LeaveRoom(char* _packet)
 	while (pList->IsUsing()) { ; }
 	pList->RemoveItem(strRoomId);
 
-	OutputDebug(L"PacketHandler::S_LeaveRoom\n");
+	Debug::Log(L"PacketHandler::S_LeaveRoom");
 }
 
 void PacketHandler::S_UpdateRoomMemberLeave(char* _packet)
@@ -465,11 +466,11 @@ void PacketHandler::S_UpdateRoomMemberLeave(char* _packet)
 	pUI = pSlot->FindChildUI(L"State");
 	if (!pUI) return;
 	UIPanel* pTextState = static_cast<UIPanel*>(pUI);
-	pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_waitingroomscene_owner.png");
+	pBitmap = ResourceManager::GetInst()->GetBitmap(L"ui_waitingroomscene_owner");
 	if (!pBitmap) return;
 	pTextState->SetBitmap(pBitmap);
 
-	OutputDebug(L"PacketHandler::S_UpdateRoomMemberLeave\n");
+	Debug::Log(L"PacketHandler::S_UpdateRoomMemberLeave");
 }
 
 void PacketHandler::S_UpdateLobbyRoomList(char* _packet)
@@ -489,6 +490,8 @@ void PacketHandler::S_UpdateLobbyRoomList(char* _packet)
 	pOwner->ReassignText(nickname, eTextSize::Small);
 	UIText* pCount = static_cast<UIText*>(uiItem->FindChildUI(L"Count"));
 	pCount->ReassignText(std::to_wstring(roomMemberCount) + L" / 4", eTextSize::Small);
+
+	Debug::Log(L"PacketHandler::S_UpdateLobbyRoomList");
 }
 
 void PacketHandler::S_UpdateLobbyRoomMemberCount(char* _packet)
@@ -505,6 +508,8 @@ void PacketHandler::S_UpdateLobbyRoomMemberCount(char* _packet)
 	UIPanel* uiItem = static_cast<UIPanel*>(pUI);
 	UIText* pCount = static_cast<UIText*>(uiItem->FindChildUI(L"Count"));
 	pCount->ReassignText(std::to_wstring(roomMemberCount) + L" / 4", eTextSize::Small);
+
+	Debug::Log(L"PacketHandler::S_UpdateLobbyRoomMemberCount");
 }
 
 void PacketHandler::S_UpdateUserState(char* _packet)
@@ -520,11 +525,13 @@ void PacketHandler::S_UpdateUserState(char* _packet)
 	UIPanel* pTextState = static_cast<UIPanel*>(pUI);
 	Bitmap* pBitmap = nullptr;
 	if(state == eMemberState::Wait)
-		pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_waitingroomscene_wait.png");
+		pBitmap = ResourceManager::GetInst()->GetBitmap(L"ui_waitingroomscene_wait");
 	else if(state == eMemberState::Ready)
-		pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_waitingroomscene_ready.png");
+		pBitmap = ResourceManager::GetInst()->GetBitmap(L"ui_waitingroomscene_ready");
 	if (pBitmap)
 		pTextState->SetBitmap(pBitmap);
+
+	Debug::Log(L"PacketHandler::S_UpdateUserState");
 }
 
 void PacketHandler::S_UpdateUserType(char* _packet)
@@ -541,6 +548,8 @@ void PacketHandler::S_UpdateUserType(char* _packet)
 		UIText* pText = pBtn->GetUIText();
 		pText->ReassignText(L"게임 시작");
 	}
+
+	Debug::Log(L"PacketHandler::S_UpdateUserType");
 }
 
 void PacketHandler::S_UpdateWaitingRoomBtn(char* _packet)
@@ -558,5 +567,7 @@ void PacketHandler::S_UpdateWaitingRoomBtn(char* _packet)
 	{
 		pText->ReassignText(L"대기");
 	}
+
+	Debug::Log(L"PacketHandler::S_UpdateWaitingRoomBtn");
 }
 

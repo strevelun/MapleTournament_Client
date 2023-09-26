@@ -16,7 +16,3 @@ public: \
 		if (m_pInst) delete m_pInst; \
 		m_pInst = nullptr; \
 	} 
-
-#ifdef _DEBUG
-#define OutputDebug(msg) OutputDebugStringW(msg);
-#endif

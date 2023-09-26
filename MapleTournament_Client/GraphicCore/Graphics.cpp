@@ -2,6 +2,7 @@
 #include "../Window.h"
 #include "../Managers/InputManager.h"
 #include "../Bitmap.h"
+#include "../Debug.h"
 
 #include <string>
 
@@ -24,7 +25,7 @@ bool Graphics::Init()
 	HRESULT hr = D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &m_pD2DFactory);
 	if (FAILED(hr))
 	{
-		OutputDebug((L"D2D1CreateFactory returned : \n" + std::to_wstring(hr)).c_str());
+		Debug::Log((L"D2D1CreateFactory returned : " + std::to_wstring(hr)));
 		return false;
 	}
 
@@ -35,28 +36,28 @@ bool Graphics::Init()
 		&m_pRenderTarget);
 	if (FAILED(hr))
 	{
-		OutputDebugStringW((L"CreateHwndRenderTarget returned : " + std::to_wstring(hr)).c_str());
+		Debug::Log((L"CreateHwndRenderTarget returned : " + std::to_wstring(hr)));
 		return false;
 	}
 
 	hr = CoInitialize(nullptr);
 	if (FAILED(hr))
 	{
-		OutputDebugStringW((L"CoInitialize returned : " + std::to_wstring(hr)).c_str());
+		Debug::Log((L"CoInitialize returned : " + std::to_wstring(hr)));
 		return false;
 	}
 
 	hr = CoCreateInstance(CLSID_WICImagingFactory, NULL, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&m_pWICFactory));
 	if (FAILED(hr))
 	{
-		OutputDebugStringW((L"CoCreateInstance returned  : " + std::to_wstring(hr)).c_str());
+		Debug::Log((L"CoCreateInstance returned  : " + std::to_wstring(hr)));
 		return false;
 	}
 
 	hr = DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(m_pDWriteFactory), reinterpret_cast<IUnknown**>(&m_pDWriteFactory));
 	if (FAILED(hr))
 	{
-		OutputDebugStringW((L"DWriteCreateFactory returned  : " + std::to_wstring(hr)).c_str());
+		Debug::Log((L"DWriteCreateFactory returned  : " + std::to_wstring(hr)));
 		return false;
 	}
 
@@ -64,7 +65,7 @@ bool Graphics::Init()
 		25.0f, L"en-US", &m_pTextFormatLarge);
 	if (FAILED(hr))
 	{
-		OutputDebugStringW((L"CreateTextFormat returned : " + std::to_wstring(hr)).c_str());
+		Debug::Log((L"CreateTextFormat returned : " + std::to_wstring(hr)));
 		return false;
 	}
 
@@ -72,21 +73,21 @@ bool Graphics::Init()
 		15.0f, L"en-US", &m_pTextFormatSmall);
 	if (FAILED(hr))
 	{
-		OutputDebugStringW((L"CreateTextFormat returned : " + std::to_wstring(hr)).c_str());
+		Debug::Log((L"CreateTextFormat returned : " + std::to_wstring(hr)));
 		return false;
 	}
 
 	hr = m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Black), &m_pBlackBrush);
 	if (FAILED(hr))
 	{
-		OutputDebugStringW((L"CreateSolidColorBrush returned  : " + std::to_wstring(hr)).c_str());
+		Debug::Log((L"CreateSolidColorBrush returned  : " + std::to_wstring(hr)));
 		return false;
 	}
 
 	hr = m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Blue), &m_pBlueBrush);
 	if (FAILED(hr))
 	{
-		OutputDebugStringW((L"CreateSolidColorBrush returned  : " + std::to_wstring(hr)).c_str());
+		Debug::Log((L"CreateSolidColorBrush returned  : " + std::to_wstring(hr)));
 		return false;
 	}
 
@@ -106,22 +107,27 @@ void Graphics::DrawMouseCoordinates(int _xpos, int _ypos)
 	m_pRenderTarget->DrawText(output, wcslen(output), m_pTextFormatSmall, outputRect, m_pBlackBrush);
 }
 
-void Graphics::DrawTextRectLarge(const wchar_t* _text, D2D1_RECT_F _rect)
+void Graphics::DrawTextRectLarge(const wchar_t* _text, const D2D1_RECT_F& _rect)
 {
 	m_pRenderTarget->DrawTextW(_text, wcslen(_text), m_pTextFormatLarge, _rect, m_pBlackBrush);
 }
 
-void Graphics::DrawTextRectSmall(const wchar_t* _text, D2D1_RECT_F _rect)
+void Graphics::DrawTextRectSmall(const wchar_t* _text, const D2D1_RECT_F& _rect)
 {
 	m_pRenderTarget->DrawTextW(_text, wcslen(_text), m_pTextFormatSmall, _rect, m_pBlackBrush);
 }
 
-void Graphics::DrawBitmap(Bitmap* _pBitmap, D2D1_RECT_F _rect)
+void Graphics::DrawBitmap(Bitmap* _pBitmap, const D2D1_RECT_F& _srcRect)
 {
-	m_pRenderTarget->DrawBitmap(_pBitmap->GetBitmap(), _rect);
+	m_pRenderTarget->DrawBitmap(_pBitmap->GetBitmap(), _srcRect);
 }
 
-void Graphics::DrawRectangle(D2D1_RECT_F _rect, eColor _color, int _strokeWidth)
+void Graphics::DrawBitmap(ID2D1Bitmap* _pBitmap, const D2D1_RECT_F& _destRect, const D2D1_RECT_F& _srcRect)
+{
+	m_pRenderTarget->DrawBitmap(_pBitmap, _destRect, 1.0f, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR, _srcRect);
+}
+
+void Graphics::DrawRectangle(const D2D1_RECT_F& _rect, eColor _color, int _strokeWidth)
 {
 	ID2D1SolidColorBrush* pBrush = nullptr;
 	switch (_color)

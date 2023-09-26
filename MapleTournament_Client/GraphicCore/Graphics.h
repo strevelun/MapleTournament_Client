@@ -39,10 +39,11 @@ public:
 	ID2D1HwndRenderTarget* GetRenderTarget() const { return m_pRenderTarget; }
 
 	void DrawMouseCoordinates(int _xpos, int _ypos);
-	void DrawTextRectLarge(const wchar_t* _text, D2D1_RECT_F _rect);
-	void DrawTextRectSmall(const wchar_t* _text, D2D1_RECT_F _rect);
-	void DrawBitmap(Bitmap* _pBitmap, D2D1_RECT_F _rect);
-	void DrawRectangle(D2D1_RECT_F _rect, eColor _color, int _strokeWidth);
+	void DrawTextRectLarge(const wchar_t* _text, const D2D1_RECT_F& _rect);
+	void DrawTextRectSmall(const wchar_t* _text, const D2D1_RECT_F& _rect);
+	void DrawBitmap(Bitmap* _pBitmap, const D2D1_RECT_F& _srcRect);
+	void DrawBitmap(ID2D1Bitmap* _pBitmap, const D2D1_RECT_F& _destRect, const D2D1_RECT_F& _srcRect);
+	void DrawRectangle(const D2D1_RECT_F& _rect, eColor _color, int _strokeWidth);
 	HWND GetHwnd() const { return m_hWnd; }
 
 	void BeginDraw();
