@@ -21,7 +21,7 @@ public:
 	~Animator();
 
 	void Update();
-	void Render(Graphics* _pGraphics, const D2D1_RECT_F& _destRect);
+	void Render(Graphics* _pGraphics, UINT _xpos, UINT _ypos, float _ratio);
 
 	void AddClip(const std::wstring& _stateName, AnimationClip* _pClip);
 	void SetNextClip(const std::wstring& _stateName);

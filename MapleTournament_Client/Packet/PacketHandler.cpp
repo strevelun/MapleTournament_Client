@@ -102,7 +102,7 @@ void PacketHandler::S_CreateRoom(char* _packet)
 	pUI = pSlot->FindChildUI(L"State");
 	if (!pUI) return;
 	UIPanel* pTextState = static_cast<UIPanel*>(pUI);
-	Bitmap* pBitmap = ResourceManager::GetInst()->GetBitmap(L"ui_waitingroomscene_owner");
+	Bitmap* pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_waitingroomscene_owner.png");
 	if (!pBitmap) return;
 	pTextState->SetBitmap(pBitmap);
 	pSlot->SetActive(true);
@@ -300,11 +300,11 @@ void PacketHandler::S_JoinRoom(char* _packet)
 		UIPanel* pTextState = static_cast<UIPanel*>(pUI);
 		if (eType == eMemberType::Owner)
 		{
-			pBitmap = ResourceManager::GetInst()->GetBitmap(L"ui_waitingroomscene_owner");
+			pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_waitingroomscene_owner.png");
 		}
 		else if (eType == eMemberType::Member)
 		{
-			pBitmap = ResourceManager::GetInst()->GetBitmap(L"ui_waitingroomscene_wait");
+			pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_waitingroomscene_wait.png");
 		}
 		if (!pBitmap) return;
 		pTextState->SetBitmap(pBitmap);
@@ -393,11 +393,11 @@ void PacketHandler::S_NotifyJoinedUser(char* _packet)
 	UIPanel* pTextState = static_cast<UIPanel*>(pUI);
 	if (eType == eMemberType::Owner)
 	{
-		pBitmap = ResourceManager::GetInst()->GetBitmap(L"ui_waitingroomscene_owner");
+		pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_waitingroomscene_owner.png");
 	}
 	else if (eType == eMemberType::Member)
 	{
-		pBitmap = ResourceManager::GetInst()->GetBitmap(L"ui_waitingroomscene_wait");
+		pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_waitingroomscene_wait.png");
 	}
 	if (!pBitmap) return;
 	pTextState->SetBitmap(pBitmap);
@@ -466,7 +466,7 @@ void PacketHandler::S_UpdateRoomMemberLeave(char* _packet)
 	pUI = pSlot->FindChildUI(L"State");
 	if (!pUI) return;
 	UIPanel* pTextState = static_cast<UIPanel*>(pUI);
-	pBitmap = ResourceManager::GetInst()->GetBitmap(L"ui_waitingroomscene_owner");
+	pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_waitingroomscene_owner.png");
 	if (!pBitmap) return;
 	pTextState->SetBitmap(pBitmap);
 
@@ -525,9 +525,9 @@ void PacketHandler::S_UpdateUserState(char* _packet)
 	UIPanel* pTextState = static_cast<UIPanel*>(pUI);
 	Bitmap* pBitmap = nullptr;
 	if(state == eMemberState::Wait)
-		pBitmap = ResourceManager::GetInst()->GetBitmap(L"ui_waitingroomscene_wait");
+		pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_waitingroomscene_wait.png");
 	else if(state == eMemberState::Ready)
-		pBitmap = ResourceManager::GetInst()->GetBitmap(L"ui_waitingroomscene_ready");
+		pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_waitingroomscene_ready.png");
 	if (pBitmap)
 		pTextState->SetBitmap(pBitmap);
 

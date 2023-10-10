@@ -149,6 +149,7 @@
     <ClCompile Include="Obj\MyPlayer.cpp" />
     <ClCompile Include="Obj\Obj.cpp" />
     <ClCompile Include="Obj\Player.cpp" />
+    <ClCompile Include="Obj\Skill.cpp" />
     <ClCompile Include="Obj\UI\Mouse.cpp" />
     <ClCompile Include="Obj\UI\UI.cpp" />
     <ClCompile Include="Obj\UI\UIButton.cpp" />
@@ -186,6 +187,7 @@
     <ClInclude Include="Obj\MyPlayer.h" />
     <ClInclude Include="Obj\Obj.h" />
     <ClInclude Include="Obj\Player.h" />
+    <ClInclude Include="Obj\Skill.h" />
     <ClInclude Include="Obj\UI\Mouse.h" />
     <ClInclude Include="Obj\UI\UI.h" />
     <ClInclude Include="Obj\UI\UIButton.h" />

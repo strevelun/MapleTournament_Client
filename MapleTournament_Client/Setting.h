@@ -67,25 +67,19 @@ typedef struct _tSpriteData
 	D2D1_RECT_F rect = {};
 	D2D1_SIZE_F size = {};
 	DWORD* pixel = nullptr;
-	ID2D1Bitmap* bitmap = nullptr;
+	ID2D1Bitmap* m_bitmap = nullptr;
 	eType type;
 } tSpriteData;
 
 typedef struct _tAnimationFrame
 {
-	ID2D1Bitmap* bitmap = nullptr;
 	float pivotX = 0.5f, pivotY = 0.5f;
 	D2D1_RECT_F rect = {};
 	D2D1_SIZE_F size = {};
 
 	_tAnimationFrame(const _tSpriteData& sprite)
-	{
-		pivotX = sprite.pivotX;
-		pivotY = sprite.pivotY;
-		rect = sprite.rect;
-		size = sprite.size;
-		bitmap = sprite.bitmap;
-	}
+		: pivotX(sprite.pivotX), pivotY(sprite.pivotY), rect(sprite.rect), size(sprite.size)
+	{}
 } tAnimationFrame;
 
 #endif

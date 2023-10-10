@@ -24,12 +24,12 @@ private:
 public:	
 	bool Init(IWICImagingFactory* _pImagingFactory, ID2D1HwndRenderTarget* _pRenderTarget);
 
-	Bitmap* GetBitmap(const std::wstring& _fileName);
-	AnimationClip* GetAnimClip(const std::wstring& _fileName);
+	Bitmap* GetBitmap(const std::wstring& _fileWithPath);
+	AnimationClip* GetAnimClip(const std::wstring& _justFilename);
 
 private:
-	bool LoadImageFromFile(const std::wstring& _path, const std::wstring& _fileName);
-	bool LoadAnimFile(const std::wstring& _path, const std::wstring& _fileName);
+	bool LoadImageFromFile(const std::wstring& _fileWithPath);
+	bool LoadAnimFile(const std::wstring& _spriteFileWithPath, const std::wstring& _animFileWithPath);
 
 	SINGLETON(ResourceManager)
 };

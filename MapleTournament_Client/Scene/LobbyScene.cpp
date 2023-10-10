@@ -206,7 +206,7 @@ bool LobbyScene::InitLobbyUI()
 {
     UIManager* pUIManager = UIManager::GetInst();
     /* Background */;
-    Bitmap* pBitmap = ResourceManager::GetInst()->GetBitmap(L"ui_lobbyscene_background2");
+    Bitmap* pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_lobbyscene_background2.png");
     if (!pBitmap) return false;
     UIPanel* pBackground = new UIPanel(nullptr, ScreenWidth, ScreenHeight);
     pBackground->SetBitmap(pBitmap);
@@ -214,7 +214,7 @@ bool LobbyScene::InitLobbyUI()
     pUIManager->AddUI(pBackground);
 
     /* 방만들기 버튼 */
-    pBitmap = ResourceManager::GetInst()->GetBitmap(L"ui_button");
+    pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_button.png");
     if (!pBitmap) return false;
     UIButton* pRoomBtn = new UIButton(nullptr, 150, 100, pBackground->GetWidth() / 2, pBackground->GetHeight(), 0.5f, 1.0f);
     pRoomBtn->SetName(L"MakeRoom");
@@ -231,14 +231,14 @@ bool LobbyScene::InitLobbyUI()
     pUIManager->AddUI(pRoomBtn);
 
     /* 방만들기 팝업 */
-    pBitmap = ResourceManager::GetInst()->GetBitmap(L"ui_board");
+    pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_board.png");
     if (!pBitmap) return false;
     UIPanel* pPanel = new UIPanel(nullptr, 500, 400, ScreenWidth / 2, ScreenHeight / 2, 0.5f, 0.5f);
     pPanel->SetName(L"CreateRoom");
     pPanel->SetBitmap(pBitmap);
     pUIManager->AddUI(pPanel);
 
-    pBitmap = ResourceManager::GetInst()->GetBitmap(L"ui_login_edittext");
+    pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_login_edittext.png");
     if (!pBitmap) return false;
     UIEditText* pInputRoomName = new UIEditText(pPanel, pPanel->GetWidth() - 100, 50, pPanel->GetWidth() / 2, pPanel->GetHeight() / 2, 0.5f, 0.5f);
     pInputRoomName->SetBitmap(pBitmap);
@@ -246,7 +246,7 @@ bool LobbyScene::InitLobbyUI()
     pInputRoomName->SetCallback(&LobbyScene::CreateRoomButtonCallback, this);
     pPanel->AddChildUI(pInputRoomName);
 
-    pBitmap = ResourceManager::GetInst()->GetBitmap(L"ui_button");
+    pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_button.png");
     if (!pBitmap) return false;
     UIButton* pOKButton = new UIButton(pPanel, 150, 100, pPanel->GetWidth() / 2, pPanel->GetHeight() / 2 + (pPanel->GetHeight() / 4), 0.5f, 0.5f);
     pOKButton->SetBitmap(pBitmap);
@@ -262,7 +262,7 @@ bool LobbyScene::InitLobbyUI()
     pPanel->SetActive(false);
 
     /* Room List */
-    pBitmap = ResourceManager::GetInst()->GetBitmap(L"ui_lobbyscene_roomlist");
+    pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_lobbyscene_roomlist.png");
     if (!pBitmap) return false;
     UIPanel* pRoomListPanel = new UIPanel(nullptr, 800, 400);
     pRoomListPanel->SetName(L"RoomListPanel");
@@ -278,7 +278,7 @@ bool LobbyScene::InitLobbyUI()
     const wchar_t* pMyNickname = myNickname.c_str();
 
     /* 룸 입장 불가 안내 팝업 */
-    pBitmap = ResourceManager::GetInst()->GetBitmap(L"ui_board");
+    pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_board.png");
     if (!pBitmap) return false;
     pPanel = new UIPanel(pBackground, 500, 400, ScreenWidth / 2, ScreenHeight / 2, 0.5f, 0.5f);
     pPanel->SetName(L"JoinRoomFail");
@@ -288,7 +288,7 @@ bool LobbyScene::InitLobbyUI()
         wcslen(L"방이 꽉 차거나 게임중입니다!") * 25, 25, pPanel->GetWidth() / 2, 100, 0.5f, 0.5f);
     pPanel->AddChildUI(pText);
 
-    pBitmap = ResourceManager::GetInst()->GetBitmap(L"ui_button");
+    pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_button.png");
     if (!pBitmap) return false;
     pOKButton = new UIButton(pPanel, 150, 100, pPanel->GetWidth() / 2, pPanel->GetHeight() / 2 + (pPanel->GetHeight() / 4), 0.5f, 0.5f);
     pOKButton->SetBitmap(pBitmap);
@@ -306,7 +306,7 @@ bool LobbyScene::InitLobbyUI()
     pPanel->SetActive(false);
 
     /* User List */
-    pBitmap = ResourceManager::GetInst()->GetBitmap(L"ui_lobbyscene_userlist");
+    pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_lobbyscene_userlist.png");
     if (!pBitmap) return false;
     UIPanel* pUserListPanel = new UIPanel(nullptr, 250, 400, ScreenWidth, 0, 1.0f, 0.f);
     pUserListPanel->SetName(L"UserListPanel");
@@ -321,7 +321,7 @@ bool LobbyScene::InitLobbyUI()
     //pBackground->AddChildUI(pUserListPanel);
 
     /* user profile */
-    pBitmap = ResourceManager::GetInst()->GetBitmap(L"ui_lobbyscene_profile");
+    pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_lobbyscene_profile.png");
     if (!pBitmap) return false;
     UIPanel* pProfile = new UIPanel(nullptr, 400, 200, ScreenWidth, ScreenHeight, 1.0f, 1.0f);
     pProfile->SetBitmap(pBitmap);
@@ -332,20 +332,20 @@ bool LobbyScene::InitLobbyUI()
     //pBackground->AddChildUI(pProfile);
 
     /* Chat */
-    pBitmap = ResourceManager::GetInst()->GetBitmap(L"ui_lobbyscene_chat");
+    pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_lobbyscene_chat.png");
     if (!pBitmap) return false;
     UIPanel* pChatPanel = new UIPanel(nullptr, 500, 300, 0, ScreenHeight, 0.f, 1.0f);
     pChatPanel->SetBitmap(pBitmap);
     pChatPanel->SetName(L"Chat");
 
-    pBitmap = ResourceManager::GetInst()->GetBitmap(L"ui_lobbyscene_roombutton");
-    if (!pBitmap) return false;
+    //pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_lobbyscene_roombutton.png");
+   // if (!pBitmap) return false;
     UIList* pChatList = new UIList(pChatPanel, 480, 230, 10, 10, 0.f, 0.f);
-    pChatList->SetBitmap(pBitmap);
+    //pChatList->SetItemBitmap(pBitmap);
     pChatList->SetName(L"ChatList");
     pChatPanel->AddChildUI(pChatList);
 
-    pBitmap = ResourceManager::GetInst()->GetBitmap(L"ui_login_edittext");
+    pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_login_edittext.png");
     if (!pBitmap) return false;
     UIEditText* pChatEdit = new UIEditText(pChatPanel, 385, 40, 40, 285, 0.0f, 1.0f);
     pChatEdit->SetBitmap(pBitmap);
@@ -360,7 +360,7 @@ bool LobbyScene::InitLobbyUI()
 
 bool LobbyScene::InitWaitingRoomUI()
 {
-    Bitmap* pBitmap = ResourceManager::GetInst()->GetBitmap(L"ui_waitingroomscene");
+    Bitmap* pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_waitingroomscene.png");
     if (!pBitmap) return false;
     UIPanel* pBackground = new UIPanel(nullptr, ScreenWidth, ScreenHeight);
     pBackground->SetBitmap(pBitmap);
@@ -369,7 +369,7 @@ bool LobbyScene::InitWaitingRoomUI()
     UIManager::GetInst()->AddUI(pBackground);
 
     /* 게임 시작 버튼 */
-    pBitmap = ResourceManager::GetInst()->GetBitmap(L"ui_button");
+    pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_button.png");
     if (!pBitmap) return false;
     UIButton* pRoomBtn = new UIButton(nullptr, 150, 80, 970, 655, 0.5f, 0.f);
     pRoomBtn->SetName(L"StartGame");
@@ -386,7 +386,7 @@ bool LobbyScene::InitWaitingRoomUI()
     pUserPanel->SetName(L"UserSlot0");
     pUserPanel->SetActive(false);
     UIManager::GetInst()->AddUI(pUserPanel);
-    pBitmap = ResourceManager::GetInst()->GetBitmap(L"profile_character");
+    pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\profile_character.png");
     if (!pBitmap) return false;
     UIPanel* pUserPicture = new UIPanel(pUserPanel, 138, 113, 0, 0);
     pUserPicture->SetBitmap(pBitmap);
@@ -395,7 +395,7 @@ bool LobbyScene::InitWaitingRoomUI()
     pTextNickname->SetName(L"Nickname");
     pUserPanel->AddChildUI(pTextNickname);
     UIPanel* pTextState = new UIPanel(pUserPanel, pUserPanel->GetWidth(), 20, pUserPanel->GetWidth() / 2, 155, 0.5f, 0.f);
-    pBitmap = ResourceManager::GetInst()->GetBitmap(L"ui_waitingroomscene_wait");
+    pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_waitingroomscene_wait.png");
     if (!pBitmap) return false;
     pTextState->SetName(L"State");
     pTextState->SetBitmap(pBitmap);
@@ -406,7 +406,7 @@ bool LobbyScene::InitWaitingRoomUI()
     pUserPanel->SetName(L"UserSlot1");
     pUserPanel->SetActive(false);
     UIManager::GetInst()->AddUI(pUserPanel);
-    pBitmap = ResourceManager::GetInst()->GetBitmap(L"profile_character");
+    pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\profile_character.png");
     if (!pBitmap) return false;
     pUserPicture = new UIPanel(pUserPanel, 138, 113, 0, 0);
     pUserPicture->SetBitmap(pBitmap);
@@ -415,7 +415,7 @@ bool LobbyScene::InitWaitingRoomUI()
     pTextNickname->SetName(L"Nickname");
     pUserPanel->AddChildUI(pTextNickname);
     pTextState = new UIPanel(pUserPanel, pUserPanel->GetWidth(), 20, pUserPanel->GetWidth() / 2, 155, 0.5f, 0.f);
-    pBitmap = ResourceManager::GetInst()->GetBitmap(L"ui_waitingroomscene_wait");
+    pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_waitingroomscene_wait.png");
     if (!pBitmap) return false;
     pTextState->SetName(L"State");
     pTextState->SetBitmap(pBitmap);
@@ -426,7 +426,7 @@ bool LobbyScene::InitWaitingRoomUI()
     pUserPanel->SetName(L"UserSlot2");
     pUserPanel->SetActive(false);
     UIManager::GetInst()->AddUI(pUserPanel);
-    pBitmap = ResourceManager::GetInst()->GetBitmap(L"profile_character");
+    pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\profile_character.png");
     if (!pBitmap) return false;
     pUserPicture = new UIPanel(pUserPanel, 138, 113, 0, 0);
     pUserPicture->SetBitmap(pBitmap);
@@ -435,7 +435,7 @@ bool LobbyScene::InitWaitingRoomUI()
     pTextNickname->SetName(L"Nickname");
     pUserPanel->AddChildUI(pTextNickname);
     pTextState = new UIPanel(pUserPanel, pUserPanel->GetWidth(), 20, pUserPanel->GetWidth() / 2, 155, 0.5f, 0.f);
-    pBitmap = ResourceManager::GetInst()->GetBitmap(L"ui_waitingroomscene_wait");
+    pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_waitingroomscene_wait.png");
     if (!pBitmap) return false;
     pTextState->SetName(L"State");
     pTextState->SetBitmap(pBitmap);
@@ -446,7 +446,7 @@ bool LobbyScene::InitWaitingRoomUI()
     pUserPanel->SetName(L"UserSlot3");
     pUserPanel->SetActive(false);
     UIManager::GetInst()->AddUI(pUserPanel);
-    pBitmap = ResourceManager::GetInst()->GetBitmap(L"profile_character");
+    pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\profile_character.png");
     if (!pBitmap) return false;
     pUserPicture = new UIPanel(pUserPanel, 138, 113, 0, 0);
     pUserPicture->SetBitmap(pBitmap);
@@ -455,7 +455,7 @@ bool LobbyScene::InitWaitingRoomUI()
     pTextNickname->SetName(L"Nickname");
     pUserPanel->AddChildUI(pTextNickname);
     pTextState = new UIPanel(pUserPanel, pUserPanel->GetWidth(), 20, pUserPanel->GetWidth() / 2, 155, 0.5f, 0.f);
-    pBitmap = ResourceManager::GetInst()->GetBitmap(L"ui_waitingroomscene_wait");
+    pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_waitingroomscene_wait.png");
     if (!pBitmap) return false;
     pTextState->SetName(L"State");
     pTextState->SetBitmap(pBitmap);
@@ -482,7 +482,7 @@ bool LobbyScene::InitWaitingRoomUI()
     UIManager::GetInst()->AddUI(pBackBtn);
 
     /* 게임 시작 불가 팝업 */
-    pBitmap = ResourceManager::GetInst()->GetBitmap(L"ui_board");
+    pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_board.png");
     if (!pBitmap) return false;
     UIPanel* pPanel = new UIPanel(pBackground, 500, 400, ScreenWidth / 2, ScreenHeight / 2, 0.5f, 0.5f);
     pPanel->SetName(L"StartGameFail");
@@ -492,7 +492,7 @@ bool LobbyScene::InitWaitingRoomUI()
         wcslen(L"전부 레디하지 않았음!") * 25, 25, pPanel->GetWidth() / 2, 100, 0.5f, 0.5f);
     pPanel->AddChildUI(pText);
 
-    pBitmap = ResourceManager::GetInst()->GetBitmap(L"ui_button");
+    pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_button.png");
     if (!pBitmap) return false;
     UIButton* pOKButton = new UIButton(pPanel, 150, 100, pPanel->GetWidth() / 2, pPanel->GetHeight() / 2 + (pPanel->GetHeight() / 4), 0.5f, 0.5f);
     pOKButton->SetBitmap(pBitmap);

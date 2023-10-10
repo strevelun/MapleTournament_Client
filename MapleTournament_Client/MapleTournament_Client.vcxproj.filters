@@ -141,6 +141,9 @@
     <ClCompile Include="Debug.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Obj\Skill.cpp">
+      <Filter>Obj</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameApp.h">
@@ -244,6 +247,9 @@
     </ClInclude>
     <ClInclude Include="Debug.h">
       <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Obj\Skill.h">
+      <Filter>Obj</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

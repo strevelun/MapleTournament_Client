@@ -144,6 +144,11 @@ void Graphics::DrawRectangle(const D2D1_RECT_F& _rect, eColor _color, int _strok
 	m_pRenderTarget->DrawRectangle(_rect, pBrush, _strokeWidth);
 }
 
+void Graphics::SetTransform(const D2D1::Matrix3x2F& _rot)
+{
+	m_pRenderTarget->SetTransform(_rot);
+}
+
 void Graphics::BeginDraw()
 {
 	m_pRenderTarget->BeginDraw();

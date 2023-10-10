@@ -44,6 +44,7 @@ public:
 	void DrawBitmap(Bitmap* _pBitmap, const D2D1_RECT_F& _srcRect);
 	void DrawBitmap(ID2D1Bitmap* _pBitmap, const D2D1_RECT_F& _destRect, const D2D1_RECT_F& _srcRect);
 	void DrawRectangle(const D2D1_RECT_F& _rect, eColor _color, int _strokeWidth);
+	void SetTransform(const D2D1::Matrix3x2F& _rot);
 	HWND GetHwnd() const { return m_hWnd; }
 
 	void BeginDraw();

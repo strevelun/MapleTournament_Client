@@ -5,11 +5,12 @@
 #include "../Setting.h"
 
 class Graphics;
+class Bitmap;
 
 class AnimationClip
 {
 private:
-	std::wstring m_strName;
+	Bitmap* m_pBitmap = nullptr;
 	std::vector<tAnimationFrame*> m_vecFrame;
 	bool m_isLoop = false;
 	bool m_isEnd = false;
@@ -21,17 +22,19 @@ private:
 	float m_playTime = 0.0f;
 
 	bool m_anyState = false;
+	bool    m_isFlip = false;
 
 public:
-	AnimationClip(const std::wstring& m_strName, int _clipSize);
+	AnimationClip(Bitmap* _pBitmap, int _clipSize);
 	~AnimationClip();
 
 	void Update();
-	void Render(Graphics* _pGraphics, const D2D1_RECT_F& _destRect);
+	void Render(Graphics* _pGraphics, UINT _xpos, UINT _ypos, float _ratio);
 
 	void SetLoop(bool _isLoop) { m_isLoop = _isLoop; }
 	void SetPlayTime(float _playTime) { m_playTime = _playTime; }
 	void SetAnyState(bool _anyState) { m_anyState = _anyState; }
+	void SetFlip(bool _isFlip) { m_isFlip = _isFlip; }
 
 	void Reset();
 

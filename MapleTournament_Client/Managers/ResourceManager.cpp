@@ -41,13 +41,12 @@ bool ResourceManager::Init(IWICImagingFactory* _pImagingFactory, ID2D1HwndRender
 	return true;
 }
 
-bool ResourceManager::LoadImageFromFile(const std::wstring& _path, const std::wstring& _fileName)
+bool ResourceManager::LoadImageFromFile(const std::wstring& _fileWithPath)
 {
 	HRESULT hr = S_OK;
 	IWICBitmapDecoder* pDecoder = nullptr;
-	std::wstring fileNameWithPath = _path + _fileName + L".png";
 
-	hr = m_pImagingFactory->CreateDecoderFromFilename(fileNameWithPath.c_str(), NULL, GENERIC_READ, WICDecodeMetadataCacheOnLoad, &pDecoder);
+	hr = m_pImagingFactory->CreateDecoderFromFilename(_fileWithPath.c_str(), NULL, GENERIC_READ, WICDecodeMetadataCacheOnLoad, &pDecoder);
 	if (FAILED(hr))
 	{
 		Debug::Log(L"LoadImageFromFile에서 CreateDecoderFromFilename호출 도중 오류발생. hr : " + hr);
@@ -90,89 +89,74 @@ bool ResourceManager::LoadImageFromFile(const std::wstring& _path, const std::ws
 	pDecoder->Release();
 
 	Bitmap* pBitmap = new Bitmap(pD2dBitmap);
-	m_mapBitmap.insert(make_pair(_fileName, pBitmap));
+	m_mapBitmap.insert(make_pair(_fileWithPath, pBitmap));
 
 	return true;
 }
 
-bool ResourceManager::LoadAnimFile(const std::wstring& _path, const std::wstring& _fileName)
+bool ResourceManager::LoadAnimFile(const std::wstring& _spriteFileWithPath, const std::wstring& _animFileWithPath)
 {
-	std::filesystem::path filePath(_path + _fileName + L".anim");
-
-	if (!std::filesystem::exists(filePath))
+	if (!std::filesystem::exists(_animFileWithPath))
 	{
-		Debug::Log(_fileName + L".anim 가 존재하지 않습니다!");
+		Debug::Log(L"ResourceManager::LoadAnimFile : " + _animFileWithPath + L"가 존재하지 않습니다!");
 		return false;
 	}
 
-	std::ifstream animFile(filePath, std::ios_base::binary);
+	std::ifstream animFile(_animFileWithPath, std::ios_base::binary);
 	if (!animFile.is_open())
 	{
-		Debug::Log(_fileName + L".anim 여는 도중 에러 발생");
+		Debug::Log(L"ResourceManager::LoadAnimFile : " + _animFileWithPath + L"여는 도중 에러 발생");
 		return false;
 	}
 
-	D2D1_BITMAP_PROPERTIES bpp;
-	bpp.pixelFormat.format = DXGI_FORMAT_B8G8R8A8_UNORM;
-	bpp.pixelFormat.alphaMode = D2D1_ALPHA_MODE_PREMULTIPLIED;
-	bpp.dpiX = (FLOAT)0;
-	bpp.dpiY = (FLOAT)0;
-
-	int clipSize = 0;
-
+	int clipSize = 0;	
 	TCHAR animName[100];
 	animFile.read((char*)&animName, 100);
 	animFile.read((char*)&clipSize, sizeof(int));
 
-	D2D1_SIZE_F bitmapSize;
-	animFile.read((char*)&bitmapSize, sizeof(D2D1_SIZE_F));
-
-	Bitmap* pBitmap = new Bitmap();
-
-	DWORD* pixel = new DWORD[sizeof(DWORD) * bitmapSize.width * bitmapSize.height];
-	animFile.read((char*)pixel, sizeof(DWORD) * bitmapSize.width * bitmapSize.height);
-
-	ID2D1Bitmap* d2dBitmap;
-	m_pRenderTarget->CreateBitmap(D2D1::SizeU(bitmapSize.width, bitmapSize.height), pixel, bitmapSize.width * 4, &bpp,&d2dBitmap);
-
-	delete[] pixel;
-
 	tSpriteData* arr = new tSpriteData[clipSize];
 	animFile.read((char*)arr, sizeof(tSpriteData) * clipSize);
 
-	AnimationClip* animClip = new AnimationClip(animName, clipSize);
+	Bitmap* pBitmap = GetBitmap(_spriteFileWithPath);
+	if (!pBitmap)
+	{
+		Debug::Log(L"ResourceManager::LoadAnimFile : " + _spriteFileWithPath + L"여는 도중 에러 발생");
+		return false;
+	}
+
+	
+	AnimationClip* animClip = new AnimationClip(pBitmap, clipSize);
 
 	for (int i = 0; i < clipSize; i++) 
 	{
-		arr[i].bitmap = d2dBitmap;
 		tAnimationFrame* frame = new tAnimationFrame(arr[i]);
 		animClip->AddFrame(frame);
 	}
 
-	m_mapAnimClip.insert(std::make_pair(_fileName, animClip));
-
+	m_mapAnimClip.insert(std::make_pair(animName, animClip));
 	delete[] arr;
+
 	return true;
 }
 
-Bitmap* ResourceManager::GetBitmap(const std::wstring& _fileName)
+Bitmap* ResourceManager::GetBitmap(const std::wstring& _fileWithPath)
 {
-	std::map<std::wstring, Bitmap*>::const_iterator iter = m_mapBitmap.find(_fileName);
+	std::map<std::wstring, Bitmap*>::const_iterator iter = m_mapBitmap.find(_fileWithPath);
 	if (iter != m_mapBitmap.cend())
 		return iter->second;
 
-	if (!LoadImageFromFile(L"Resource\\UI\\", _fileName)) return nullptr;
+	if (!LoadImageFromFile(_fileWithPath)) return nullptr;
 
-	return m_mapBitmap.find(_fileName)->second;
+	return m_mapBitmap.find(_fileWithPath)->second;
 }
 
-AnimationClip* ResourceManager::GetAnimClip(const std::wstring& _fileName)
+AnimationClip* ResourceManager::GetAnimClip(const std::wstring& _justFilename)
 {
-	std::map<std::wstring, AnimationClip*>::const_iterator iter = m_mapAnimClip.find(_fileName);
+	std::map<std::wstring, AnimationClip*>::const_iterator iter = m_mapAnimClip.find(_justFilename);
 	if (iter != m_mapAnimClip.cend())
 		return iter->second;
 	
-	if (!LoadAnimFile(L"Resource\\Anim\\", _fileName)) return nullptr;
+	if (!LoadAnimFile(L"Resource/Sprite/" + _justFilename + L".png", L"Resource/Anim/" + _justFilename + L".anim")) return nullptr;
 
-	return m_mapAnimClip.find(_fileName)->second;
+	return m_mapAnimClip.find(_justFilename)->second;
 }

@@ -31,19 +31,19 @@ void Animator::Update()
 
 	if (m_pCurClip->IsEnd())
 	{
-		if (m_pCurClip)
+		if (m_pNextClip)
 		{
 			m_pCurClip = m_pNextClip;
 			m_pNextClip = nullptr;
 		}
 		else
-			m_pCurClip = m_pDefaultClip;
+			m_pCurClip = m_pDefaultClip; // 유니티는 마지막 프레임에서 멈춘상태로 정지
 	}
 }
 
-void Animator::Render(Graphics* _pGraphics, const D2D1_RECT_F& _destRect)
+void Animator::Render(Graphics* _pGraphics, UINT _xpos, UINT _ypos, float _ratio)
 {
-	m_pCurClip->Render(_pGraphics, _destRect);
+	m_pCurClip->Render(_pGraphics, _xpos, _ypos, _ratio);
 }
 
 void Animator::AddClip(const std::wstring& _stateName, AnimationClip* _pClip)
