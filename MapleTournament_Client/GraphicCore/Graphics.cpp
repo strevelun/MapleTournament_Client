@@ -25,7 +25,7 @@ bool Graphics::Init()
 	HRESULT hr = D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &m_pD2DFactory);
 	if (FAILED(hr))
 	{
-		Debug::Log((L"D2D1CreateFactory returned : " + std::to_wstring(hr)));
+		Debug::Log(("D2D1CreateFactory returned : " + std::to_string(hr)));
 		return false;
 	}
 
@@ -36,28 +36,28 @@ bool Graphics::Init()
 		&m_pRenderTarget);
 	if (FAILED(hr))
 	{
-		Debug::Log((L"CreateHwndRenderTarget returned : " + std::to_wstring(hr)));
+		Debug::Log(("CreateHwndRenderTarget returned : " + std::to_string(hr)));
 		return false;
 	}
 
 	hr = CoInitialize(nullptr);
 	if (FAILED(hr))
 	{
-		Debug::Log((L"CoInitialize returned : " + std::to_wstring(hr)));
+		Debug::Log(("CoInitialize returned : " + std::to_string(hr)));
 		return false;
 	}
 
 	hr = CoCreateInstance(CLSID_WICImagingFactory, NULL, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&m_pWICFactory));
 	if (FAILED(hr))
 	{
-		Debug::Log((L"CoCreateInstance returned  : " + std::to_wstring(hr)));
+		Debug::Log(("CoCreateInstance returned  : " + std::to_string(hr)));
 		return false;
 	}
 
 	hr = DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(m_pDWriteFactory), reinterpret_cast<IUnknown**>(&m_pDWriteFactory));
 	if (FAILED(hr))
 	{
-		Debug::Log((L"DWriteCreateFactory returned  : " + std::to_wstring(hr)));
+		Debug::Log(("DWriteCreateFactory returned  : " + std::to_string(hr)));
 		return false;
 	}
 
@@ -65,7 +65,7 @@ bool Graphics::Init()
 		25.0f, L"en-US", &m_pTextFormatLarge);
 	if (FAILED(hr))
 	{
-		Debug::Log((L"CreateTextFormat returned : " + std::to_wstring(hr)));
+		Debug::Log(("CreateTextFormat returned : " + std::to_string(hr)));
 		return false;
 	}
 
@@ -73,21 +73,21 @@ bool Graphics::Init()
 		15.0f, L"en-US", &m_pTextFormatSmall);
 	if (FAILED(hr))
 	{
-		Debug::Log((L"CreateTextFormat returned : " + std::to_wstring(hr)));
+		Debug::Log(("CreateTextFormat returned : " + std::to_string(hr)));
 		return false;
 	}
 
 	hr = m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Black), &m_pBlackBrush);
 	if (FAILED(hr))
 	{
-		Debug::Log((L"CreateSolidColorBrush returned  : " + std::to_wstring(hr)));
+		Debug::Log(("CreateSolidColorBrush returned  : " + std::to_string(hr)));
 		return false;
 	}
 
 	hr = m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Blue), &m_pBlueBrush);
 	if (FAILED(hr))
 	{
-		Debug::Log((L"CreateSolidColorBrush returned  : " + std::to_wstring(hr)));
+		Debug::Log(("CreateSolidColorBrush returned  : " + std::to_string(hr)));
 		return false;
 	}
 

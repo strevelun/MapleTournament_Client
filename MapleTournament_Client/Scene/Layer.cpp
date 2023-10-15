@@ -6,7 +6,7 @@ Layer::Layer(const std::wstring& _layerName, uint32_t _zOrder) :
 {
 }
 
-Layer::~Layer()
+Layer::~Layer() // ObjectManager¿¡¼­´Â
 {
     std::vector<Obj*>::const_iterator iter = m_vecObj.cbegin();
     std::vector<Obj*>::const_iterator iterEnd = m_vecObj.cend();

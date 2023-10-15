@@ -1,5 +1,6 @@
 #include "NetworkManager.h"
 #include "TCPClient.h"
+#include "../Debug.h"
 
 #include <iostream>
 #include <thread>
@@ -27,6 +28,7 @@ std::map<ePacketType, void(*)(char*)> TCPClient::m_mapPacketHandlerCallback = {
 	{ ePacketType::S_UpdateUserState, PacketHandler::S_UpdateUserState },
 	{ ePacketType::S_UpdateUserType, PacketHandler::S_UpdateUserType },
 	{ ePacketType::S_UpdateWaitingRoomBtn, PacketHandler::S_UpdateWaitingRoomBtn },
+	{ ePacketType::S_InGameReady, PacketHandler::S_InGameReady },
 };
 
 TCPClient::TCPClient()
@@ -48,7 +50,7 @@ bool TCPClient::Init()
 	m_hThread = (HANDLE)_beginthreadex(NULL, 0, ThreadFunc, this, 0, &threadID);
 	if (m_hThread == NULL)
 	{
-		OutputDebugStringW(L"Failed BeginThreadEx");
+		Debug::Log("Failed BeginThreadEx");
 		return false;
 	}
 	return true;
@@ -66,10 +68,10 @@ unsigned int TCPClient::ReceivePacket()
 	while (isRunning)
 	{
 		recvSize = NetworkManager::GetInst()->Receive(recvBuffer + totalSize, bufferSize - totalSize);
-		if (recvSize == -1) {
+		if (recvSize == SOCKET_ERROR)
+		{
 			int error = WSAGetLastError();
-			std::cout << ("Receive error: " + std::to_string(error)).c_str();
-			// TODO : MEssagebox
+			Debug::Log("Receive error: " + std::to_string(error));
 			break;
 		}
 
@@ -78,7 +80,7 @@ unsigned int TCPClient::ReceivePacket()
 		while (totalSize >= sizeof(u_short))
 		{
 			packetSize = *(u_short*)recvBuffer;
-			if ( packetSize > totalSize) break;
+			if (packetSize > totalSize) break;
 
 			ProcessPacket(recvBuffer);
 

@@ -37,6 +37,18 @@ enum class ePacketType
 	S_UpdateUserState,
 	S_UpdateWaitingRoomBtn,
 	S_UpdateUserType,
+	C_InGameReady,
+	S_InGameReady,
+};
+
+enum class eSkillType
+{
+	None,
+	AttackCloud,
+	LeftMove,
+	LeftDoubleMove,
+
+	NumOfSkills,
 };
 
 enum class eMemberType

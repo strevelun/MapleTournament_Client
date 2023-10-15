@@ -45,7 +45,9 @@ void AnimationClip::Render(Graphics* _pGraphics, UINT _xpos, UINT _ypos, float _
 		(adjustedY + m_vecFrame[m_curFrameIdx]->size.height - pivotY) * _ratio
 	};
 
-	if (m_isFlip) _pGraphics->SetTransform(D2D1::Matrix3x2F::Scale(1.0, -1.0, D2D1::Point2F((renderRect.right - renderRect.left) / 2, (renderRect.bottom - renderRect.top) / 2)));
+	if (m_isFlip) 
+		_pGraphics->SetTransform(D2D1::Matrix3x2F::Scale(-1.0f, 1.0f, D2D1::Point2F(_xpos , _ypos)));
+	//_pGraphics->SetTransform(D2D1::Matrix3x2F::Rotation(90.0f, D2D1::Point2F((renderRect.right - renderRect.left) / 2, (renderRect.bottom - renderRect.top) / 2)));
 
 	_pGraphics->DrawBitmap(m_pBitmap->GetBitmap(), renderRect, m_vecFrame[m_curFrameIdx]->rect);
 

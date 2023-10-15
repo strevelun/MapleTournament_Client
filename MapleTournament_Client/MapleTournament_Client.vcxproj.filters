@@ -144,6 +144,15 @@
     <ClCompile Include="Obj\Skill.cpp">
       <Filter>Obj</Filter>
     </ClCompile>
+    <ClCompile Include="Obj\SkillAttackCloud.cpp">
+      <Filter>Obj</Filter>
+    </ClCompile>
+    <ClCompile Include="Obj\SkillMove.cpp">
+      <Filter>Obj</Filter>
+    </ClCompile>
+    <ClCompile Include="InstructionQueue.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameApp.h">
@@ -250,6 +259,15 @@
     </ClInclude>
     <ClInclude Include="Obj\Skill.h">
       <Filter>Obj</Filter>
+    </ClInclude>
+    <ClInclude Include="Obj\SkillAttackCloud.h">
+      <Filter>Obj</Filter>
+    </ClInclude>
+    <ClInclude Include="Obj\SkillMove.h">
+      <Filter>Obj</Filter>
+    </ClInclude>
+    <ClInclude Include="InstructionQueue.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -7,6 +7,7 @@
 class Debug
 {
 public:
+	static void Log(std::string _log);
 	static void Log(std::wstring _log);
 };
 

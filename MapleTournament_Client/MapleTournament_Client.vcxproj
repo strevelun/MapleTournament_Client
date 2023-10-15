@@ -137,6 +137,7 @@
     <ClCompile Include="Debug.cpp" />
     <ClCompile Include="GameApp.cpp" />
     <ClCompile Include="GraphicCore\Graphics.cpp" />
+    <ClCompile Include="InstructionQueue.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Managers\InputManager.cpp" />
     <ClCompile Include="Managers\ObjectManager.cpp" />
@@ -150,6 +151,8 @@
     <ClCompile Include="Obj\Obj.cpp" />
     <ClCompile Include="Obj\Player.cpp" />
     <ClCompile Include="Obj\Skill.cpp" />
+    <ClCompile Include="Obj\SkillAttackCloud.cpp" />
+    <ClCompile Include="Obj\SkillMove.cpp" />
     <ClCompile Include="Obj\UI\Mouse.cpp" />
     <ClCompile Include="Obj\UI\UI.cpp" />
     <ClCompile Include="Obj\UI\UIButton.cpp" />
@@ -176,6 +179,7 @@
     <ClInclude Include="Defines.h" />
     <ClInclude Include="GameApp.h" />
     <ClInclude Include="GraphicCore\Graphics.h" />
+    <ClInclude Include="InstructionQueue.h" />
     <ClInclude Include="Managers\InputManager.h" />
     <ClInclude Include="Managers\ObjectManager.h" />
     <ClInclude Include="Managers\ResourceManager.h" />
@@ -188,6 +192,8 @@
     <ClInclude Include="Obj\Obj.h" />
     <ClInclude Include="Obj\Player.h" />
     <ClInclude Include="Obj\Skill.h" />
+    <ClInclude Include="Obj\SkillAttackCloud.h" />
+    <ClInclude Include="Obj\SkillMove.h" />
     <ClInclude Include="Obj\UI\Mouse.h" />
     <ClInclude Include="Obj\UI\UI.h" />
     <ClInclude Include="Obj\UI\UIButton.h" />
