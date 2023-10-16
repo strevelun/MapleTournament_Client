@@ -107,6 +107,24 @@ void Graphics::DrawMouseCoordinates(int _xpos, int _ypos)
 	m_pRenderTarget->DrawText(output, wcslen(output), m_pTextFormatSmall, outputRect, m_pBlackBrush);
 }
 
+void Graphics::CreateTextRectLargeLayout(const wchar_t* _text, IDWriteTextLayout* _pLayout, POINT& _tPos, D2D1_RECT_F& _rect)
+{
+	HRESULT hr = m_pDWriteFactory->CreateTextLayout(_text, wcslen(_text), m_pTextFormatLarge, 100.0f,100.0f, &_pLayout);
+
+	if (SUCCEEDED(hr))
+	{
+		DWRITE_TEXT_METRICS metrics;
+		hr = _pLayout->GetMetrics(&metrics);
+
+		if (SUCCEEDED(hr))
+		{
+			_rect.left = _tPos.x + metrics.widthIncludingTrailingWhitespace;
+			_rect.right = _tPos.x + metrics.widthIncludingTrailingWhitespace;
+		}
+		_pLayout->Release();
+	}
+}
+
 void Graphics::DrawTextRectLarge(const wchar_t* _text, const D2D1_RECT_F& _rect)
 {
 	m_pRenderTarget->DrawTextW(_text, wcslen(_text), m_pTextFormatLarge, _rect, m_pBlackBrush);

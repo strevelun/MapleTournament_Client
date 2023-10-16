@@ -39,6 +39,7 @@ public:
 	ID2D1HwndRenderTarget* GetRenderTarget() const { return m_pRenderTarget; }
 
 	void DrawMouseCoordinates(int _xpos, int _ypos);
+	void CreateTextRectLargeLayout(const wchar_t* _text, IDWriteTextLayout* _pLayout, POINT& _tPos, D2D1_RECT_F& _rect);
 	void DrawTextRectLarge(const wchar_t* _text, const D2D1_RECT_F& _rect);
 	void DrawTextRectSmall(const wchar_t* _text, const D2D1_RECT_F& _rect);
 	void DrawBitmap(Bitmap* _pBitmap, const D2D1_RECT_F& _srcRect);
