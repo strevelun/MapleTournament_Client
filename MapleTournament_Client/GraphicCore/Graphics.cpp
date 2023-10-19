@@ -135,8 +135,9 @@ void Graphics::DrawTextRectSmall(const wchar_t* _text, const D2D1_RECT_F& _rect)
 	m_pRenderTarget->DrawTextW(_text, wcslen(_text), m_pTextFormatSmall, _rect, m_pBlackBrush);
 }
 
-void Graphics::DrawTextLayout(const wchar_t* _text, const D2D1_RECT_F& _rect)
+void Graphics::DrawTextLayout(const wchar_t* _text, const D2D1_RECT_F& _rect, IDWriteTextLayout* _pLayout)
 {
+	m_pRenderTarget->DrawTextLayout(D2D1::Point2F(_rect.left, _rect.top), _pLayout, m_pBlackBrush);
 }
 
 void Graphics::DrawBitmap(Bitmap* _pBitmap, const D2D1_RECT_F& _srcRect)

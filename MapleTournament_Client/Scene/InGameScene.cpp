@@ -47,28 +47,28 @@ bool InGameScene::Init()
     UIPanel* pPanel = new UIPanel(nullptr, 200, 50);
     pPanel->SetName(L"PlayerStat0");
     UIManager::GetInst()->AddUI(pPanel);
-    UIText* pPlayerName = new UIText(pPanel, L"", 200, 50);
+    UIText* pPlayerName = new UIText(pPanel, L"", 20.f, 200, 50);
     pPlayerName->SetName(L"Nickname");
     pPanel->AddChildUI(pPlayerName);
 
     pPanel = new UIPanel(nullptr, 200, 50, ScreenWidth, 0, 1.0f);
     pPanel->SetName(L"PlayerStat1");
     UIManager::GetInst()->AddUI(pPanel);
-    pPlayerName = new UIText(pPanel, L"", 200, 50);
+    pPlayerName = new UIText(pPanel, L"", 20.f, 200, 50);
     pPlayerName->SetName(L"Nickname");
     pPanel->AddChildUI(pPlayerName);
 
     pPanel = new UIPanel(nullptr, 200, 50, 0, ScreenHeight, 0.0f, 1.0f);
     pPanel->SetName(L"PlayerStat2");
     UIManager::GetInst()->AddUI(pPanel);
-    pPlayerName = new UIText(pPanel, L"", 200, 50);
+    pPlayerName = new UIText(pPanel, L"", 20.f, 200, 50);
     pPlayerName->SetName(L"Nickname");
     pPanel->AddChildUI(pPlayerName);
 
     pPanel = new UIPanel(nullptr, 200, 50, ScreenWidth, ScreenHeight, 1.0f, 1.0f);
     pPanel->SetName(L"PlayerStat3");
     UIManager::GetInst()->AddUI(pPanel);
-    pPlayerName = new UIText(pPanel, L"", 200, 50);
+    pPlayerName = new UIText(pPanel, L"", 20.f, 200, 50);
     pPlayerName->SetName(L"Nickname");
     pPanel->AddChildUI(pPlayerName);
 

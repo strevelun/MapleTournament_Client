@@ -219,8 +219,7 @@ bool LobbyScene::InitLobbyUI()
     UIButton* pRoomBtn = new UIButton(nullptr, 150, 100, pBackground->GetWidth() / 2, pBackground->GetHeight(), 0.5f, 1.0f);
     pRoomBtn->SetName(L"MakeRoom");
     pRoomBtn->SetBitmap(pBitmap);
-    UIText* pText = new UIText(pRoomBtn, L"방만들기",
-        wcslen(L"방만들기") * 25, 25, pRoomBtn->GetWidth() / 2, 50, 0.5f, 0.7f);
+    UIText* pText = new UIText(pRoomBtn, L"방만들기", 20.f, pRoomBtn->GetWidth() / 2, 50, 0.5f, 0.7f);
     pRoomBtn->SetUIText(pText);
     pRoomBtn->SetCallback([]() {
         UIPanel* pCreateRoom = static_cast<UIPanel*>(UIManager::GetInst()->FindUI(L"CreateRoom"));
@@ -254,8 +253,7 @@ bool LobbyScene::InitLobbyUI()
         {
             CreateRoomButtonCallback(pInputRoomName, pInputRoomName->GetText());
         });
-    pText = new UIText(pOKButton, L"만들기!",
-        wcslen(L"만들기!") * 25, 25, pOKButton->GetWidth() / 2, 50, 0.5f, 0.5f);
+    pText = new UIText(pOKButton, L"만들기!", 20.f, pOKButton->GetWidth() / 2, 50, 0.5f, 0.5f);
     pOKButton->SetUIText(pText);
     pOKButton->SetClickable(true);
     pPanel->AddChildUI(pOKButton);
@@ -284,8 +282,7 @@ bool LobbyScene::InitLobbyUI()
     pPanel->SetName(L"JoinRoomFail");
     pPanel->SetBitmap(pBitmap);
     pUIManager->AddUI(pPanel);
-    pText = new UIText(pPanel, L"방이 꽉 차거나 게임중입니다!",
-        wcslen(L"방이 꽉 차거나 게임중입니다!") * 25, 25, pPanel->GetWidth() / 2, 100, 0.5f, 0.5f);
+    pText = new UIText(pPanel, L"방이 꽉 차거나 게임중입니다!", pPanel->GetWidth() / 2, 100, 0.5f, 0.5f);
     pPanel->AddChildUI(pText);
 
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_button.png");
@@ -297,8 +294,7 @@ bool LobbyScene::InitLobbyUI()
             pPanel->SetActive(false);
             UIManager::GetInst()->PopPopupUI();
         });
-    pText = new UIText(pOKButton, L"넹",
-        wcslen(L"넹") * 25, 25, pOKButton->GetWidth() / 2, 50, 0.5f, 0.5f);
+    pText = new UIText(pOKButton, L"넹", pOKButton->GetWidth() / 2, 50, 0.5f, 0.5f);
     pOKButton->SetUIText(pText);
     pOKButton->SetClickable(true);
 
@@ -371,8 +367,7 @@ bool LobbyScene::InitWaitingRoomUI()
     UIButton* pRoomBtn = new UIButton(nullptr, 150, 80, 970, 655, 0.5f, 0.f);
     pRoomBtn->SetName(L"StartGame");
     pRoomBtn->SetBitmap(pBitmap);
-    UIText* pText = new UIText(pRoomBtn, L"게임 시작",
-        wcslen(L"게임 시작") * 25, 25, pRoomBtn->GetWidth() / 2, pRoomBtn->GetHeight() / 2, 0.4f, 0.7f);
+    UIText* pText = new UIText(pRoomBtn, L"게임 시작", 20.f, pRoomBtn->GetWidth() / 2, pRoomBtn->GetHeight() / 2, 0.4f, 0.7f);
     pRoomBtn->SetUIText(pText);
     pRoomBtn->SetClickable(true);
     pRoomBtn->SetActive(false);
@@ -388,7 +383,7 @@ bool LobbyScene::InitWaitingRoomUI()
     UIPanel* pUserPicture = new UIPanel(pUserPanel, 138, 113, 0, 0);
     pUserPicture->SetBitmap(pBitmap);
     pUserPanel->AddChildUI(pUserPicture);
-    UIText* pTextNickname = new UIText(pUserPanel, L"", 0, 15, pUserPanel->GetWidth() / 2, 132, 0.5f, 0.f, eTextSize::Small);
+    UIText* pTextNickname = new UIText(pUserPanel, L"", 20.f, pUserPanel->GetWidth() / 2, 132, 0.5f, 0.f);
     pTextNickname->SetName(L"Nickname");
     pUserPanel->AddChildUI(pTextNickname);
     UIPanel* pTextState = new UIPanel(pUserPanel, pUserPanel->GetWidth(), 20, pUserPanel->GetWidth() / 2, 155, 0.5f, 0.f);
@@ -408,7 +403,7 @@ bool LobbyScene::InitWaitingRoomUI()
     pUserPicture = new UIPanel(pUserPanel, 138, 113, 0, 0);
     pUserPicture->SetBitmap(pBitmap);
     pUserPanel->AddChildUI(pUserPicture);
-    pTextNickname = new UIText(pUserPanel, L"", 0, 15, pUserPanel->GetWidth()/2, 132, 0.5f, 0.f, eTextSize::Small);
+    pTextNickname = new UIText(pUserPanel, L"", 20.f, pUserPanel->GetWidth()/2, 132, 0.5f, 0.f);
     pTextNickname->SetName(L"Nickname");
     pUserPanel->AddChildUI(pTextNickname);
     pTextState = new UIPanel(pUserPanel, pUserPanel->GetWidth(), 20, pUserPanel->GetWidth() / 2, 155, 0.5f, 0.f);
@@ -428,7 +423,7 @@ bool LobbyScene::InitWaitingRoomUI()
     pUserPicture = new UIPanel(pUserPanel, 138, 113, 0, 0);
     pUserPicture->SetBitmap(pBitmap);
     pUserPanel->AddChildUI(pUserPicture);
-    pTextNickname = new UIText(pUserPanel, L"", 0, 15, pUserPanel->GetWidth()/2, 132, 0.5f, 0.f, eTextSize::Small);
+    pTextNickname = new UIText(pUserPanel, L"", 20.f, pUserPanel->GetWidth()/2, 132, 0.5f, 0.f);
     pTextNickname->SetName(L"Nickname");
     pUserPanel->AddChildUI(pTextNickname);
     pTextState = new UIPanel(pUserPanel, pUserPanel->GetWidth(), 20, pUserPanel->GetWidth() / 2, 155, 0.5f, 0.f);
@@ -448,7 +443,7 @@ bool LobbyScene::InitWaitingRoomUI()
     pUserPicture = new UIPanel(pUserPanel, 138, 113, 0, 0);
     pUserPicture->SetBitmap(pBitmap);
     pUserPanel->AddChildUI(pUserPicture);
-    pTextNickname = new UIText(pUserPanel, L"", 0, 15, pUserPanel->GetWidth()/2, 132, 0.5f, 0.f, eTextSize::Small);
+    pTextNickname = new UIText(pUserPanel, L"", 20.f, pUserPanel->GetWidth()/2, 132, 0.5f, 0.f);
     pTextNickname->SetName(L"Nickname");
     pUserPanel->AddChildUI(pTextNickname);
     pTextState = new UIPanel(pUserPanel, pUserPanel->GetWidth(), 20, pUserPanel->GetWidth() / 2, 155, 0.5f, 0.f);
@@ -485,8 +480,7 @@ bool LobbyScene::InitWaitingRoomUI()
     pPanel->SetName(L"StartGameFail");
     pPanel->SetBitmap(pBitmap);
     UIManager::GetInst()->AddUI(pPanel);
-    pText = new UIText(pPanel, L"전부 레디하지 않았음!",
-        wcslen(L"전부 레디하지 않았음!") * 25, 25, pPanel->GetWidth() / 2, 100, 0.5f, 0.5f);
+    pText = new UIText(pPanel, L"전부 레디하지 않았음!", 20.f, pPanel->GetWidth() / 2, 100, 0.5f, 0.5f);
     pPanel->AddChildUI(pText);
 
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_button.png");
@@ -498,8 +492,7 @@ bool LobbyScene::InitWaitingRoomUI()
             pPanel->SetActive(false);
             UIManager::GetInst()->PopPopupUI();
         });
-    pText = new UIText(pOKButton, L"네",
-        wcslen(L"네") * 25, 25, pOKButton->GetWidth() / 2, 50, 0.5f, 0.5f);
+    pText = new UIText(pOKButton, L"네", 20.f, pOKButton->GetWidth() / 2, 50, 0.5f, 0.5f);
     pOKButton->SetUIText(pText);
     pOKButton->SetClickable(true);
 

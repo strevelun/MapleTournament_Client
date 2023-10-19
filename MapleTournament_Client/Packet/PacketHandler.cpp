@@ -52,14 +52,11 @@ void PacketHandler::S_OKLogin(char* _packet)
 
 void PacketHandler::S_FailedLogin(char* _packet) // 누가 이 닉네임으로 로그인 중 or 회원가입 안된 닉네임
 {
-	UI* pUI = UIManager::GetInst()->FindUI(L"FailedLogin");
+	UI* pUI = UIManager::GetInst()->FindUI(L"AlreadyLogin");
 	if (pUI)
 	{
 		UIPanel* pFailedLoginUI = static_cast<UIPanel*>(pUI);
 		pFailedLoginUI->SetActive(true);
-		UIText* pText = new UIText(pFailedLoginUI, L"누군가 이 닉네임으로 로그인 중",
-			wcslen(L"누군가 이 닉네임으로 로그인 중") * 25, 25, pFailedLoginUI->GetWidth() / 2, 100, 0.5f, 0.5f);
-		pFailedLoginUI->AddChildUI(pText);
 		UIManager::GetInst()->AddPopupUI(pFailedLoginUI);
 	}
 
@@ -113,7 +110,7 @@ void PacketHandler::S_CreateRoom(char* _packet)
 		if (pUI)
 		{
 			UIText* pTextNickname = static_cast<UIText*>(pUI);
-			pTextNickname->ReassignText(strNickname, eTextSize::Small);
+			pTextNickname->ReassignText(strNickname, 20.f);
 		}
 		pUI = pSlot->FindChildUI(L"State");
 		if (pUI)
@@ -167,17 +164,17 @@ void PacketHandler::S_NotifyCreateRoom(char* _packet)
 				pMouse->SetActive(false);
 			});
 		pPanel->AddChildUI(pBtn);
-		UIText* pTextRoomId = new UIText(pPanel, strRoomId, strRoomId.length() * 15, 15, 0.f, 0.f, 0.f, 0.f, eTextSize::Small);
+		UIText* pTextRoomId = new UIText(pPanel, strRoomId, 20.f, 0.f, 0.f, 0.f, 0.f);
 		pPanel->AddChildUI(pTextRoomId);
-		UIText* pTextState = new UIText(pPanel, strRoomState, strRoomState.length() * 15, 15, 80.f, 0.f, 0.f, 0.f, eTextSize::Small);
+		UIText* pTextState = new UIText(pPanel, strRoomState, 20.f, 80.f, 0.f, 0.f, 0.f);
 		pTextState->SetName(L"State");
 		pPanel->AddChildUI(pTextState);
-		UIText* pTextTitle = new UIText(pPanel, roomTitle, roomTitle.length() * 15, 15, 140.f, 0.f, 0.f, 0.f, eTextSize::Small);
+		UIText* pTextTitle = new UIText(pPanel, roomTitle, 20.f, 140.f, 0.f, 0.f, 0.f);
 		pPanel->AddChildUI(pTextTitle);
-		UIText* pTextOwner = new UIText(pPanel, roomOwner, roomOwner.length() * 15, 15, 460.f, 0.f, 0.f, 0.f, eTextSize::Small);
+		UIText* pTextOwner = new UIText(pPanel, roomOwner, 20.f, 460.f, 0.f, 0.f, 0.f);
 		pTextOwner->SetName(L"Owner");
 		pPanel->AddChildUI(pTextOwner);
-		UIText* pTextParticipants = new UIText(pPanel, L"1 / 4", wcslen(L"1 / 4") * 15, 15, 590.f, 0.f, 0.f, 0.f, eTextSize::Small);
+		UIText* pTextParticipants = new UIText(pPanel, L"1 / 4", 20.f, 590.f, 0.f, 0.f, 0.f);
 		pTextParticipants->SetName(L"Count");
 		pPanel->AddChildUI(pTextParticipants);
 		pRoomList->AddItem(pPanel);
@@ -204,7 +201,7 @@ void PacketHandler::S_SendSessions(char* _packet)
 
 		for (int i = 0; i < size; i++)
 		{
-			UIText* pText = new UIText(pList, (wchar_t*)_packet, wcslen((wchar_t*)_packet) * 25, 25, 10);
+			UIText* pText = new UIText(pList, (wchar_t*)_packet, 20.f, 10);
 			pText->SetName((wchar_t*)_packet);
 			_packet += (ushort)wcslen((wchar_t*)_packet) * 2 + 2;
 			pList->AddItem(pText);
@@ -256,17 +253,17 @@ void PacketHandler::S_SendRooms(char* _packet)
 				});
 
 			pPanel->AddChildUI(pBtn);
-			UIText* pTextRoomId = new UIText(pPanel, strRoomId, strRoomId.length() * 15, 15, 0.f, 0.f, 0.f, 0.f, eTextSize::Small);
+			UIText* pTextRoomId = new UIText(pPanel, strRoomId, 20.f, 0.f, 0.f, 0.f, 0.f);
 			pPanel->AddChildUI(pTextRoomId);
-			UIText* pTextState = new UIText(pPanel, strRoomState, strRoomState.length() * 15, 15, 80.f, 0.f, 0.f, 0.f, eTextSize::Small);
+			UIText* pTextState = new UIText(pPanel, strRoomState, 20.f, 80.f, 0.f, 0.f, 0.f);
 			pTextState->SetName(L"State");
 			pPanel->AddChildUI(pTextState);
-			UIText* pTextTitle = new UIText(pPanel, roomTitle, roomTitle.length() * 15, 15, 140.f, 0.f, 0.f, 0.f, eTextSize::Small);
+			UIText* pTextTitle = new UIText(pPanel, roomTitle, 20.f, 140.f, 0.f, 0.f, 0.f);
 			pPanel->AddChildUI(pTextTitle);
-			UIText* pTextOwner = new UIText(pPanel, roomOwner, roomOwner.length() * 15, 15, 460.f, 0.f, 0.f, 0.f, eTextSize::Small);
+			UIText* pTextOwner = new UIText(pPanel, roomOwner, 20.f, 460.f, 0.f, 0.f, 0.f);
 			pTextOwner->SetName(L"Owner");
 			pPanel->AddChildUI(pTextOwner);
-			UIText* pTextParticipants = new UIText(pPanel, strUserCount, strUserCount.length() * 15, 15, 590.f, 0.f, 0.f, 0.f, eTextSize::Small);
+			UIText* pTextParticipants = new UIText(pPanel, strUserCount, 20.f, 590.f, 0.f, 0.f, 0.f);
 			pTextParticipants->SetName(L"Count");
 			pPanel->AddChildUI(pTextParticipants);
 			pRoomList->AddItem(pPanel);
@@ -284,7 +281,7 @@ void PacketHandler::S_EnterOtherUser(char* _packet)
 		UIPanel* pUserListPanel = static_cast<UIPanel*>(pUI);
 		pUI = pUserListPanel->FindChildUI(L"UserList");
 		UIList* pList = static_cast<UIList*>(pUI);
-		UIText* pText = new UIText(pList, (wchar_t*)_packet, wcslen((wchar_t*)_packet) * 25, 25, 10);
+		UIText* pText = new UIText(pList, (wchar_t*)_packet, 20.f, 10);
 		pText->SetName((wchar_t*)_packet);
 		pList->AddItem(pText);
 	}
@@ -304,7 +301,7 @@ void PacketHandler::S_Chat(char* _packet)
 		std::wstring nickname((wchar_t*)_packet);
 		std::wstring message = nickname + L" : " + chat;
 
-		UIText* pText = new UIText(pList, message, message.length() * 15, 15, 10, 50, 0.f, 0.f, eTextSize::Small);
+		UIText* pText = new UIText(pList, message, 20.f, 10, 50, 0.f, 0.f);
 		pList->AddItem(pText);
 	}
 
@@ -330,7 +327,7 @@ void PacketHandler::S_JoinRoom(char* _packet)
 			if (pUI)
 			{
 				UIText* pTextNickname = static_cast<UIText*>(pUI);
-				pTextNickname->ReassignText(nickname, eTextSize::Small);
+				pTextNickname->ReassignText(nickname, 20.f);
 			}
 			Bitmap* pBitmap = nullptr;
 			pUI = pSlot->FindChildUI(L"State");
@@ -408,7 +405,7 @@ void PacketHandler::S_JoinRoom(char* _packet)
 		UIButton* pBtn = static_cast<UIButton*>(pUI);
 		pBtn->SetCallback(&LobbyScene::GameReadyCallback, pLobbyScene);
 		UIText* pText = pBtn->GetUIText();
-		pText->ReassignText(L"준비");
+		pText->ReassignText(L"준비", 20.f);
 	}
 
 	Debug::Log("PacketHandler::S_JoinRoom");
@@ -445,7 +442,7 @@ void PacketHandler::S_NotifyJoinedUser(char* _packet)
 		if (pUI)
 		{
 			UIText* pTextNickname = static_cast<UIText*>(pUI);
-			pTextNickname->ReassignText(nickname, eTextSize::Small);
+			pTextNickname->ReassignText(nickname, 20.f);
 		}
 		pUI = pSlot->FindChildUI(L"State");
 		if (pUI)
@@ -561,11 +558,11 @@ void PacketHandler::S_UpdateLobbyRoomList(char* _packet)
 	pUI = uiItem->FindChildUI(L"Owner");
 	if (!pUI) return;
 	UIText* pOwner = static_cast<UIText*>(pUI);
-	pOwner->ReassignText(nickname, eTextSize::Small);
+	pOwner->ReassignText(nickname, 20.f);
 	pUI = uiItem->FindChildUI(L"Count");
 	if (!pUI) return;
 	UIText* pCount = static_cast<UIText*>(pUI);
-	pCount->ReassignText(std::to_wstring(roomMemberCount) + L" / 4", eTextSize::Small);
+	pCount->ReassignText(std::to_wstring(roomMemberCount) + L" / 4", 20.f);
 
 	Debug::Log("PacketHandler::S_UpdateLobbyRoomList");
 }
@@ -587,7 +584,7 @@ void PacketHandler::S_UpdateLobbyRoomMemberCount(char* _packet)
 	pUI = uiItem->FindChildUI(L"Count");
 	if (!pUI) return;
 	UIText* pCount = static_cast<UIText*>(pUI);
-	pCount->ReassignText(std::to_wstring(roomMemberCount) + L" / 4", eTextSize::Small);
+	pCount->ReassignText(std::to_wstring(roomMemberCount) + L" / 4", 20.f);
 
 	Debug::Log("PacketHandler::S_UpdateLobbyRoomMemberCount");
 }
@@ -626,7 +623,7 @@ void PacketHandler::S_UpdateUserType(char* _packet)
 		UIButton* pBtn = static_cast<UIButton*>(pUI);
 		pBtn->SetCallback(&LobbyScene::GameStartCallback, pLobbyScene);
 		UIText* pText = pBtn->GetUIText();
-		pText->ReassignText(L"게임 시작");
+		pText->ReassignText(L"게임 시작", 20.f);
 	}
 
 	Debug::Log("PacketHandler::S_UpdateUserType");
@@ -641,11 +638,11 @@ void PacketHandler::S_UpdateWaitingRoomBtn(char* _packet)
 	UIText* pText = pBtn->GetUIText();
 	if (state == eMemberState::Wait)
 	{
-		pText->ReassignText(L"준비");
+		pText->ReassignText(L"준비", 20.f);
 	}
 	else if (state == eMemberState::Ready)
 	{
-		pText->ReassignText(L"대기");
+		pText->ReassignText(L"대기", 20.f);
 	}
 
 	Debug::Log("PacketHandler::S_UpdateWaitingRoomBtn");
@@ -667,7 +664,7 @@ void PacketHandler::S_InGameReady(char* _packet)
 		if (pUI)
 		{
 			UIText* pText = static_cast<UIText*>(pUI);
-			pText->ReassignText((wchar_t*)_packet);
+			pText->ReassignText((wchar_t*)_packet, 20.f);
 		}
 
 		AnimationClip* pClip = ResourceManager::GetInst()->GetAnimClip(L"player" + std::to_wstring(slot));
