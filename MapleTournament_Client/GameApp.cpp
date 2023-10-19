@@ -35,7 +35,7 @@ GameApp::~GameApp()
 
 	if (m_pClient) delete m_pClient;
 
-	InstructionQueue::DestroyInst();
+	//InstructionQueue::DestroyInst();
 	ResourceManager::DestroyInst(); // TODO : m_mapBitmap ÇØÁ¦
 	InputManager::DestroyInst();
 	SceneManager::DestroyInst();
@@ -70,7 +70,7 @@ bool GameApp::Init(int _nCmdShow, const wchar_t* _windowName, UINT _width, UINT 
 	if (!UIManager::GetInst()->Init()) return false;
 	if (!ObjectManager::GetInst()->Init()) return false;
 	if (!Timer::GetInst()->Init(120)) return false;
-	if (!InstructionQueue::GetInst()->Init()) return false;
+	//if (!InstructionQueue::GetInst()->Init()) return false;
 
 	SceneManager::GetInst()->ChangeScene(new LoginScene);
 
@@ -103,6 +103,7 @@ int GameApp::Run()
 			if (Timer::GetInst()->Update())
 			{
 				SceneManager::GetInst()->CheckSceneChange();
+				m_pClient->ReceivePacket();
 				Input();
 				Update();
 				Render();
@@ -119,11 +120,10 @@ void GameApp::Input()
 
 void GameApp::Update()
 {
-	InstructionQueue::GetInst()->Update();
+	//InstructionQueue::GetInst()->Update();
 	SceneManager::GetInst()->Update();
 	UIManager::GetInst()->Update();
 	InputManager::GetInst()->Update();
-
 }
 
 void GameApp::Render()

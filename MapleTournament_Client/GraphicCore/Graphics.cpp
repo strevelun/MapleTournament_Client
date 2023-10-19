@@ -135,6 +135,10 @@ void Graphics::DrawTextRectSmall(const wchar_t* _text, const D2D1_RECT_F& _rect)
 	m_pRenderTarget->DrawTextW(_text, wcslen(_text), m_pTextFormatSmall, _rect, m_pBlackBrush);
 }
 
+void Graphics::DrawTextLayout(const wchar_t* _text, const D2D1_RECT_F& _rect)
+{
+}
+
 void Graphics::DrawBitmap(Bitmap* _pBitmap, const D2D1_RECT_F& _srcRect)
 {
 	m_pRenderTarget->DrawBitmap(_pBitmap->GetBitmap(), _srcRect);

@@ -13,6 +13,9 @@ class TCPClient
 {
 private:
 	HANDLE m_hThread;
+	char						m_recvBuffer[255];
+	u_short						m_packetSize = 0;
+	int							m_totalSize = 0;
 	
 	static std::map<ePacketType, void(*)(char*)> m_mapPacketHandlerCallback;
 
@@ -24,10 +27,10 @@ public:
 
 	bool Init();
 
-	unsigned int ReceivePacket();
+	void ReceivePacket();
 
 private:
 	void ProcessPacket(char* _packet);
-	static unsigned int __stdcall ThreadFunc(void* _pArgs);
+	//static unsigned int __stdcall ThreadFunc(void* _pArgs);
 };
 

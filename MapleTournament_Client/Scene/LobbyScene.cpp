@@ -313,12 +313,9 @@ bool LobbyScene::InitLobbyUI()
     pUserListPanel->SetBitmap(pBitmap);
     UIList* pUserList = new UIList(pUserListPanel, 250, 330, 10, 70, 0.f, 0.f);
     pUserList->SetName(L"UserList");
-    pText = new UIText(pUserList, pMyNickname, wcslen(pMyNickname) * 25, 25);
-    pUserList->AddItem(pText);
     pUserListPanel->AddChildUI(pUserList);
     pUserList->SetItemVerticalInterval(10.0f);
     pUIManager->AddUI(pUserListPanel);
-    //pBackground->AddChildUI(pUserListPanel);
 
     /* user profile */
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_lobbyscene_profile.png");
@@ -326,7 +323,7 @@ bool LobbyScene::InitLobbyUI()
     UIPanel* pProfile = new UIPanel(nullptr, 400, 200, ScreenWidth, ScreenHeight, 1.0f, 1.0f);
     pProfile->SetBitmap(pBitmap);
     pProfile->SetName(L"Profile");
-    pText = new UIText(pProfile, pMyNickname, wcslen(pMyNickname) * 25, 25, pProfile->GetWidth() / 2, 25, 0.5f, 0.5f);
+    pText = new UIText(pProfile, pMyNickname, wcslen(pMyNickname) * 25, 25, pProfile->GetWidth() / 2, 10);
     pProfile->AddChildUI(pText);
     pUIManager->AddUI(pProfile);
     //pBackground->AddChildUI(pProfile);

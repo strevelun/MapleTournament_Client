@@ -46,49 +46,46 @@ bool TCPClient::Init()
 {
 	if (!NetworkManager::GetInst()->Init("192.168.219.167", 30001)) return false;
 
-	unsigned int threadID;
-	m_hThread = (HANDLE)_beginthreadex(NULL, 0, ThreadFunc, this, 0, &threadID);
-	if (m_hThread == NULL)
-	{
-		Debug::Log("Failed BeginThreadEx");
-		return false;
-	}
+	//unsigned int threadID;
+	//m_hThread = (HANDLE)_beginthreadex(NULL, 0, ThreadFunc, this, 0, &threadID);
+	//if (m_hThread == NULL)
+	//{
+	//	Debug::Log("Failed BeginThreadEx");
+	//	return false;
+	//}
 	return true;
 }
 
-unsigned int TCPClient::ReceivePacket()
+void TCPClient::ReceivePacket()
 {
-	int							recvSize, totalSize = 0;
-	u_short						packetSize;
-	char						recvBuffer[255];
-	int bufferSize = sizeof(recvBuffer);
+	int	recvSize = 0;
+	int bufferSize = sizeof(m_recvBuffer);
 
-	bool isRunning = true;
-
-	while (isRunning)
+	recvSize = NetworkManager::GetInst()->Receive(m_recvBuffer + m_totalSize, bufferSize - m_totalSize);
+	if (recvSize < 0)
 	{
-		recvSize = NetworkManager::GetInst()->Receive(recvBuffer + totalSize, bufferSize - totalSize);
-		if (recvSize == SOCKET_ERROR)
+		int error = WSAGetLastError();
+		if (error != WSAEWOULDBLOCK)
 		{
-			int error = WSAGetLastError();
 			Debug::Log("Receive error: " + std::to_string(error));
-			break;
 		}
-
-		totalSize += recvSize;
-
-		while (totalSize >= sizeof(u_short))
-		{
-			packetSize = *(u_short*)recvBuffer;
-			if (packetSize > totalSize) break;
-
-			ProcessPacket(recvBuffer);
-
-			totalSize -= packetSize;
-			memcpy(recvBuffer, recvBuffer + packetSize, totalSize);                     
-		}
+		return;
 	}
-	return 0;
+
+	m_totalSize += recvSize;
+
+	while (m_totalSize >= sizeof(u_short))
+	{
+		m_packetSize = *(u_short*)m_recvBuffer;
+		if (m_packetSize > m_totalSize) break;
+
+		ProcessPacket(m_recvBuffer);
+
+		m_totalSize -= m_packetSize;
+		memcpy(m_recvBuffer, m_recvBuffer + m_packetSize, m_totalSize);
+	}
+
+	return;
 }
 
 void TCPClient::ProcessPacket(char* _packet)
@@ -98,9 +95,10 @@ void TCPClient::ProcessPacket(char* _packet)
 
 	m_mapPacketHandlerCallback[(ePacketType)type](tempPacket);
 }
-
+/*
 unsigned int __stdcall TCPClient::ThreadFunc(void* _pArgs)
 {
 	TCPClient* pClient = static_cast<TCPClient*>(_pArgs);
 	return pClient->ReceivePacket();
 }
+*/

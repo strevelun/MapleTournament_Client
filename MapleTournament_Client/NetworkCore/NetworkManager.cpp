@@ -1,4 +1,5 @@
 #include "NetworkManager.h"
+#include "../Debug.h"
 
 #include <WS2tcpip.h>
 #include <Windows.h>
@@ -20,20 +21,29 @@ bool NetworkManager::Init(const char* _serverIP, int _serverPort)
 	m_hClientSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if (m_hClientSocket == INVALID_SOCKET)
 	{
-		//L"Failed socket(). Error Code : %d\n", WSAGetLastError();
-		OutputDebugStringA("failed socket");
+		Debug::Log("家南 积己 肋给凳");
 		return false;
 	}
+
+	u_long arg = 1;
+	ioctlsocket(m_hClientSocket, FIONBIO, &arg);
 
 	memset(&m_servAddr, 0, sizeof(m_servAddr));
 	m_servAddr.sin_family = AF_INET;
 	inet_pton(AF_INET, _serverIP, &m_servAddr.sin_addr);
 	m_servAddr.sin_port = htons(_serverPort);
 
-	if (connect(m_hClientSocket, (SOCKADDR*)&m_servAddr, sizeof(m_servAddr)) == SOCKET_ERROR)
+	while (1)
 	{
-		OutputDebugStringA("connect error");
-		return false;
+		if (connect(m_hClientSocket, (SOCKADDR*)&m_servAddr, sizeof(m_servAddr)) == SOCKET_ERROR)
+		{
+			//Debug::Log("connect socket_error : " + std::to_string(WSAGetLastError()));
+			int error = WSAGetLastError();
+			if (error == WSAEWOULDBLOCK) continue;
+			if (error == WSAEISCONN) break;
+
+			break;
+		}
 	}
 
 	return true;

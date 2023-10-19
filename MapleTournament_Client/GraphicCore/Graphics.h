@@ -42,6 +42,7 @@ public:
 	void CreateTextRectLargeLayout(const wchar_t* _text, IDWriteTextLayout* _pLayout, POINT& _tPos, D2D1_RECT_F& _rect);
 	void DrawTextRectLarge(const wchar_t* _text, const D2D1_RECT_F& _rect);
 	void DrawTextRectSmall(const wchar_t* _text, const D2D1_RECT_F& _rect);
+	void DrawTextLayout(const wchar_t* _text, const D2D1_RECT_F& _rect);
 	void DrawBitmap(Bitmap* _pBitmap, const D2D1_RECT_F& _srcRect);
 	void DrawBitmap(ID2D1Bitmap* _pBitmap, const D2D1_RECT_F& _destRect, const D2D1_RECT_F& _srcRect);
 	void DrawRectangle(const D2D1_RECT_F& _rect, eColor _color, int _strokeWidth);
