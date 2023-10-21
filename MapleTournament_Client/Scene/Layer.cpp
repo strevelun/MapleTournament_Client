@@ -41,14 +41,14 @@ void Layer::Update()
     }
 }
 
-void Layer::Render(Graphics* _pGraphics)
+void Layer::Render()
 {
     std::vector<Obj*>::iterator iter = m_vecObj.begin();
     std::vector<Obj*>::iterator iterEnd = m_vecObj.end();
 
     for (; iter != iterEnd; iter++)
     {
-        (*iter)->Render(_pGraphics);
+        (*iter)->Render();
     }
 }
 

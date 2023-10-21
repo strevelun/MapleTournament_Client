@@ -27,7 +27,7 @@ public:
 	uint32_t GetZOrder() const { return m_zOrder; }
 
 	void Update();
-	void Render(Graphics* _pGraphics);
+	void Render();
 
 private:
 	bool CompareObjName(Obj* _pObj, const std::wstring& _strName);

@@ -1,18 +1,21 @@
 #pragma once
 
 #include <WinSock2.h>
+#include <dwrite.h>
+#include <d2d1.h>
 #include "Window.h"
 
 class Window;
-class Graphics;
 class TCPClient;
 
 class GameApp
 {
 private:
-	Graphics*	m_pGraphics;
 	Window		m_window;
-	TCPClient*	m_pClient;
+	TCPClient*	m_pClient = nullptr;
+
+	IDWriteTextFormat* m_pTextFormat = nullptr;
+	ID2D1SolidColorBrush* m_pBrush = nullptr;
 
 public:
 	GameApp(HINSTANCE _hInst, const wchar_t* _wndClassName);

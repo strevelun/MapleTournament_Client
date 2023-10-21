@@ -10,18 +10,26 @@
 #pragma comment(lib, "windowscodecs.lib")
 #pragma comment(lib, "dwrite.lib")
 
-Graphics::Graphics(HWND _hWnd) :
-	m_hWnd(_hWnd)
+Graphics* Graphics::m_pInst = nullptr;
+
+Graphics::Graphics()
 {
 
 }
 
 Graphics::~Graphics()
 {
+	if (m_pDWriteFactory) m_pDWriteFactory->Release();
+	if (m_pWICFactory) m_pWICFactory->Release();
+	if (m_pRenderTarget) m_pRenderTarget->Release();
+	if (m_pD2DFactory) m_pD2DFactory->Release();
+	CoUninitialize();
 }
 
-bool Graphics::Init()
+bool Graphics::Init(HWND _hWnd)
 {
+	m_hWnd = _hWnd;
+
 	HRESULT hr = D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &m_pD2DFactory);
 	if (FAILED(hr))
 	{
@@ -29,7 +37,7 @@ bool Graphics::Init()
 		return false;
 	}
 
-	GetClientRect(m_hWnd, &m_clientRect);
+	GetClientRect(_hWnd, &m_clientRect);
 	hr = m_pD2DFactory->CreateHwndRenderTarget(
 		D2D1::RenderTargetProperties(D2D1_RENDER_TARGET_TYPE_HARDWARE),
 		D2D1::HwndRenderTargetProperties(m_hWnd, D2D1::SizeU(m_clientRect.right - m_clientRect.left, m_clientRect.bottom - m_clientRect.top)),
@@ -60,116 +68,30 @@ bool Graphics::Init()
 		Debug::Log(("DWriteCreateFactory returned  : " + std::to_string(hr)));
 		return false;
 	}
-
-	hr = m_pDWriteFactory->CreateTextFormat(L"Arial", nullptr, DWRITE_FONT_WEIGHT_NORMAL, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL,
-		25.0f, L"en-US", &m_pTextFormatLarge);
-	if (FAILED(hr))
-	{
-		Debug::Log(("CreateTextFormat returned : " + std::to_string(hr)));
-		return false;
-	}
-
-	hr = m_pDWriteFactory->CreateTextFormat(L"Arial", nullptr, DWRITE_FONT_WEIGHT_NORMAL, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL,
-		15.0f, L"en-US", &m_pTextFormatSmall);
-	if (FAILED(hr))
-	{
-		Debug::Log(("CreateTextFormat returned : " + std::to_string(hr)));
-		return false;
-	}
-
-	hr = m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Black), &m_pBlackBrush);
-	if (FAILED(hr))
-	{
-		Debug::Log(("CreateSolidColorBrush returned  : " + std::to_string(hr)));
-		return false;
-	}
-
-	hr = m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Blue), &m_pBlueBrush);
-	if (FAILED(hr))
-	{
-		Debug::Log(("CreateSolidColorBrush returned  : " + std::to_string(hr)));
-		return false;
-	}
-
 	return true;
 }
 
-void Graphics::DrawMouseCoordinates(int _xpos, int _ypos)
+bool Graphics::CreateTextFormat(const wchar_t* _pFontName, FLOAT _fontSize, IDWriteTextFormat** _pFormat)
 {
-	if (_xpos < 0) _xpos = 0;
-	if (_ypos < 0) _ypos = 0;
-	if (_xpos > m_clientRect.right) _xpos = m_clientRect.right;
-	if (_ypos > m_clientRect.bottom) _ypos = m_clientRect.bottom;
-
-	wchar_t output[50];
-	wsprintf(output, L"x: %d, y: %d", _xpos, _ypos);
-	D2D1_RECT_F outputRect = D2D1::RectF(5.0f, 5.0f, 500.0f, 20.0f);
-	m_pRenderTarget->DrawText(output, wcslen(output), m_pTextFormatSmall, outputRect, m_pBlackBrush);
-}
-
-void Graphics::CreateTextRectLargeLayout(const wchar_t* _text, IDWriteTextLayout* _pLayout, POINT& _tPos, D2D1_RECT_F& _rect)
-{
-	HRESULT hr = m_pDWriteFactory->CreateTextLayout(_text, wcslen(_text), m_pTextFormatLarge, 100.0f,100.0f, &_pLayout);
-
-	if (SUCCEEDED(hr))
+	HRESULT hr = m_pDWriteFactory->CreateTextFormat(_pFontName, nullptr, DWRITE_FONT_WEIGHT_NORMAL, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL,
+		_fontSize, L"en-US", _pFormat);
+	if (FAILED(hr))
 	{
-		DWRITE_TEXT_METRICS metrics;
-		hr = _pLayout->GetMetrics(&metrics);
-
-		if (SUCCEEDED(hr))
-		{
-			_rect.left = _tPos.x + metrics.widthIncludingTrailingWhitespace;
-			_rect.right = _tPos.x + metrics.widthIncludingTrailingWhitespace;
-		}
-		_pLayout->Release();
+		Debug::Log(("CreateTextFormat returned : " + std::to_string(hr)));
+		return false;
 	}
+	return true;
 }
 
-void Graphics::DrawTextRectLarge(const wchar_t* _text, const D2D1_RECT_F& _rect)
+bool Graphics::CreateSolidColorBrush(D2D1::ColorF _color, ID2D1SolidColorBrush** _pBrush)
 {
-	m_pRenderTarget->DrawTextW(_text, wcslen(_text), m_pTextFormatLarge, _rect, m_pBlackBrush);
-}
-
-void Graphics::DrawTextRectSmall(const wchar_t* _text, const D2D1_RECT_F& _rect)
-{
-	m_pRenderTarget->DrawTextW(_text, wcslen(_text), m_pTextFormatSmall, _rect, m_pBlackBrush);
-}
-
-void Graphics::DrawTextLayout(const wchar_t* _text, const D2D1_RECT_F& _rect, IDWriteTextLayout* _pLayout)
-{
-	m_pRenderTarget->DrawTextLayout(D2D1::Point2F(_rect.left, _rect.top), _pLayout, m_pBlackBrush);
-}
-
-void Graphics::DrawBitmap(Bitmap* _pBitmap, const D2D1_RECT_F& _srcRect)
-{
-	m_pRenderTarget->DrawBitmap(_pBitmap->GetBitmap(), _srcRect);
-}
-
-void Graphics::DrawBitmap(ID2D1Bitmap* _pBitmap, const D2D1_RECT_F& _destRect, const D2D1_RECT_F& _srcRect)
-{
-	m_pRenderTarget->DrawBitmap(_pBitmap, _destRect, 1.0f, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR, _srcRect);
-}
-
-void Graphics::DrawRectangle(const D2D1_RECT_F& _rect, eColor _color, int _strokeWidth)
-{
-	ID2D1SolidColorBrush* pBrush = nullptr;
-	switch (_color)
+	HRESULT hr = m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(_color), _pBrush);
+	if (FAILED(hr))
 	{
-	case eColor::Black:
-		pBrush = m_pBlackBrush;
-		break;
-	case eColor::Blue:
-		pBrush = m_pBlueBrush;
-		break;
-	default:
-		return;
+		Debug::Log(("CreateSolidColorBrush returned  : " + std::to_string(hr)));
+		return false;
 	}
-	m_pRenderTarget->DrawRectangle(_rect, pBrush, _strokeWidth);
-}
-
-void Graphics::SetTransform(const D2D1::Matrix3x2F& _rot)
-{
-	m_pRenderTarget->SetTransform(_rot);
+	return true;
 }
 
 void Graphics::BeginDraw()
@@ -181,18 +103,4 @@ void Graphics::BeginDraw()
 void Graphics::EndDraw()
 {
 	m_pRenderTarget->EndDraw();
-}
-
-void Graphics::CleanupDevice()
-{
-	// TODO : 순서반대
-	if (m_pBlueBrush) m_pBlueBrush->Release();
-	if (m_pBlackBrush) m_pBlackBrush->Release();
-	if (m_pTextFormatSmall) m_pTextFormatSmall->Release();
-	if (m_pTextFormatLarge) m_pTextFormatLarge->Release();
-	if (m_pDWriteFactory) m_pDWriteFactory->Release();
-	if (m_pWICFactory) m_pWICFactory->Release();
-	if (m_pRenderTarget) m_pRenderTarget->Release();
-	if (m_pD2DFactory) m_pD2DFactory->Release();
-	CoUninitialize();
 }

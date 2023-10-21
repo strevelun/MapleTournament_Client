@@ -36,7 +36,7 @@ void SceneManager::Update()
 	m_pCurScene->Update();
 }
 
-void SceneManager::Render(Graphics* _pGraphics)
+void SceneManager::Render()
 {
-	m_pCurScene->Render(_pGraphics);
+	m_pCurScene->Render();
 }

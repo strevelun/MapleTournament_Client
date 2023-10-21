@@ -19,21 +19,17 @@ typedef unsigned short ushort;
 
 GameApp::GameApp(HINSTANCE _hInst, const wchar_t* _wndClassName)
 	: m_window(_hInst, _wndClassName),
-	m_pClient(nullptr),
-	m_pGraphics(nullptr)
+	m_pClient(nullptr)
 {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 }
 
 GameApp::~GameApp()
 {
-	if (m_pGraphics)
-	{
-		m_pGraphics->CleanupDevice();
-		delete m_pGraphics;
-	}
-
 	if (m_pClient) delete m_pClient;
+
+	if (m_pTextFormat) m_pTextFormat->Release();
+	if (m_pBrush) m_pBrush->Release();
 
 	//InstructionQueue::DestroyInst();
 	ResourceManager::DestroyInst(); // TODO : m_mapBitmap 해제
@@ -42,6 +38,7 @@ GameApp::~GameApp()
 	UIManager::DestroyInst();
 	ObjectManager::DestroyInst();
 	Timer::DestroyInst();
+	Graphics::DestroyInst();
 }
 
 bool GameApp::Init(int _nCmdShow, const wchar_t* _windowName, UINT _width, UINT _height)
@@ -54,14 +51,15 @@ bool GameApp::Init(int _nCmdShow, const wchar_t* _windowName, UINT _width, UINT 
 	}
 
 	if (!m_window.Init(_nCmdShow, _windowName, _width, _height)) return false;
-
-	m_pGraphics = new Graphics(m_window.GetHWnd());
-	if (!m_pGraphics->Init()) return false;
+	if (!Graphics::GetInst()->Init(m_window.GetHWnd())) return false;
+	
+	Graphics::GetInst()->CreateTextFormat(L"Arial", 15.f, &m_pTextFormat);
+	Graphics::GetInst()->CreateSolidColorBrush(D2D1::ColorF::Black, &m_pBrush);
 
 	m_pClient = new TCPClient();
 	if (!m_pClient->Init()) return false;
 
-	if (!ResourceManager::GetInst()->Init(m_pGraphics->GetImagingFactory(), m_pGraphics->GetRenderTarget()))
+	if (!ResourceManager::GetInst()->Init())
 	{
 		Debug::Log(L"NetworkManager 초기화 에러");
 		return false;
@@ -128,13 +126,16 @@ void GameApp::Update()
 
 void GameApp::Render()
 {
-	m_pGraphics->BeginDraw();
+	Graphics::GetInst()->BeginDraw();
 
-	SceneManager::GetInst()->Render(m_pGraphics);
-	UIManager::GetInst()->Render(m_pGraphics);
+	SceneManager::GetInst()->Render();
+	UIManager::GetInst()->Render();
 
-	Mouse* pMouse = InputManager::GetInst()->GetMouse();
-	m_pGraphics->DrawMouseCoordinates(pMouse->GetPosX(), pMouse->GetPosY());
+	Mouse* pMouse = InputManager::GetInst()->GetMouse(); 
+	wchar_t output[50];
+	wsprintf(output, L"x: %d, y: %d", pMouse->GetPosX(), pMouse->GetPosY());
+	D2D1_RECT_F outputRect = D2D1::RectF(5.0f, 5.0f, 500.0f, 20.0f);
+	Graphics::GetInst()->GetRenderTarget()->DrawText(output, wcslen(output), m_pTextFormat, outputRect, m_pBrush);
 
-	m_pGraphics->EndDraw();
+	Graphics::GetInst()->EndDraw();
 }

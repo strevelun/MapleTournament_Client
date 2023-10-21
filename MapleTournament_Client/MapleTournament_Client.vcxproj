@@ -160,6 +160,7 @@
     <ClCompile Include="Obj\UI\UIList.cpp" />
     <ClCompile Include="Obj\UI\UIPage.cpp" />
     <ClCompile Include="Obj\UI\UIPanel.cpp" />
+    <ClCompile Include="Obj\UI\UIScrollView.cpp" />
     <ClCompile Include="Obj\UI\UIText.cpp" />
     <ClCompile Include="Packet\PacketHandler.cpp" />
     <ClCompile Include="Scene\InGameScene.cpp" />
@@ -202,6 +203,7 @@
     <ClInclude Include="Obj\UI\UIList.h" />
     <ClInclude Include="Obj\UI\UIPage.h" />
     <ClInclude Include="Obj\UI\UIPanel.h" />
+    <ClInclude Include="Obj\UI\UIScrollView.h" />
     <ClInclude Include="Obj\UI\UIText.h" />
     <ClInclude Include="Packet\PacketHandler.h" />
     <ClInclude Include="Scene\InGameScene.h" />

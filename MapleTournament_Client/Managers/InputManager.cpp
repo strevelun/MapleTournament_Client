@@ -23,7 +23,6 @@ bool InputManager::Init(HWND _hWnd)
 
 void InputManager::Update()
 {
-	
 	m_pMouse->Update();
 	ClearVecKeyInput();
 }

@@ -3,6 +3,7 @@
 #include "../Setting.h"
 #include "../Debug.h"
 #include "../Animation/AnimationClip.h"
+#include "../GraphicCore/Graphics.h"
 
 #include <wincodec.h>
 #include <d2d1.h>
@@ -12,9 +13,7 @@
 
 ResourceManager* ResourceManager::m_pInst = nullptr;
 
-ResourceManager::ResourceManager() :
-	m_pRenderTarget(nullptr),
-	m_pImagingFactory(nullptr)
+ResourceManager::ResourceManager()
 {
 }
 
@@ -33,11 +32,8 @@ ResourceManager::~ResourceManager()
 		delete iter2->second;
 }
 
-bool ResourceManager::Init(IWICImagingFactory* _pImagingFactory, ID2D1HwndRenderTarget* _pRenderTarget)
+bool ResourceManager::Init()
 {
-	if(!m_pImagingFactory) m_pImagingFactory = _pImagingFactory;
-	m_pRenderTarget = _pRenderTarget;
-
 	return true;
 }
 
@@ -45,8 +41,9 @@ bool ResourceManager::LoadImageFromFile(const std::wstring& _fileWithPath)
 {
 	HRESULT hr = S_OK;
 	IWICBitmapDecoder* pDecoder = nullptr;
+	IWICImagingFactory* pImagingFactory = Graphics::GetInst()->GetImagingFactory();
 
-	hr = m_pImagingFactory->CreateDecoderFromFilename(_fileWithPath.c_str(), NULL, GENERIC_READ, WICDecodeMetadataCacheOnLoad, &pDecoder);
+	hr = pImagingFactory->CreateDecoderFromFilename(_fileWithPath.c_str(), NULL, GENERIC_READ, WICDecodeMetadataCacheOnLoad, &pDecoder);
 	if (FAILED(hr))
 	{
 		Debug::Log(L"LoadImageFromFile에서 CreateDecoderFromFilename호출 도중 오류발생. hr : " + hr);
@@ -62,7 +59,7 @@ bool ResourceManager::LoadImageFromFile(const std::wstring& _fileWithPath)
 	}
 
 	IWICFormatConverter* pConverter = nullptr;
-	hr = m_pImagingFactory->CreateFormatConverter(&pConverter);
+	hr = pImagingFactory->CreateFormatConverter(&pConverter);
 	if (FAILED(hr))
 	{
 		Debug::Log(L"LoadImageFromFile에서 CreateFormatConverter호출 도중 오류발생. hr : " + hr);
@@ -76,8 +73,8 @@ bool ResourceManager::LoadImageFromFile(const std::wstring& _fileWithPath)
 		return false;
 	}
 
-	ID2D1Bitmap* pD2dBitmap;
-	hr = m_pRenderTarget->CreateBitmapFromWicBitmap(pConverter, NULL, &pD2dBitmap);
+	ID2D1Bitmap* pD2dBitmap = nullptr;
+	hr = Graphics::GetInst()->GetRenderTarget()->CreateBitmapFromWicBitmap(pConverter, NULL, &pD2dBitmap);
 	if (FAILED(hr))
 	{
 		Debug::Log(L"LoadImageFromFile에서 m_pRenderTarget->CreateBitmapFromWicBitmap호출 도중 오류발생. hr : " + hr);

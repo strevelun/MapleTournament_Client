@@ -31,27 +31,28 @@ void AnimationClip::Update()
 	}
 }
 
-void AnimationClip::Render(Graphics* _pGraphics, UINT _xpos, UINT _ypos, float _ratio)
+void AnimationClip::Render(UINT _xpos, UINT _ypos, float _ratio)
 {
+	ID2D1HwndRenderTarget* pRenderTarget = Graphics::GetInst()->GetRenderTarget();
+
 	float pivotX = (m_vecFrame[m_curFrameIdx]->pivotX * m_vecFrame[m_curFrameIdx]->size.width);
 	float pivotY = (m_vecFrame[m_curFrameIdx]->pivotY * m_vecFrame[m_curFrameIdx]->size.height);
 	float adjustedX = _xpos / _ratio;
 	float adjustedY = _ypos / _ratio;
 
-	D2D1_RECT_F renderRect = {
+	D2D1_RECT_F renderRect = 
+	{
 		(adjustedX - pivotX) * _ratio,
 		(adjustedY - pivotY) * _ratio,
 		(adjustedX + m_vecFrame[m_curFrameIdx]->size.width - pivotX) * _ratio,
 		(adjustedY + m_vecFrame[m_curFrameIdx]->size.height - pivotY) * _ratio
 	};
 
-	if (m_isFlip) 
-		_pGraphics->SetTransform(D2D1::Matrix3x2F::Scale(-1.0f, 1.0f, D2D1::Point2F(_xpos , _ypos)));
-	//_pGraphics->SetTransform(D2D1::Matrix3x2F::Rotation(90.0f, D2D1::Point2F((renderRect.right - renderRect.left) / 2, (renderRect.bottom - renderRect.top) / 2)));
+	if (m_isFlip) pRenderTarget->SetTransform(D2D1::Matrix3x2F::Scale(-1.0f, 1.0f, D2D1::Point2F(_xpos, _ypos)));
 
-	_pGraphics->DrawBitmap(m_pBitmap->GetBitmap(), renderRect, m_vecFrame[m_curFrameIdx]->rect);
+	pRenderTarget->DrawBitmap(m_pBitmap->GetBitmap(), renderRect, 1.0f, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR, m_vecFrame[m_curFrameIdx]->rect);
 
-	if (m_isFlip) _pGraphics->SetTransform(D2D1::Matrix3x2F::Identity());
+	if (m_isFlip) pRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
 }
 
 void AnimationClip::Reset()

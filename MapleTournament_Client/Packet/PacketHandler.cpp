@@ -9,6 +9,7 @@
 #include "../Obj/UI/UIButton.h"
 #include "../Obj/UI/UIList.h"
 #include "../Obj/UI/UIText.h"
+#include "../Obj/UI/UIScrollView.h"
 #include "../Obj/UI/Mouse.h"
 #include "../Scene/Scene.h"
 #include "../Scene/Layer.h"
@@ -73,8 +74,8 @@ void PacketHandler::S_CreateRoom(char* _packet)
 	{
 		UIPanel* pPanel = static_cast<UIPanel*>(pUI);
 		pUI = pPanel->FindChildUI(L"ChatList");
-		UIList* pList = static_cast<UIList*>(pUI);
-		pList->RemoveAllItems();
+		UIScrollView* pList = static_cast<UIScrollView*>(pUI);
+		pList->GetUIList()->RemoveAllItems();
 	}
 
 	pUI = UIManager::GetInst()->FindUI(L"UserListPanel");
@@ -201,10 +202,8 @@ void PacketHandler::S_SendSessions(char* _packet)
 
 		for (int i = 0; i < size; i++)
 		{
-			UIText* pText = new UIText(pList, (wchar_t*)_packet, 20.f, 10);
-			pText->SetName((wchar_t*)_packet);
+			pList->AddItem((wchar_t*)_packet, 20.f);
 			_packet += (ushort)wcslen((wchar_t*)_packet) * 2 + 2;
-			pList->AddItem(pText);
 		}
 	}
 	
@@ -281,9 +280,7 @@ void PacketHandler::S_EnterOtherUser(char* _packet)
 		UIPanel* pUserListPanel = static_cast<UIPanel*>(pUI);
 		pUI = pUserListPanel->FindChildUI(L"UserList");
 		UIList* pList = static_cast<UIList*>(pUI);
-		UIText* pText = new UIText(pList, (wchar_t*)_packet, 20.f, 10);
-		pText->SetName((wchar_t*)_packet);
-		pList->AddItem(pText);
+		pList->AddItem((wchar_t*)_packet, 20.f);
 	}
 
 	Debug::Log("PacketHandler::S_EnterOtherUser");
@@ -296,13 +293,11 @@ void PacketHandler::S_Chat(char* _packet)
 	{
 		UIPanel* pPanel = static_cast<UIPanel*>(pUI);
 		pUI = pPanel->FindChildUI(L"ChatList");
-		UIList* pList = static_cast<UIList*>(pUI);
+		UIScrollView* pList = static_cast<UIScrollView*>(pUI);
 		std::wstring chat((wchar_t*)_packet);			_packet += (ushort)wcslen((wchar_t*)_packet) * 2 + 2;
 		std::wstring nickname((wchar_t*)_packet);
 		std::wstring message = nickname + L" : " + chat;
-
-		UIText* pText = new UIText(pList, message, 20.f, 10, 50, 0.f, 0.f);
-		pList->AddItem(pText);
+		pList->GetUIList()->AddItem(message, 20.f);//
 	}
 
 	Debug::Log("PacketHandler::S_Chat");

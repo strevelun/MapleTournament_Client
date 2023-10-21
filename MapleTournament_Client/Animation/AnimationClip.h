@@ -29,7 +29,7 @@ public:
 	~AnimationClip();
 
 	void Update();
-	void Render(Graphics* _pGraphics, UINT _xpos, UINT _ypos, float _ratio);
+	void Render(UINT _xpos, UINT _ypos, float _ratio);
 
 	void SetLoop(bool _isLoop) { m_isLoop = _isLoop; }
 	void SetPlayTime(float _playTime) { m_playTime = _playTime; }

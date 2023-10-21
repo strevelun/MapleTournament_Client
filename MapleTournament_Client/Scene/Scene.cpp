@@ -63,11 +63,11 @@ void Scene::Update()
         (*iter)->Update();
 }
 
-void Scene::Render(Graphics* _pGraphics)
+void Scene::Render()
 {
     std::vector<Layer*>::iterator iter = m_vecObjLayer.begin();
     std::vector<Layer*>::iterator iterEnd = m_vecObjLayer.end();
 
     for (; iter != iterEnd; iter++)
-        (*iter)->Render(_pGraphics);
+        (*iter)->Render();
 }

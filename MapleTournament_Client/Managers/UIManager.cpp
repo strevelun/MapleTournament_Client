@@ -92,7 +92,7 @@ void UIManager::Update()
     }
 }
 
-void UIManager::Render(Graphics* _pGraphics)
+void UIManager::Render()
 {
     std::vector<UI*>::iterator iter = m_vecUI.begin();
     std::vector<UI*>::iterator iterEnd = m_vecUI.end();
@@ -100,7 +100,7 @@ void UIManager::Render(Graphics* _pGraphics)
     for (; iter != iterEnd; iter++)
     {
         if ((*iter)->IsActive())
-            (*iter)->Render(_pGraphics);
+            (*iter)->Render();
     }
 
     std::vector<UIPanel*>::iterator iter2 = m_vecPopupUI.begin();
@@ -109,7 +109,7 @@ void UIManager::Render(Graphics* _pGraphics)
     for (; iter2 != iterEnd2; iter2++)
     {
         if ((*iter2)->IsActive())
-            (*iter2)->Render(_pGraphics);
+            (*iter2)->Render();
     }
 }
 

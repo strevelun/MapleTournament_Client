@@ -6,6 +6,7 @@
 #include "../Managers/SceneManager.h"
 #include "../Bitmap.h"
 #include "../Obj/UI/UIPanel.h"
+#include "../Obj/UI/UIScrollView.h"
 #include "../Obj/UI/UIButton.h"
 #include "../Obj/UI/UIEditText.h"
 #include "../Obj/UI/UIList.h"
@@ -82,6 +83,14 @@ void LobbyScene::ChatCallback(UIEditText* _pEditText, const std::wstring& _str)
     NetworkManager::GetInst()->Send(buffer);
 
     _pEditText->ClearEditText();
+    /*
+    UI* pUI = UIManager::GetInst()->FindUI(L"Chat");
+    UIPanel* pPanel = static_cast<UIPanel*>(pUI);
+    pUI = pPanel->FindChildUI(L"ChatList");
+    UIScrollView* pScroll = static_cast<UIScrollView*>(pUI);
+    size_t ct = pScroll->GetUIList()->GetItemCount();
+    pScroll->SetIdx(pScroll->GetTopIdx() + pScroll->GetBottomIdx() - ct, ct + 1);
+    */
 }
 
 bool LobbyScene::ShowLobbyUI()
@@ -265,7 +274,7 @@ bool LobbyScene::InitLobbyUI()
     UIPanel* pRoomListPanel = new UIPanel(nullptr, 800, 400);
     pRoomListPanel->SetName(L"RoomListPanel");
     pRoomListPanel->SetBitmap(pBitmap);
-    UIList* pRoomList = new UIList(pRoomListPanel, 680, 355, 20, 50);
+    UIList* pRoomList = new UIList(pRoomListPanel, 680, 355, 665, 20, 50);
     pRoomList->SetName(L"RoomList");
     pRoomListPanel->AddChildUI(pRoomList);
     pUIManager->AddUI(pRoomListPanel);
@@ -282,7 +291,7 @@ bool LobbyScene::InitLobbyUI()
     pPanel->SetName(L"JoinRoomFail");
     pPanel->SetBitmap(pBitmap);
     pUIManager->AddUI(pPanel);
-    pText = new UIText(pPanel, L"방이 꽉 차거나 게임중입니다!", pPanel->GetWidth() / 2, 100, 0.5f, 0.5f);
+    pText = new UIText(pPanel, L"방이 꽉 차거나 게임중입니다!", 20.f, pPanel->GetWidth() / 2, 100, 0.5f, 0.5f);
     pPanel->AddChildUI(pText);
 
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_button.png");
@@ -294,7 +303,7 @@ bool LobbyScene::InitLobbyUI()
             pPanel->SetActive(false);
             UIManager::GetInst()->PopPopupUI();
         });
-    pText = new UIText(pOKButton, L"넹", pOKButton->GetWidth() / 2, 50, 0.5f, 0.5f);
+    pText = new UIText(pOKButton, L"넹", 20.f, pOKButton->GetWidth() / 2, 50, 0.5f, 0.5f);
     pOKButton->SetUIText(pText);
     pOKButton->SetClickable(true);
 
@@ -307,10 +316,10 @@ bool LobbyScene::InitLobbyUI()
     UIPanel* pUserListPanel = new UIPanel(nullptr, 250, 400, ScreenWidth, 0, 1.0f, 0.f);
     pUserListPanel->SetName(L"UserListPanel");
     pUserListPanel->SetBitmap(pBitmap);
-    UIList* pUserList = new UIList(pUserListPanel, 250, 330, 10, 70, 0.f, 0.f);
+    UIList* pUserList = new UIList(pUserListPanel, 250, 330, 110, 24, 10, 70, 0.f, 0.f);
     pUserList->SetName(L"UserList");
     pUserListPanel->AddChildUI(pUserList);
-    pUserList->SetItemVerticalInterval(10.0f);
+    pUserList->SetItemVerticalInterval(9.0f);
     pUIManager->AddUI(pUserListPanel);
 
     /* user profile */
@@ -319,7 +328,7 @@ bool LobbyScene::InitLobbyUI()
     UIPanel* pProfile = new UIPanel(nullptr, 400, 200, ScreenWidth, ScreenHeight, 1.0f, 1.0f);
     pProfile->SetBitmap(pBitmap);
     pProfile->SetName(L"Profile");
-    pText = new UIText(pProfile, pMyNickname, wcslen(pMyNickname) * 25, 25, pProfile->GetWidth() / 2, 10);
+    pText = new UIText(pProfile, pMyNickname, 20.f, pProfile->GetWidth() / 2, 10);
     pProfile->AddChildUI(pText);
     pUIManager->AddUI(pProfile);
     //pBackground->AddChildUI(pProfile);
@@ -331,12 +340,10 @@ bool LobbyScene::InitLobbyUI()
     pChatPanel->SetBitmap(pBitmap);
     pChatPanel->SetName(L"Chat");
 
-    //pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_lobbyscene_roombutton.png");
-   // if (!pBitmap) return false;
-    UIList* pChatList = new UIList(pChatPanel, 480, 230, 10, 10, 0.f, 0.f);
-    //pChatList->SetItemBitmap(pBitmap);
-    pChatList->SetName(L"ChatList");
-    pChatPanel->AddChildUI(pChatList);
+    UIScrollView* pChatScrollView = new UIScrollView(pChatPanel, 480, 230, 10, 10, 665, 20);
+    pChatScrollView->SetName(L"ChatList");
+    pChatScrollView->GetUIList()->SetItemVerticalInterval(2.f);
+    pChatPanel->AddChildUI(pChatScrollView);
 
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_login_edittext.png");
     if (!pBitmap) return false;
@@ -346,7 +353,6 @@ bool LobbyScene::InitLobbyUI()
     pChatEdit->SetCallback(&LobbyScene::ChatCallback, this);
     pChatPanel->AddChildUI(pChatEdit);
     pUIManager->AddUI(pChatPanel);
-    //pBackground->AddChildUI(pChatPanel);
     
     return true;
 }

@@ -156,6 +156,9 @@
     <ClCompile Include="Obj\UI\UIPage.cpp">
       <Filter>Obj\UI</Filter>
     </ClCompile>
+    <ClCompile Include="Obj\UI\UIScrollView.cpp">
+      <Filter>Obj\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameApp.h">
@@ -273,6 +276,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Obj\UI\UIPage.h">
+      <Filter>Obj\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Obj\UI\UIScrollView.h">
       <Filter>Obj\UI</Filter>
     </ClInclude>
   </ItemGroup>

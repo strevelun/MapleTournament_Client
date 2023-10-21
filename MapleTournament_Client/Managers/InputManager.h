@@ -27,7 +27,6 @@ public:
 	void ClearVecKeyInput() { m_vecKeyInput.clear(); }
 
 	Mouse* GetMouse() const { return m_pMouse; }
-	HWND GetHwnd() const { return m_hWnd; }
 
 	SINGLETON(InputManager)
 };

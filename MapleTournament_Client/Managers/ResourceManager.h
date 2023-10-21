@@ -18,11 +18,9 @@ private:
 	std::map<std::wstring, AnimationClip*> m_mapAnimClip;
 
 	ID2D1HwndRenderTarget* m_pRenderTarget;
-	IWICImagingFactory* m_pImagingFactory;
-
 
 public:	
-	bool Init(IWICImagingFactory* _pImagingFactory, ID2D1HwndRenderTarget* _pRenderTarget);
+	bool Init();
 
 	Bitmap* GetBitmap(const std::wstring& _fileWithPath);
 	AnimationClip* GetAnimClip(const std::wstring& _justFilename);

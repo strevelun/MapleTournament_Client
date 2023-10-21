@@ -22,7 +22,7 @@ public:
 	T* GetCurScene() { return dynamic_cast<T*>(m_pCurScene); }
 
 	void Update();
-	void Render(Graphics* _pGraphics);
+	void Render();
 
 	SINGLETON(SceneManager)
 };

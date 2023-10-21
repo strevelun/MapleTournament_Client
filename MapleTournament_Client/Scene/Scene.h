@@ -31,6 +31,6 @@ public:
 
 	virtual bool Init();
 	void Update();
-	void Render(Graphics* _pGraphics);
+	void Render();
 };
 

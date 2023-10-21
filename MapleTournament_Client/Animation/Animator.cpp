@@ -41,9 +41,9 @@ void Animator::Update()
 	}
 }
 
-void Animator::Render(Graphics* _pGraphics, UINT _xpos, UINT _ypos, float _ratio)
+void Animator::Render(UINT _xpos, UINT _ypos, float _ratio)
 {
-	m_pCurClip->Render(_pGraphics, _xpos, _ypos, _ratio);
+	m_pCurClip->Render(_xpos, _ypos, _ratio);
 }
 
 void Animator::AddClip(const std::wstring& _stateName, AnimationClip* _pClip)
