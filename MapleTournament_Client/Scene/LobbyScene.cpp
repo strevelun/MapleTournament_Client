@@ -14,6 +14,7 @@
 #include "../Obj/MyPlayer.h"
 #include "../Setting.h"
 #include "../Constants.h"
+#include "../Debug.h"
 
 #include <algorithm>
 
@@ -83,14 +84,16 @@ void LobbyScene::ChatCallback(UIEditText* _pEditText, const std::wstring& _str)
     NetworkManager::GetInst()->Send(buffer);
 
     _pEditText->ClearEditText();
-    /*
+
     UI* pUI = UIManager::GetInst()->FindUI(L"Chat");
     UIPanel* pPanel = static_cast<UIPanel*>(pUI);
     pUI = pPanel->FindChildUI(L"ChatList");
     UIScrollView* pScroll = static_cast<UIScrollView*>(pUI);
     size_t ct = pScroll->GetUIList()->GetItemCount();
-    pScroll->SetIdx(pScroll->GetTopIdx() + pScroll->GetBottomIdx() - ct, ct + 1);
-    */
+    int maxCount = pScroll->GetMaxItemViewCount();
+    if (maxCount <= ct)
+        pScroll->SetIdx(ct - maxCount + 1, ct + 1);
+    
 }
 
 bool LobbyScene::ShowLobbyUI()
@@ -340,7 +343,7 @@ bool LobbyScene::InitLobbyUI()
     pChatPanel->SetBitmap(pBitmap);
     pChatPanel->SetName(L"Chat");
 
-    UIScrollView* pChatScrollView = new UIScrollView(pChatPanel, 480, 230, 10, 10, 665, 20);
+    UIScrollView* pChatScrollView = new UIScrollView(pChatPanel, 480, 230, 10, 10, pChatPanel->GetWidth() - 80, 20);
     pChatScrollView->SetName(L"ChatList");
     pChatScrollView->GetUIList()->SetItemVerticalInterval(2.f);
     pChatPanel->AddChildUI(pChatScrollView);
