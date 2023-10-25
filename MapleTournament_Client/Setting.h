@@ -84,6 +84,15 @@ enum class eSessionState
 	InGame
 };
 
+inline const wchar_t* sessionStateStr[] =
+{
+	L"None",
+	L"Login",
+	L"Lobby",
+	L"WaitingRoom",
+	L"InGame"
+};
+
 typedef struct _tSpriteData
 {
 	float pivotX = 0.5f, pivotY = 0.5f;

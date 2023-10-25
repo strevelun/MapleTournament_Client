@@ -25,8 +25,10 @@ public:
 
     UIText* Clone() const override { return new UIText(*this); }
 
-    void ReassignText(std::wstring _text, FLOAT _size);
+    void ReassignText(std::wstring _text);
     void SetTextColor(D2D1::ColorF _color);
+
+    const std::wstring& GetText() const { return m_text; }
 
     void Render();
 

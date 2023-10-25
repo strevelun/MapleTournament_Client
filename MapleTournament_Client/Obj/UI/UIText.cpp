@@ -9,7 +9,7 @@ UIText::UIText(const UIText& _uiText)
 	m_text = _uiText.m_text;
 	m_size = _uiText.m_size;
 
-	ReassignText(_uiText.m_text, _uiText.m_size);
+	ReassignText(_uiText.m_text);
 	D2D1_COLOR_F color = _uiText.m_pBrush->GetColor();
 	SetTextColor(D2D1::ColorF(color.r, color.g, color.b, color.a));
 }
@@ -27,7 +27,7 @@ UIText::~UIText()
 	if(m_pTextFormat)		m_pTextFormat->Release();
 }
 
-void UIText::ReassignText(std::wstring _text, FLOAT _size)
+void UIText::ReassignText(std::wstring _text)
 {
 	m_text = _text;
 
@@ -37,7 +37,7 @@ void UIText::ReassignText(std::wstring _text, FLOAT _size)
 	if (m_pTextFormat)		m_pTextFormat->Release();
 
 	HRESULT hr = pDWriteFactory->CreateTextFormat(L"Arial", nullptr, DWRITE_FONT_WEIGHT_NORMAL, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL,
-		_size, L"en-US", &m_pTextFormat);
+		m_size, L"en-US", &m_pTextFormat);
 	if (FAILED(hr))
 	{
 		Debug::Log(("UIText : CreateTextFormat returned : " + std::to_string(hr)));
@@ -75,7 +75,7 @@ void UIText::SetTextColor(D2D1::ColorF _color)
 
 void UIText::Render()
 {
-	//_pGraphics->DrawRectangle(m_rect, eColor::Black, 3);
+	Graphics::GetInst()->GetRenderTarget()->DrawRectangle(m_rect, m_pBrush);
 	Graphics::GetInst()->GetRenderTarget()->DrawTextLayout(D2D1::Point2F(m_rect.left, m_rect.top), m_pLayout, m_pBrush);
 }
 

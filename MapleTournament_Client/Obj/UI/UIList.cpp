@@ -37,10 +37,9 @@ UIList::~UIList()
 
 void UIList::AddItem(std::wstring _text, float _textSize)
 {
-	unsigned int itemSize = m_vecItem.size();
+	size_t itemSize = m_vecItem.size();
 	UIPanel* pPanel = new UIPanel(this, m_itemWidth, m_itemHeight);
 	UIText * pText = new UIText(pPanel, _text, _textSize);
-	pText->SetName(_text);
 	pPanel->AddChildUI(pText);
 	pPanel->SetPos(0, pPanel->GetHeight() * itemSize + (itemSize > 0 ? m_itemVerticalInterval * itemSize : 0));
 	m_vecItem.push_back(pPanel);
@@ -108,7 +107,8 @@ void UIList::Update()
 {
 	for (auto& item : m_vecItem)
 	{
-		item->Update();
+		if(item->IsActive())
+			item->Update();
 	}
 }
 
@@ -116,7 +116,8 @@ void UIList::Render()
 {
 	for (auto& item : m_vecItem)
 	{
-		item->Render();
+		if (item->IsActive())
+			item->Render();
 	}
 }
 
@@ -126,6 +127,8 @@ void UIList::Render(int _from, int _to)
 
 	for (int i = _from, j=0; i < _to; i++, j++)
 	{
+		if (!m_vecItem[i]->IsActive()) continue;
+
 		m_vecItem[i]->SetPos(0, m_vecItem[i]->GetHeight() * j);
 		m_vecItem[i]->Render();
 	}

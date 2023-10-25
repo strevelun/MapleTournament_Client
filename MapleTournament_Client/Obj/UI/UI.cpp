@@ -18,7 +18,8 @@ UI::UI(UI* _pParentPanel, UINT _width, UINT _height, INT _xpos, INT _ypos, FLOAT
 	SetPos(_xpos, _ypos);
 }
 
-UI::UI(const UI& _ui)
+UI::UI(const UI& _ui) :
+	Obj(_ui)
 {
 	m_bFocus = _ui.m_bFocus;
 	m_pParentUI = _ui.m_pParentUI; 

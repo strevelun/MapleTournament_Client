@@ -1,6 +1,8 @@
 #include "UIScrollView.h"
 #include "UIList.h"
 #include "UIButton.h"
+#include "UIPanel.h"
+#include "UIText.h"
 #include "../../GraphicCore/Graphics.h"
 #include "../../Managers/ResourceManager.h"
 
@@ -61,12 +63,13 @@ void UIScrollView::SetIdx(int _topIdx, int _bottomIdx)
 	m_bottomIdx = _bottomIdx;
 }
 
-void UIScrollView::AddItem(const std::wstring& _text)
+void UIScrollView::AddItem(const std::wstring& _text, float _textSize)
 {
 	size_t ct = m_pUIList->GetItemCount();
 	if (m_maxItemViewCount <= ct)
 		SetIdx(ct - m_maxItemViewCount + 1, ct + 1);
 
+	m_pUIList->AddItem(_text, _textSize);
 }
 
 void UIScrollView::Update()

@@ -18,6 +18,8 @@ private:
     u_int m_curPage = 0;
     u_int m_maxPageCount = 0;
 
+    ID2D1SolidColorBrush* m_pBrush = nullptr;
+
 public:
     UIPage(const UIPage& _uiPage);
     UIPage(UI* _pParentPanel, UINT _width, UINT _height, UINT _itemWidth, UINT _itemHeight, INT _xpos = 0, INT _ypos = 0, FLOAT _pivotX = 0.f, FLOAT _pivotY = 0.f, float _itemVerticalInterval = 0.f);

@@ -5,6 +5,7 @@
 #include "UIPanel.h"
 #include "../../Managers/ResourceManager.h"
 #include "../../Setting.h"
+#include "../../GraphicCore/Graphics.h"
 
 UIPage::UIPage(const UIPage& _uiPage)
 	: UI(_uiPage)
@@ -62,6 +63,8 @@ UIPage::UIPage(UI* _pParentPanel, UINT _width, UINT _height, UINT _itemWidth, UI
 			*(u_short*)buffer = count;
 			NetworkManager::GetInst()->Send(buffer);
 		});
+
+	Graphics::GetInst()->CreateSolidColorBrush(D2D1::ColorF::Blue, &m_pBrush);
 }
 
 UIPage::~UIPage()
@@ -69,6 +72,8 @@ UIPage::~UIPage()
 	delete m_pUIList;
 	delete m_pPrevBtn;
 	delete m_pNextBtn;
+
+	if (m_pBrush) m_pBrush->Release();
 }
 
 void UIPage::SetItemTemplate(UIPanel* _pItem)
@@ -91,6 +96,8 @@ void UIPage::Render()
 	m_pUIList->Render();
 	m_pPrevBtn->Render();
 	m_pNextBtn->Render();
+
+	Graphics::GetInst()->GetRenderTarget()->DrawRectangle(m_rect, m_pBrush);
 }
 
 void UIPage::Reset()

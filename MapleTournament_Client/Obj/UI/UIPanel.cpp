@@ -8,7 +8,7 @@ UIPanel::UIPanel(const UIPanel& _ui)
 	: UI(_ui)
 {
 	for (auto ui : _ui.m_vecMemberUI) {
-		m_vecMemberUI.push_back(_ui.Clone());
+		m_vecMemberUI.push_back(ui->Clone());
 	}
 
 	m_pBitmap = _ui.m_pBitmap;
@@ -75,7 +75,7 @@ void UIPanel::SetPos(INT _xpos, INT _ypos)
 	size_t size = m_vecMemberUI.size();
 	for (size_t i = 0; i < size; i++)
 	{
-		m_vecMemberUI[i]->SetPos(m_vecMemberUI[i]->GetPosX(), m_vecMemberUI[i]->GetPosY());
+		m_vecMemberUI[i]->SetPos(m_vecMemberUI[i]->GetPosX() - m_vecMemberUI[i]->GetParent()->GetPosX(), _ypos+ m_vecMemberUI[i]->GetPosY() - m_vecMemberUI[i]->GetParent()->GetPosY());
 	}
 }
 

@@ -282,11 +282,10 @@ bool LobbyScene::InitLobbyUI()
     UIPanel* pRoomListPanel = new UIPanel(nullptr, 800, 400);
     pRoomListPanel->SetName(L"RoomListPanel");
     pRoomListPanel->SetBitmap(pBitmap);
-    UIList* pRoomList = new UIList(pRoomListPanel, 680, 355, 665, 20, 50);
-    pRoomList->SetName(L"RoomList");
-    pRoomListPanel->AddChildUI(pRoomList);
+    UIPage* pRoomPage = new UIPage(pRoomListPanel, 680, 355, 665, 20, 50, 0, 0.f, 0.f, 3.f);
+    pRoomPage->SetName(L"RoomList");
+    pRoomListPanel->AddChildUI(pRoomPage);
     pUIManager->AddUI(pRoomListPanel);
-    //pBackground->AddChildUI(pRoomListPanel);
 
     MyPlayer* pMyPlayer = ObjectManager::GetInst()->GetMyPlayer();
     const std::wstring& myNickname = pMyPlayer->GetNickname();
@@ -324,15 +323,15 @@ bool LobbyScene::InitLobbyUI()
     UIPanel* pUserListPanel = new UIPanel(nullptr, 250, 400, ScreenWidth, 0, 1.0f, 0.f);
     pUserListPanel->SetName(L"UserListPanel");
     pUserListPanel->SetBitmap(pBitmap);
-    UINT itemWidth = 150, itemHeight = 24;
-    UIPage* pPage = new UIPage(pUserListPanel, 250, 280, itemWidth, itemHeight, 10, 70, 0.f, 0.f, 9.f); // 페이지 당 리스트 아이템 수
+    UINT itemWidth = 190, itemHeight = 24;
+    UIPage* pPage = new UIPage(pUserListPanel, itemWidth, 290, itemWidth, itemHeight, 10, 70, 0.f, 0.f, 8.f); // 페이지 당 리스트 아이템 수
     pPage->SetName(L"UserList");
     pUserListPanel->AddChildUI(pPage);
     pUIManager->AddUI(pUserListPanel);
-    UIPanel* pItem = new UIPanel(pPage, itemWidth, itemHeight);
+    UIPanel* pItem = new UIPanel(pPage, itemWidth, itemHeight, 10);
     UIText* pNickname = new UIText(pItem, L"", 20.f);
     pNickname->SetName(L"Nickname");
-    UIText* pSessionState = new UIText(pItem, L"", 20.f);
+    UIText* pSessionState = new UIText(pItem, L"", 10.f, 160);
     pSessionState->SetName(L"SessionState");
     pItem->AddChildUI(pNickname);
     pItem->AddChildUI(pSessionState);

@@ -6,6 +6,14 @@ Obj::Obj() :
 {
 }
 
+Obj::Obj(const Obj& _obj)
+{
+	m_strName = _obj.m_strName;
+	m_tPos = _obj.m_tPos;
+	m_bAlive = _obj.m_bAlive;
+	m_bActive = _obj.m_bActive;
+}
+
 Obj::Obj(INT _xpos, INT _ypos)
 	: m_tPos{ _xpos, _ypos }, m_bAlive(true)
 {

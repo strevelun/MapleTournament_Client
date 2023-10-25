@@ -27,7 +27,7 @@ public:
     int GetMaxItemViewCount() const { return m_maxItemViewCount; }
 
     void SetIdx(int _topIdx, int _bottomIdx);
-    void AddItem(const std::wstring& _text);
+    void AddItem(const std::wstring& _text, float _textSize);
 
     void Update() override;
     void Render() override;

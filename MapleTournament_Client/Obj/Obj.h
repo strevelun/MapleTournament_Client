@@ -16,6 +16,7 @@ protected:
 
 public:
 	Obj();
+	Obj(const Obj& _obj);
 	Obj(INT _xpos, INT _ypos);
 	virtual ~Obj();
 
