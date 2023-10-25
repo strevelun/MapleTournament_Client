@@ -8,7 +8,8 @@
 UIButton::UIButton(const UIButton& _uiButton)
 	: UI(_uiButton)
 {
-	m_pUIText = _uiButton.m_pUIText->Clone();
+	if(_uiButton.m_pUIText)
+		m_pUIText = _uiButton.m_pUIText->Clone();
 	m_pBitmap = _uiButton.m_pBitmap;
 	m_Callback = _uiButton.m_Callback;
 }

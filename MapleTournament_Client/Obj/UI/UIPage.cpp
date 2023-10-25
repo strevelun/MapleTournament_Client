@@ -34,35 +34,12 @@ UIPage::UIPage(UI* _pParentPanel, UINT _width, UINT _height, UINT _itemWidth, UI
 	if (pBitmap) m_pPrevBtn->SetBitmap(pBitmap);
 
 	m_pPrevBtn->SetClickable(true);
-	m_pPrevBtn->SetCallback([this]()
-		{
-			if (m_curPage <= 0) 
-				return;
-
-			char buffer[255];
-			u_short count = sizeof(u_short);
-			*(u_short*)(buffer + count) = (u_short)ePacketType::C_UpdateUserListPage;		count += sizeof(u_short);
-			*(char*)(buffer + count) = (char)m_curPage;										count += sizeof(char);
-			*(char*)(buffer + count) = (char)m_curPage-1;										count += sizeof(char);
-			*(u_short*)buffer = count;
-			NetworkManager::GetInst()->Send(buffer);
-		});
 
 	pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_arrow_right.png");
 	m_pNextBtn = new UIButton(_pParentPanel, 40, 40, _pParentPanel->GetWidth(), _pParentPanel->GetHeight(), 1.f, 1.f);
 	if (pBitmap) m_pNextBtn->SetBitmap(pBitmap);
 
 	m_pNextBtn->SetClickable(true);
-	m_pNextBtn->SetCallback([this]()
-		{
-			char buffer[255];
-			u_short count = sizeof(u_short);
-			*(u_short*)(buffer + count) = (u_short)ePacketType::C_UpdateUserListPage;		count += sizeof(u_short);
-			*(char*)(buffer + count) = (char)m_curPage;										count += sizeof(char);
-			*(char*)(buffer + count) = (char)m_curPage+1;										count += sizeof(char);
-			*(u_short*)buffer = count;
-			NetworkManager::GetInst()->Send(buffer);
-		});
 
 	Graphics::GetInst()->CreateSolidColorBrush(D2D1::ColorF::Blue, &m_pBrush);
 }
@@ -82,6 +59,16 @@ void UIPage::SetItemTemplate(UIPanel* _pItem)
 	{
 		m_pUIList->AddItem(_pItem->Clone());
 	}
+}
+
+void UIPage::SetPrevBtnCallback(const std::function<void()>& _func)
+{
+	m_pPrevBtn->SetCallback(_func);
+}
+
+void UIPage::SetNextBtnCallback(const std::function<void()>& _func)
+{
+	m_pNextBtn->SetCallback(_func);
 }
 
 void UIPage::Update()

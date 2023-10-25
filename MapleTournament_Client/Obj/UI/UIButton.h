@@ -29,7 +29,7 @@ public:
     void Render() override;
     template <typename T>
     void SetCallback(void (T::*pFunc)(), T* _pObj) { m_Callback = std::bind(pFunc, _pObj); }
-    void SetCallback(const std::function<void()>& pFunc) {  m_Callback = pFunc; }
+    void SetCallback(const std::function<void()>& _func) {  m_Callback = _func; }
     void SetBitmap(Bitmap* _pBitmap) { m_pBitmap = _pBitmap; }
 
     void SetUIText(UIText* _pUIText);

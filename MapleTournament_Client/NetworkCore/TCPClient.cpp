@@ -7,29 +7,23 @@
 #include <string>
 
 std::map<ePacketType, void(*)(char*)> TCPClient::m_mapPacketHandlerCallback = {
-	{ ePacketType::S_Exit, PacketHandler::S_Exit },
 	{ ePacketType::S_OKLogin, PacketHandler::S_OKLogin },
 	{ ePacketType::S_FailedLogin, PacketHandler::S_FailedLogin },
 	{ ePacketType::S_CreateRoom, PacketHandler::S_CreateRoom },
 	{ ePacketType::S_NotifyCreateRoom, PacketHandler::S_NotifyCreateRoom },
-	{ ePacketType::S_SendSessions, PacketHandler::S_SendSessions },
-	{ ePacketType::S_SendRooms, PacketHandler::S_SendRooms },
-	{ ePacketType::S_EnterOtherUser, PacketHandler::S_EnterOtherUser },
 	{ ePacketType::S_Chat, PacketHandler::S_Chat },
 	{ ePacketType::S_JoinRoom, PacketHandler::S_JoinRoom },
 	{ ePacketType::S_NotifyJoinedUser, PacketHandler::S_NotifyJoinedUser },
 	{ ePacketType::S_CheckRoomReadyOK, PacketHandler::S_CheckRoomReadyOK },
 	{ ePacketType::S_CheckRoomReadyFail, PacketHandler::S_CheckRoomReadyFail },
 	{ ePacketType::S_EnterLobby, PacketHandler::S_EnterLobby },
-	{ ePacketType::S_LeaveRoom, PacketHandler::S_LeaveRoom },
 	{ ePacketType::S_UpdateRoomMemberLeave, PacketHandler::S_UpdateRoomMemberLeave },
-	{ ePacketType::S_UpdateLobbyRoomList, PacketHandler::S_UpdateLobbyRoomList },
-	{ ePacketType::S_UpdateLobbyRoomMemberCount, PacketHandler::S_UpdateLobbyRoomMemberCount },
 	{ ePacketType::S_UpdateUserState, PacketHandler::S_UpdateUserState },
 	{ ePacketType::S_UpdateUserType, PacketHandler::S_UpdateUserType },
 	{ ePacketType::S_UpdateWaitingRoomBtn, PacketHandler::S_UpdateWaitingRoomBtn },
 	{ ePacketType::S_InGameReady, PacketHandler::S_InGameReady },
 	{ ePacketType::S_UpdateUserListPage, PacketHandler::S_UpdateUserListPage },
+	{ ePacketType::S_UpdateRoomListPage, PacketHandler::S_UpdateRoomListPage },
 };
 
 TCPClient::TCPClient()

@@ -2,6 +2,7 @@
 #include "UI.h"
 
 #include <list>
+#include <functional>
 
 class UIButton;
 class UIList;
@@ -33,6 +34,9 @@ public:
     void SetCurPageIdx(u_int _idx) { m_curPage = _idx; }
     void SetItemTemplate(UIPanel* _pItem);
     void SetMaxItemViewCount(int _count) { m_maxItemViewCount = _count; }
+
+    void SetPrevBtnCallback(const std::function<void()>& _func);
+    void SetNextBtnCallback(const std::function<void()>& _func);
 
     u_int GetMaxItemViewCount() const { return m_maxItemViewCount; }
 
