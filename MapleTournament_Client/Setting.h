@@ -39,6 +39,8 @@ enum class ePacketType
 	S_UpdateUserType,
 	C_InGameReady,
 	S_InGameReady,
+	C_UpdateUserListPage,
+	S_UpdateUserListPage,
 };
 
 enum class eSkillType
@@ -71,6 +73,15 @@ enum class eType
 	Block,
 	Character,
 	None
+};
+
+enum class eSessionState
+{
+	None,
+	Login,
+	Lobby,
+	WatingRoom,
+	InGame
 };
 
 typedef struct _tSpriteData

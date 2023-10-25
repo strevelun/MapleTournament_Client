@@ -11,10 +11,12 @@
 #include "../Obj/UI/UIEditText.h"
 #include "../Obj/UI/UIList.h"
 #include "../Obj/UI/UIText.h"
+#include "../Obj/UI/UIPage.h"
 #include "../Obj/MyPlayer.h"
 #include "../Setting.h"
 #include "../Constants.h"
 #include "../Debug.h"
+#include "../Timer.h"
 
 #include <algorithm>
 
@@ -44,6 +46,13 @@ bool LobbyScene::Init()
     *(ushort*)buffer = count;
     NetworkManager::GetInst()->Send(buffer);
 
+    count = sizeof(ushort);
+    *(ushort*)(buffer + count) = (ushort)ePacketType::C_UpdateUserListPage;		count += sizeof(ushort);
+    *(char*)(buffer + count) = (char)0;                                         count += sizeof(char);
+    *(char*)(buffer + count) = (char)0;                                         count += sizeof(char);
+    *(ushort*)buffer = count;
+    NetworkManager::GetInst()->Send(buffer);
+
     return true;
 }
 
@@ -66,6 +75,12 @@ void LobbyScene::CreateRoomButtonCallback(UIEditText* _pEditText, const std::wst
     UIManager::GetInst()->PopPopupUI();
 
     _pEditText->ClearEditText();
+
+    UI* pUI = UIManager::GetInst()->FindUI(L"Chat");
+    UIPanel* pPanel = static_cast<UIPanel*>(pUI);
+    pUI = pPanel->FindChildUI(L"ChatList");
+    UIScrollView* pScroll = static_cast<UIScrollView*>(pUI);
+    pScroll->Clear();
 }
 
 void LobbyScene::ChatCallback(UIEditText* _pEditText, const std::wstring& _str)
@@ -83,17 +98,7 @@ void LobbyScene::ChatCallback(UIEditText* _pEditText, const std::wstring& _str)
     *(ushort*)buffer = count;
     NetworkManager::GetInst()->Send(buffer);
 
-    _pEditText->ClearEditText();
-
-    UI* pUI = UIManager::GetInst()->FindUI(L"Chat");
-    UIPanel* pPanel = static_cast<UIPanel*>(pUI);
-    pUI = pPanel->FindChildUI(L"ChatList");
-    UIScrollView* pScroll = static_cast<UIScrollView*>(pUI);
-    size_t ct = pScroll->GetUIList()->GetItemCount();
-    int maxCount = pScroll->GetMaxItemViewCount();
-    if (maxCount <= ct)
-        pScroll->SetIdx(ct - maxCount + 1, ct + 1);
-    
+    _pEditText->ClearEditText();    
 }
 
 bool LobbyScene::ShowLobbyUI()
@@ -319,11 +324,20 @@ bool LobbyScene::InitLobbyUI()
     UIPanel* pUserListPanel = new UIPanel(nullptr, 250, 400, ScreenWidth, 0, 1.0f, 0.f);
     pUserListPanel->SetName(L"UserListPanel");
     pUserListPanel->SetBitmap(pBitmap);
-    UIList* pUserList = new UIList(pUserListPanel, 250, 330, 110, 24, 10, 70, 0.f, 0.f);
-    pUserList->SetName(L"UserList");
-    pUserListPanel->AddChildUI(pUserList);
-    pUserList->SetItemVerticalInterval(9.0f);
+    UINT itemWidth = 150, itemHeight = 24;
+    UIPage* pPage = new UIPage(pUserListPanel, 250, 280, itemWidth, itemHeight, 10, 70, 0.f, 0.f, 9.f); // 페이지 당 리스트 아이템 수
+    pPage->SetName(L"UserList");
+    pUserListPanel->AddChildUI(pPage);
     pUIManager->AddUI(pUserListPanel);
+    UIPanel* pItem = new UIPanel(pPage, itemWidth, itemHeight);
+    UIText* pNickname = new UIText(pItem, L"", 20.f);
+    pNickname->SetName(L"Nickname");
+    UIText* pSessionState = new UIText(pItem, L"", 20.f);
+    pSessionState->SetName(L"SessionState");
+    pItem->AddChildUI(pNickname);
+    pItem->AddChildUI(pSessionState);
+    pPage->SetItemTemplate(pItem);
+    delete pItem;
 
     /* user profile */
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_lobbyscene_profile.png");
@@ -343,9 +357,8 @@ bool LobbyScene::InitLobbyUI()
     pChatPanel->SetBitmap(pBitmap);
     pChatPanel->SetName(L"Chat");
 
-    UIScrollView* pChatScrollView = new UIScrollView(pChatPanel, 480, 230, 10, 10, pChatPanel->GetWidth() - 80, 20);
+    UIScrollView* pChatScrollView = new UIScrollView(pChatPanel, 480, 230, 10, 10, pChatPanel->GetWidth() - 80, 20, 2.f);
     pChatScrollView->SetName(L"ChatList");
-    pChatScrollView->GetUIList()->SetItemVerticalInterval(2.f);
     pChatPanel->AddChildUI(pChatScrollView);
 
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_login_edittext.png");
@@ -528,4 +541,30 @@ void LobbyScene::GameReadyCallback()
     *(ushort*)(buffer + count) = (ushort)ePacketType::C_UserRoomReady;          count += sizeof(ushort);
     *(ushort*)buffer = count;
     NetworkManager::GetInst()->Send(buffer);
+}
+
+void LobbyScene::Update()
+{
+    // 멤버로 현재 waiting인지 lobby인지 
+
+    m_frameTime += Timer::GetInst()->GetDeltaTime();
+    if (m_frameTime >= 5.f)
+    {
+        UI* pUI = UIManager::GetInst()->FindUI(L"UserListPanel");
+        if (!pUI) return;
+        
+        UIPanel* pUserListPanel = static_cast<UIPanel*>(pUI);
+        pUI = pUserListPanel->FindChildUI(L"UserList");
+        UIPage* pPage = static_cast<UIPage*>(pUI);
+        char page = pPage->GetCurPageIdx();
+
+        char buffer[255];
+        ushort count = sizeof(ushort);
+        *(ushort*)(buffer + count) = (ushort)ePacketType::C_UpdateUserListPage;		count += sizeof(ushort);
+        *(char*)(buffer + count) = page;                                         count += sizeof(char);
+        *(char*)(buffer + count) = page;                                         count += sizeof(char);
+        *(ushort*)buffer = count;
+        NetworkManager::GetInst()->Send(buffer);
+        m_frameTime = 0.f;
+    }
 }

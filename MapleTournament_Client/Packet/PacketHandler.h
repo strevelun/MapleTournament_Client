@@ -28,5 +28,6 @@ public:
 	static void S_UpdateUserType(char* _packet);
 	static void S_UpdateWaitingRoomBtn(char* _packet);
 	static void S_InGameReady(char* _packet);
+	static void S_UpdateUserListPage(char* _packet);
 };
 

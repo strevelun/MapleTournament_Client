@@ -30,7 +30,7 @@ public:
 	static bool SortLayer(const Layer* a, const Layer* b);
 
 	virtual bool Init();
-	void Update();
+	virtual void Update();
 	void Render();
 };
 

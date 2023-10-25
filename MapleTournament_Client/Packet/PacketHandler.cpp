@@ -10,6 +10,7 @@
 #include "../Obj/UI/UIList.h"
 #include "../Obj/UI/UIText.h"
 #include "../Obj/UI/UIScrollView.h"
+#include "../Obj/UI/UIPage.h"
 #include "../Obj/UI/Mouse.h"
 #include "../Scene/Scene.h"
 #include "../Scene/Layer.h"
@@ -32,9 +33,9 @@ void PacketHandler::S_Exit(char* _packet)
 	{
 		UIPanel* pUserListPanel = static_cast<UIPanel*>(pUI);
 		pUI = pUserListPanel->FindChildUI(L"UserList");
-		UIList* pUserList = static_cast<UIList*>(pUI);
+		UIPage* pUserList = static_cast<UIPage*>(pUI);
 		std::wstring user((wchar_t*)_packet);
-		pUserList->RemoveItem(user);
+		pUserList->GetUIList()->RemoveItem(user);
 	}
 
 	Debug::Log("PacketHandler::S_Exit");
@@ -69,22 +70,26 @@ void PacketHandler::S_CreateRoom(char* _packet)
 	Mouse* pMouse = InputManager::GetInst()->GetMouse();
 	pMouse->SetActive(true);
 
+	LobbyScene* pLobbyScene = SceneManager::GetInst()->GetCurScene<LobbyScene>();
+
 	UI* pUI = UIManager::GetInst()->FindUI(L"Chat");
 	if (pUI)
 	{
 		UIPanel* pPanel = static_cast<UIPanel*>(pUI);
 		pUI = pPanel->FindChildUI(L"ChatList");
-		UIScrollView* pList = static_cast<UIScrollView*>(pUI);
-		pList->GetUIList()->RemoveAllItems();
+		UIScrollView* pScroll = static_cast<UIScrollView*>(pUI);
+		pScroll->Clear();
 	}
 
+	// UserList는 WaitingRoom으로 갈때 active=false로 하고, 다시 lobby로 나올때 서버로부터 업데이트
 	pUI = UIManager::GetInst()->FindUI(L"UserListPanel");
 	if (pUI)
 	{
 		UIPanel* pUserListPanel = static_cast<UIPanel*>(pUI);
 		pUI = pUserListPanel->FindChildUI(L"UserList");
-		UIList* pList = static_cast<UIList*>(pUI);
-		pList->RemoveAllItems();
+		UIPage* pPage = static_cast<UIPage*>(pUI);
+		pPage->Reset();
+
 	}
 
 	pUI = UIManager::GetInst()->FindUI(L"RoomListPanel");
@@ -96,7 +101,6 @@ void PacketHandler::S_CreateRoom(char* _packet)
 		pList->RemoveAllItems();
 	}
 
-	LobbyScene* pLobbyScene = SceneManager::GetInst()->GetCurScene<LobbyScene>();
 	pLobbyScene->HideLobbyUI();
 	pLobbyScene->ShowWaitingRoomUI();
 
@@ -191,6 +195,7 @@ void PacketHandler::S_NotifyCreateRoom(char* _packet)
 //void PacketHandler::ReceiveUserList(char* _packet)
 void PacketHandler::S_SendSessions(char* _packet)
 {
+	/*
 	int size = *(ushort*)_packet;			_packet += sizeof(ushort);
 
 	UI* pUI = UIManager::GetInst()->FindUI(L"UserListPanel");
@@ -198,15 +203,15 @@ void PacketHandler::S_SendSessions(char* _packet)
 	{
 		UIPanel* pUserListPanel = static_cast<UIPanel*>(pUI);
 		pUI = pUserListPanel->FindChildUI(L"UserList");
-		UIList* pList = static_cast<UIList*>(pUI);
+		UIPage* pPage = static_cast<UIPage*>(pUI);
 
 		for (int i = 0; i < size; i++)
 		{
-			pList->AddItem((wchar_t*)_packet, 20.f);
+			pPage->GetUIList()->AddItem((wchar_t*)_packet, 20.f);
 			_packet += (ushort)wcslen((wchar_t*)_packet) * 2 + 2;
 		}
 	}
-	
+	*/
 	Debug::Log("PacketHandler::S_SendSessions");
 }
 
@@ -279,8 +284,8 @@ void PacketHandler::S_EnterOtherUser(char* _packet)
 	{
 		UIPanel* pUserListPanel = static_cast<UIPanel*>(pUI);
 		pUI = pUserListPanel->FindChildUI(L"UserList");
-		UIList* pList = static_cast<UIList*>(pUI);
-		pList->AddItem((wchar_t*)_packet, 20.f);
+		UIPage* pPage = static_cast<UIPage*>(pUI);
+		pPage->GetUIList()->AddItem((wchar_t*)_packet, 20.f);
 	}
 
 	Debug::Log("PacketHandler::S_EnterOtherUser");
@@ -293,11 +298,10 @@ void PacketHandler::S_Chat(char* _packet)
 	{
 		UIPanel* pPanel = static_cast<UIPanel*>(pUI);
 		pUI = pPanel->FindChildUI(L"ChatList");
-		UIScrollView* pList = static_cast<UIScrollView*>(pUI);
+		UIScrollView* pScroll = static_cast<UIScrollView*>(pUI);
 		std::wstring chat((wchar_t*)_packet);			_packet += (ushort)wcslen((wchar_t*)_packet) * 2 + 2;
 		std::wstring nickname((wchar_t*)_packet);
-		std::wstring message = nickname + L" : " + chat;
-		pList->GetUIList()->AddItem(message, 20.f);//
+		pScroll->AddItem(nickname + L" : " + chat, 20.f);
 	}
 
 	Debug::Log("PacketHandler::S_Chat");
@@ -348,6 +352,7 @@ void PacketHandler::S_JoinRoom(char* _packet)
 	pMouse->SetActive(true);
 
 	UIList* pList;
+	UIPage* pPage;
 	// UserList, Chat, Roomlist 전부 삭제
 	pUI = UIManager::GetInst()->FindUI(L"Chat");
 	if (pUI)
@@ -356,8 +361,8 @@ void PacketHandler::S_JoinRoom(char* _packet)
 		pUI = pPanel->FindChildUI(L"ChatList");
 		if (pUI)
 		{
-			pList = static_cast<UIList*>(pUI);
-			pList->RemoveAllItems();
+			pPage = static_cast<UIPage*>(pUI);
+			pPage->GetUIList()->RemoveAllItems();
 			pUI->SetActive(true);
 		}
 	}
@@ -370,8 +375,8 @@ void PacketHandler::S_JoinRoom(char* _packet)
 		pUI = pUserListPanel->FindChildUI(L"UserList");
 		if (pUI)
 		{
-			pList = static_cast<UIList*>(pUI);
-			pList->RemoveAllItems();
+			pPage = static_cast<UIPage*>(pUI);
+			pPage->GetUIList()->RemoveAllItems();
 			pUI->SetActive(true);
 		}
 	}
@@ -722,5 +727,31 @@ void PacketHandler::S_InGameReady(char* _packet)
 	UIManager::GetInst()->AddUI(pPanel);
 
 	Debug::Log("PacketHandler::S_InGameReady");
+}
+
+void PacketHandler::S_UpdateUserListPage(char* _packet)
+{
+	int numOfUser = *(char*)_packet;			_packet += sizeof(char);
+	int curPage = *(char*)_packet;			_packet += sizeof(char);
+	int newPage = *(char*)_packet;			_packet += sizeof(char);
+
+	UI* pUI = UIManager::GetInst()->FindUI(L"UserListPanel");
+	if (!pUI)	return;
+	UIPanel* pUserListPanel = static_cast<UIPanel*>(pUI);
+	pUI = pUserListPanel->FindChildUI(L"UserList");
+	UIPage* pPage = static_cast<UIPage*>(pUI);
+	if (numOfUser <= 0)
+		return;
+
+	pPage->SetCurPageIdx(newPage);
+	pPage->GetUIList()->RemoveAllItems();
+
+	for (int i = 0; i < numOfUser; i++)
+	{
+		pPage->GetUIList()->AddItem((wchar_t*)_packet, 20.f);			_packet += (ushort)wcslen((wchar_t*)_packet) * 2 + 2;
+		eSessionState eState = (eSessionState)*(char*)_packet;				_packet += sizeof(char);
+	}
+
+	Debug::Log("PacketHandler::S_UpdateUserListPage");
 }
 

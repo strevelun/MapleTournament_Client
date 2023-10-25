@@ -56,16 +56,18 @@ bool UIManager::RemoveUI(const std::wstring& _strName)
     for (; iter != iterEnd; iter++)
     {
         if ((*iter)->GetName() == _strName)
-            break;
+        {
+            m_vecUI.erase(iter);
+            return true;
+        }
     }
-    m_vecUI.erase(iter);
-
-    return true;
+    return false;
 }
 
 void UIManager::PopPopupUI()
 {
     if (m_vecPopupUI.empty()) return;
+
     m_vecPopupUI.pop_back();
 }
 
