@@ -8,7 +8,6 @@ public:
 	static void S_OKLogin(char* _packet);
 	static void S_FailedLogin(char* _packet);
 	static void S_CreateRoom(char* _packet);
-	static void S_NotifyCreateRoom(char* _packet);
 	static void S_Chat(char* _packet);
 	static void S_JoinRoom(char* _packet);
 	static void S_JoinRoomFail(char* _packet);

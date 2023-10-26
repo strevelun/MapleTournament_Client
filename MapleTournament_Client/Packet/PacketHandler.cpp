@@ -121,56 +121,6 @@ void PacketHandler::S_CreateRoom(char* _packet)
 	Debug::Log("PacketHandler::S_CreateRoom");
 }
 
-// 1 : Ready, 2 : InGame
-void PacketHandler::S_NotifyCreateRoom(char* _packet)
-{
-	unsigned int roomId = *(unsigned int*)_packet;			_packet += sizeof(unsigned int);
-	std::wstring strRoomId = std::to_wstring(roomId);
-	std::wstring strRoomState(L"Ready");
-	std::wstring roomTitle = (wchar_t*)_packet;					_packet += (ushort)wcslen((wchar_t*)_packet) * 2 + 2;
-	std::wstring roomOwner = (wchar_t*)_packet;					_packet += (ushort)wcslen((wchar_t*)_packet) * 2 + 2;
-
-	UI* pUI = UIManager::GetInst()->FindUI(L"RoomListPanel");
-	if (pUI)
-	{
-		UIPanel* pRoomListPanel = static_cast<UIPanel*>(pUI);
-		pUI = pRoomListPanel->FindChildUI(L"RoomList");
-		UIList* pRoomList = static_cast<UIList*>(pUI);
-		UIPanel* pPanel = new UIPanel(pRoomList, 660, 15);
-		pPanel->SetName(strRoomId);
-		UIButton* pBtn = new UIButton(pPanel, 660, 15);
-		pBtn->SetClickable(true);
-		pBtn->SetCallback([roomId]()
-			{
-				char buffer[255];
-				ushort count = sizeof(ushort);
-				*(ushort*)(buffer + count) = (ushort)ePacketType::C_JoinRoom;				count += sizeof(ushort);
-				*(unsigned int*)(buffer + count) = roomId;									count += sizeof(unsigned int);
-				*(ushort*)buffer = count;
-				NetworkManager::GetInst()->Send(buffer);
-				Mouse* pMouse = InputManager::GetInst()->GetMouse();
-				pMouse->SetActive(false);
-			});
-		pPanel->AddChildUI(pBtn);
-		UIText* pTextRoomId = new UIText(pPanel, strRoomId, 20.f, 0.f, 0.f, 0.f, 0.f);
-		pPanel->AddChildUI(pTextRoomId);
-		UIText* pTextState = new UIText(pPanel, strRoomState, 20.f, 80.f, 0.f, 0.f, 0.f);
-		pTextState->SetName(L"State");
-		pPanel->AddChildUI(pTextState);
-		UIText* pTextTitle = new UIText(pPanel, roomTitle, 20.f, 140.f, 0.f, 0.f, 0.f);
-		pPanel->AddChildUI(pTextTitle);
-		UIText* pTextOwner = new UIText(pPanel, roomOwner, 20.f, 460.f, 0.f, 0.f, 0.f);
-		pTextOwner->SetName(L"Owner");
-		pPanel->AddChildUI(pTextOwner);
-		UIText* pTextParticipants = new UIText(pPanel, L"1 / 4", 20.f, 590.f, 0.f, 0.f, 0.f);
-		pTextParticipants->SetName(L"Count");
-		pPanel->AddChildUI(pTextParticipants);
-		pRoomList->AddItem(pPanel);
-	}
-
-	Debug::Log("PacketHandler::S_NotifyCreateRoom");
-}
-
 void PacketHandler::S_Chat(char* _packet)
 {
 	UI* pUI = UIManager::GetInst()->FindUI(L"Chat");

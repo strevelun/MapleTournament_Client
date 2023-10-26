@@ -13,7 +13,6 @@ enum class ePacketType
 	S_FailedLogin,
 	C_CreateRoom,
 	S_CreateRoom,
-	S_NotifyCreateRoom,
 	C_Chat,
 	S_Chat,
 	C_JoinRoom,

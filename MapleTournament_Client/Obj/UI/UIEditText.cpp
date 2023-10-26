@@ -102,7 +102,8 @@ void UIEditText::Render()
 
 	if (m_pBitmap)		pRenderTarget->DrawBitmap(m_pBitmap->GetBitmap(), m_rect);
 
-	pRenderTarget->DrawTextW(m_strInput.c_str(), m_strInput.length(), m_pTextFormat, m_rect, m_pBrush);
+	if(m_strInput.length() > 0)
+		pRenderTarget->DrawTextW(m_strInput.c_str(), m_strInput.length(), m_pTextFormat, m_rect, m_pBrush);
 
 	if (m_bFocus)
 	{

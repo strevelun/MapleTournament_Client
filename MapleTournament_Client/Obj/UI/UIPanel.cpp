@@ -7,8 +7,11 @@
 UIPanel::UIPanel(const UIPanel& _ui)
 	: UI(_ui)
 {
-	for (auto ui : _ui.m_vecMemberUI) {
-		m_vecMemberUI.push_back(ui->Clone());
+	for (auto ui : _ui.m_vecMemberUI) 
+	{
+		UI* pUI = ui->Clone();
+		pUI->SetParent(this);
+		m_vecMemberUI.push_back(pUI);
 	}
 
 	m_pBitmap = _ui.m_pBitmap;
@@ -36,9 +39,7 @@ UIPanel::~UIPanel()
 void UIPanel::AddChildUI(UI* _pUI)
 {
 	if (!_pUI) return; 
-	//int posY = _pUI->GetPosY();
-	//_pUI->SetPos(posX + m_tPos.x - (m_size.width * m_pivotX), posY + m_tPos.y - (m_size.height * m_pivotY));
-	//_pUI->SetPos(posX, posY);
+
 	m_vecMemberUI.push_back(_pUI);
 }
 
@@ -55,7 +56,6 @@ UI* UIPanel::FindChildUI(const std::wstring& _strName)
 	return nullptr;
 }
 
-// Panel안에 Panle이 있는 경우?
 void UIPanel::SetActive(bool _bActive)
 {
 	std::vector<UI*>::iterator iter = m_vecMemberUI.begin();
@@ -75,7 +75,7 @@ void UIPanel::SetPos(INT _xpos, INT _ypos)
 	size_t size = m_vecMemberUI.size();
 	for (size_t i = 0; i < size; i++)
 	{
-		m_vecMemberUI[i]->SetPos(m_vecMemberUI[i]->GetPosX() - m_vecMemberUI[i]->GetParent()->GetPosX(), _ypos+ m_vecMemberUI[i]->GetPosY() - m_vecMemberUI[i]->GetParent()->GetPosY());
+		m_vecMemberUI[i]->SetPos(m_vecMemberUI[i]->GetPosXRelativeToParent(), m_vecMemberUI[i]->GetPosYRelativeToParent());
 	}
 }
 
@@ -97,13 +97,6 @@ void UIPanel::Update()
 			iter++;
 		}
 	}
-	/*
-	size_t size = m_vecMemberUI.size() ;
-	for (int i = 0; i < size; i++)
-	{
-		m_vecMemberUI[i]->Update();
-	}
-	*/
 }
 
 void UIPanel::Render()

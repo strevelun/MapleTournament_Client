@@ -407,12 +407,12 @@ bool LobbyScene::InitLobbyUI()
     UIPanel* pUserListPanel = new UIPanel(nullptr, 250, 400, ScreenWidth, 0, 1.0f, 0.f);
     pUserListPanel->SetName(L"UserListPanel");
     pUserListPanel->SetBitmap(pBitmap);
-    UINT itemWidth = 190, itemHeight = 24;
+    UINT itemWidth = 200, itemHeight = 24;
     UIPage* pPage = new UIPage(pUserListPanel, itemWidth, 290, itemWidth, itemHeight, 10, 70, 0.f, 0.f, 8.f); // 페이지 당 리스트 아이템 수
     pPage->SetName(L"UserList");
     pUserListPanel->AddChildUI(pPage);
     pUIManager->AddUI(pUserListPanel);
-    UIPanel* pItem = new UIPanel(pPage, itemWidth, itemHeight, 10);
+    UIPanel* pItem = new UIPanel(pPage, itemWidth, itemHeight);
     UIText* pNickname = new UIText(pItem, L"", 20.f);
     pNickname->SetName(L"Nickname");
     UIText* pSessionState = new UIText(pItem, L"", 10.f, 160);

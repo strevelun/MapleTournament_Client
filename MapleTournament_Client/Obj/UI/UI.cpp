@@ -15,12 +15,16 @@ UI::UI(UI* _pParentPanel, UINT _width, UINT _height, INT _xpos, INT _ypos, FLOAT
 	Obj(_xpos, _ypos), m_size{_width, _height}, m_pivotX(_pivotX), m_pivotY(_pivotY),
 	m_pParentUI(_pParentPanel)
 {
+	m_tPosRelativeToParent.x = _xpos - (m_pivotX * m_size.width);
+	m_tPosRelativeToParent.y = _ypos - (m_pivotY * m_size.height);
+
 	SetPos(_xpos, _ypos);
 }
 
 UI::UI(const UI& _ui) :
 	Obj(_ui)
 {
+	m_tPosRelativeToParent = _ui.m_tPosRelativeToParent;
 	m_bFocus = _ui.m_bFocus;
 	m_pParentUI = _ui.m_pParentUI; 
 	m_bClickable = _ui.m_bClickable;

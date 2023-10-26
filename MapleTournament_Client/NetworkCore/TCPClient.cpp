@@ -10,7 +10,6 @@ std::map<ePacketType, void(*)(char*)> TCPClient::m_mapPacketHandlerCallback = {
 	{ ePacketType::S_OKLogin, PacketHandler::S_OKLogin },
 	{ ePacketType::S_FailedLogin, PacketHandler::S_FailedLogin },
 	{ ePacketType::S_CreateRoom, PacketHandler::S_CreateRoom },
-	{ ePacketType::S_NotifyCreateRoom, PacketHandler::S_NotifyCreateRoom },
 	{ ePacketType::S_Chat, PacketHandler::S_Chat },
 	{ ePacketType::S_JoinRoom, PacketHandler::S_JoinRoom },
 	{ ePacketType::S_NotifyJoinedUser, PacketHandler::S_NotifyJoinedUser },
