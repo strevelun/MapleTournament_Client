@@ -34,6 +34,8 @@ enum class ePacketType
 	S_UpdateUserListPage,
 	C_UpdateRoomListPage,
 	S_UpdateRoomListPage,
+	C_UpdateUserSlot,
+	S_UpdateUserSlot,
 };
 
 enum class eSkillType

@@ -22,5 +22,6 @@ public:
 	static void S_InGameReady(char* _packet);
 	static void S_UpdateUserListPage(char* _packet);
 	static void S_UpdateRoomListPage(char* _packet);
+	static void S_UpdateUserSlot(char* _packet);
 };
 

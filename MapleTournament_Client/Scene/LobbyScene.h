@@ -41,5 +41,7 @@ private:
 
 	void UpdateUserListPage();
 	void UpdateRoomListPage();
+
+	void UpdateUserSlot(u_int _choice);
 };
 

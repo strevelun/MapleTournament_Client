@@ -191,6 +191,7 @@ void PacketHandler::S_JoinRoom(char* _packet)
 	for (int i = 0; i < userCount; i++)
 	{
 		char slotLocation = *(char*)_packet;				_packet += sizeof(char);
+		u_int choice = *(char*)_packet;				_packet += sizeof(char);
 		eMemberType eType = (eMemberType) * (ushort*)_packet;				_packet += sizeof(ushort);
 		std::wstring nickname((wchar_t*)_packet);			_packet += (ushort)wcslen((wchar_t*)_packet) * 2 + 2;
 
@@ -198,6 +199,14 @@ void PacketHandler::S_JoinRoom(char* _packet)
 		if (pUI)
 		{
 			UIPanel* pSlot = static_cast<UIPanel*>(pUI);
+			UI* pTemp = pSlot->FindChildUI(L"Picture");
+			if (pTemp)
+			{
+				UIPanel* pPicture = static_cast<UIPanel*>(pTemp);
+				Bitmap* pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_room_player" + std::to_wstring(choice) + L".png");
+				if (pBitmap)		pPicture->SetBitmap(pBitmap);
+			}
+
 			pUI = pSlot->FindChildUI(L"Nickname");
 			if (pUI)
 			{
@@ -300,6 +309,7 @@ void PacketHandler::S_JoinRoomFail(char* _packet)
 void PacketHandler::S_NotifyJoinedUser(char* _packet)
 {
 	char slotLocation = *(char*)_packet;				_packet += sizeof(char);
+	u_int choice = *(char*)_packet;				_packet += sizeof(char);
 	eMemberType eType = (eMemberType) * (ushort*)_packet;				_packet += sizeof(ushort);
 	std::wstring nickname((wchar_t*)_packet);
 
@@ -308,6 +318,14 @@ void PacketHandler::S_NotifyJoinedUser(char* _packet)
 	if (pUI)
 	{
 		UIPanel* pSlot = static_cast<UIPanel*>(pUI);
+		UI* pTemp = pSlot->FindChildUI(L"Picture");
+		if (pTemp)
+		{
+			UIPanel* pPicture = static_cast<UIPanel*>(pTemp);
+			Bitmap* pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_room_player" + std::to_wstring(choice) + L".png");
+			if (pBitmap)		pPicture->SetBitmap(pBitmap);
+		}
+
 		pUI = pSlot->FindChildUI(L"Nickname");
 		if (pUI)
 		{
@@ -586,10 +604,14 @@ void PacketHandler::S_UpdateUserListPage(char* _packet)
 			eSessionState eState = (eSessionState)*(char*)_packet;
 			_packet += sizeof(char);
 
-			if(eState == eSessionState::Lobby)
+			if (eState == eSessionState::Lobby)
+			{
 				pText->ReassignText(sessionStateStr[*(char*)_packet]);							_packet += sizeof(char);
+			}
 			else
-				pText->ReassignText(std::to_wstring(*(char*)_packet) + L"번방");			_packet += sizeof(u_int);
+			{
+				pText->ReassignText(std::to_wstring(*(u_int*)_packet) + L"번방");			_packet += sizeof(u_int);
+			}
 		}
 	}
 	Debug::Log("PacketHandler::S_UpdateUserListPage");
@@ -623,7 +645,7 @@ void PacketHandler::S_UpdateRoomListPage(char* _packet)
 		}
 		pPanel->SetActive(true);
 
-		unsigned int roomId = *(char*)_packet;					_packet += sizeof(char);
+		u_int roomId = *(char*)_packet;					_packet += sizeof(u_int);
 		ushort eRoomState = *(ushort*)_packet;					_packet += sizeof(ushort);
 		std::wstring roomTitle = (wchar_t*)_packet;				_packet += (ushort)wcslen((wchar_t*)_packet) * 2 + 2;
 		std::wstring  roomOwner = (wchar_t*)_packet;			_packet += (ushort)wcslen((wchar_t*)_packet) * 2 + 2;
@@ -663,5 +685,19 @@ void PacketHandler::S_UpdateRoomListPage(char* _packet)
 		if(pText) pText->ReassignText(strUserCount);
 	}
 	Debug::Log("PacketHandler::S_UpdateRoomListPage");
+}
+
+void PacketHandler::S_UpdateUserSlot(char* _packet)
+{
+	u_int slotNumber = *(char*)_packet;					_packet += sizeof(char);
+	u_int choice = *(char*)_packet;					_packet += sizeof(char);
+
+	UI* pUI = UIManager::GetInst()->FindUI(L"UserSlot" + std::to_wstring(slotNumber));
+	if (!pUI) return;
+	UIPanel* pPanel = static_cast<UIPanel*>(pUI);
+	pUI = pPanel->FindChildUI(L"Picture");
+	pPanel = static_cast<UIPanel*>(pUI);
+	Bitmap* pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_room_player" + std::to_wstring(choice) + L".png");
+	if (pBitmap)		pPanel->SetBitmap(pBitmap);
 }
 
