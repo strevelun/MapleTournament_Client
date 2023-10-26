@@ -587,10 +587,9 @@ void PacketHandler::S_UpdateUserListPage(char* _packet)
 			_packet += sizeof(char);
 
 			if(eState == eSessionState::Lobby)
-				pText->ReassignText(sessionStateStr[*(char*)_packet]);				
+				pText->ReassignText(sessionStateStr[*(char*)_packet]);							_packet += sizeof(char);
 			else
-				pText->ReassignText(std::to_wstring(*(char*)_packet) + L"번방");
-			_packet += sizeof(char);
+				pText->ReassignText(std::to_wstring(*(char*)_packet) + L"번방");			_packet += sizeof(u_int);
 		}
 	}
 	Debug::Log("PacketHandler::S_UpdateUserListPage");
