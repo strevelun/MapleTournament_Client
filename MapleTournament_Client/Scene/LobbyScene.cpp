@@ -138,8 +138,6 @@ void LobbyScene::UpdateRoomListPage()
 
 bool LobbyScene::ShowLobbyUI()
 {
-    m_state = eSessionState::Lobby;
-
     UI* pUI = UIManager::GetInst()->FindUI(L"Background");
     if (!pUI) return false;
     pUI->SetActive(true);
@@ -169,8 +167,6 @@ bool LobbyScene::ShowLobbyUI()
 
 bool LobbyScene::ShowWaitingRoomUI()
 {
-    m_state = eSessionState::WatingRoom;
-
     /* UI 활성화 */
     UI* pUI = UIManager::GetInst()->FindUI(L"WaitingRoomBackground");
     if (!pUI) return false;
@@ -186,6 +182,16 @@ bool LobbyScene::ShowWaitingRoomUI()
     UIButton* pBackBtn = static_cast<UIButton*>(pUI);
     pBackBtn->SetActive(true);
 
+    pUI = UIManager::GetInst()->FindUI(L"WaitingRoomChat");
+    if (!pUI) return false;
+    pBtn = static_cast<UIButton*>(pUI);
+    pBtn->SetActive(true);
+
+    pUI = UIManager::GetInst()->FindUI(L"RoomTitle");
+    if (!pUI) return false;
+    UIText* pText = static_cast<UIText*>(pUI);
+    pText->SetActive(true);
+    
     return true;
 }
 
@@ -254,6 +260,16 @@ bool LobbyScene::HideWaitingRoomUI()
     UIButton* pBackBtn = static_cast<UIButton*>(pUI);
     pBackBtn->SetActive(false);
 
+    pUI = UIManager::GetInst()->FindUI(L"WaitingRoomChat");
+    if (!pUI) return false;
+    pBtn = static_cast<UIButton*>(pUI);
+    pBtn->SetActive(false);
+
+    pUI = UIManager::GetInst()->FindUI(L"RoomTitle");
+    if (!pUI) return false;
+    UIText* pText = static_cast<UIText*>(pUI);
+    pText->SetActive(false);
+
     return true;
 }
 
@@ -302,7 +318,7 @@ bool LobbyScene::InitLobbyUI()
 
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_button.png");
     if (!pBitmap) return false;
-    UIButton* pOKButton = new UIButton(pPanel, 150, 100, pPanel->GetWidth() / 2, pPanel->GetHeight() / 2 + (pPanel->GetHeight() / 4), 0.5f, 0.5f);
+    UIButton* pOKButton = new UIButton(pPanel, 150, 100, pPanel->GetWidth() / 2 - 10, pPanel->GetHeight() / 2 + (pPanel->GetHeight() / 4), 1.0f, 0.5f);
     pOKButton->SetBitmap(pBitmap);
     pOKButton->SetCallback([this, pPanel, pInputRoomName]()
         {
@@ -312,6 +328,22 @@ bool LobbyScene::InitLobbyUI()
     pOKButton->SetUIText(pText);
     pOKButton->SetClickable(true);
     pPanel->AddChildUI(pOKButton);
+    pPanel->SetActive(false);
+
+
+    pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_button.png");
+    if (!pBitmap) return false;
+    UIButton* pCancelButton = new UIButton(pPanel, 150, 100, pPanel->GetWidth() / 2 + 10, pPanel->GetHeight() / 2 + (pPanel->GetHeight() / 4), 0.f, 0.5f);
+    pCancelButton->SetBitmap(pBitmap);
+    pCancelButton->SetCallback([this, pPanel]()
+        {
+            pPanel->SetActive(false);
+            UIManager::GetInst()->PopPopupUI();
+        });
+    pText = new UIText(pCancelButton, L"취소", 20.f, pCancelButton->GetWidth() / 2, 50, 0.5f, 0.5f);
+    pCancelButton->SetUIText(pText);
+    pCancelButton->SetClickable(true);
+    pPanel->AddChildUI(pCancelButton);
     pPanel->SetActive(false);
 
     /* Room List */
@@ -464,7 +496,7 @@ bool LobbyScene::InitLobbyUI()
     pChatPanel->SetBitmap(pBitmap);
     pChatPanel->SetName(L"Chat");
 
-    UIScrollView* pChatScrollView = new UIScrollView(pChatPanel, 480, 230, 10, 10, pChatPanel->GetWidth() - 80, 20, 2.f);
+    UIScrollView* pChatScrollView = new UIScrollView(pChatPanel, 480, 230, 10, 10, pChatPanel->GetWidth() - 80, 25, 2.f);
     pChatScrollView->SetName(L"ChatList");
     pChatPanel->AddChildUI(pChatScrollView);
 
@@ -623,6 +655,32 @@ bool LobbyScene::InitWaitingRoomUI()
     pPanel->AddChildUI(pOKButton);
     pPanel->SetActive(false);
 
+    /* Chat */
+    UIPanel* pChatPanel = new UIPanel(nullptr, 660, 320, 50, 410);
+    pChatPanel->SetName(L"WaitingRoomChat");
+
+    UIScrollView* pChatScrollView = new UIScrollView(pChatPanel, 660, 270, 0, 0, pChatPanel->GetWidth() - 80, 25, 2.f);
+    pChatScrollView->SetName(L"WaitingRoomChatList");
+    pChatPanel->AddChildUI(pChatScrollView);
+
+    pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_login_edittext.png");
+    if (!pBitmap) return false;
+    UIEditText* pChatEdit = new UIEditText(pChatPanel, 350, 25, 250, 315, 0.0f, 1.0f);
+    pChatEdit->SetBitmap(pBitmap);
+    pChatEdit->SetClickable(true);
+    pChatEdit->SetCallback(&LobbyScene::ChatCallback, this);
+    pChatPanel->AddChildUI(pChatEdit);
+    UIManager::GetInst()->AddUI(pChatPanel);
+    pChatPanel->SetActive(false);
+
+    /* Room Title */
+    pPanel = new UIPanel(nullptr, 200, 30, 50, 80);
+    pPanel->SetName(L"RoomTitle");
+    pPanel->SetActive(false);
+    pText = new UIText(pPanel, L"", 25);
+    pText->SetName(L"Text");
+    pPanel->AddChildUI(pText);
+    UIManager::GetInst()->AddUI(pPanel);
 
     return true;
 }

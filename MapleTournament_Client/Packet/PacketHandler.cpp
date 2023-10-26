@@ -55,9 +55,22 @@ void PacketHandler::S_CreateRoom(char* _packet)
 	Mouse* pMouse = InputManager::GetInst()->GetMouse();
 	pMouse->SetActive(true);
 
+	std::wstring roomTitle((wchar_t*)_packet);
+	UI* pUI = UIManager::GetInst()->FindUI(L"RoomTitle");
+	if (pUI)
+	{
+		UIPanel* pPanel = static_cast<UIPanel*>(pUI);
+		pUI = pPanel->FindChildUI(L"Text");
+		if (pUI)
+		{
+			UIText* pText = static_cast<UIText*>(pUI);
+			pText->ReassignText(roomTitle);
+		}
+	}
+
 	LobbyScene* pLobbyScene = SceneManager::GetInst()->GetCurScene<LobbyScene>();
 
-	UI* pUI = UIManager::GetInst()->FindUI(L"Chat");
+	pUI = UIManager::GetInst()->FindUI(L"Chat");
 	if (pUI)
 	{
 		UIPanel* pPanel = static_cast<UIPanel*>(pUI);
@@ -123,15 +136,34 @@ void PacketHandler::S_CreateRoom(char* _packet)
 
 void PacketHandler::S_Chat(char* _packet)
 {
-	UI* pUI = UIManager::GetInst()->FindUI(L"Chat");
-	if (pUI)
+	LobbyScene* pLobbyScene = SceneManager::GetInst()->GetCurScene<LobbyScene>();
+	eSessionState eState = pLobbyScene->GetState();
+
+	if (eState == eSessionState::Lobby)
 	{
-		UIPanel* pPanel = static_cast<UIPanel*>(pUI);
-		pUI = pPanel->FindChildUI(L"ChatList");
-		UIScrollView* pScroll = static_cast<UIScrollView*>(pUI);
-		std::wstring chat((wchar_t*)_packet);			_packet += (ushort)wcslen((wchar_t*)_packet) * 2 + 2;
-		std::wstring nickname((wchar_t*)_packet);
-		pScroll->AddItem(nickname + L" : " + chat, 20.f);
+		UI* pUI = UIManager::GetInst()->FindUI(L"Chat");
+		if (pUI)
+		{
+			UIPanel* pPanel = static_cast<UIPanel*>(pUI);
+			pUI = pPanel->FindChildUI(L"ChatList");
+			UIScrollView* pScroll = static_cast<UIScrollView*>(pUI);
+			std::wstring chat((wchar_t*)_packet);			_packet += (ushort)wcslen((wchar_t*)_packet) * 2 + 2;
+			std::wstring nickname((wchar_t*)_packet);
+			pScroll->AddItem(nickname + L" : " + chat, 20.f);
+		}
+	}
+	else if (eState == eSessionState::WatingRoom)
+	{
+		UI* pUI = UIManager::GetInst()->FindUI(L"WaitingRoomChat");
+		if (pUI)
+		{
+			UIPanel* pPanel = static_cast<UIPanel*>(pUI);
+			pUI = pPanel->FindChildUI(L"WaitingRoomChatList");
+			UIScrollView* pScroll = static_cast<UIScrollView*>(pUI);
+			std::wstring chat((wchar_t*)_packet);			_packet += (ushort)wcslen((wchar_t*)_packet) * 2 + 2;
+			std::wstring nickname((wchar_t*)_packet);
+			pScroll->AddItem(nickname + L" : " + chat, 20.f);
+		}
 	}
 
 	Debug::Log("PacketHandler::S_Chat");
@@ -140,6 +172,20 @@ void PacketHandler::S_Chat(char* _packet)
 void PacketHandler::S_JoinRoom(char* _packet)
 {
 	UI* pUI = nullptr;
+
+	std::wstring roomTitle((wchar_t*)_packet);					_packet += (ushort)wcslen((wchar_t*)_packet) * 2 + 2;
+	pUI = UIManager::GetInst()->FindUI(L"RoomTitle");
+	if (pUI)
+	{
+		UIPanel* pPanel = static_cast<UIPanel*>(pUI);
+		pUI = pPanel->FindChildUI(L"Text");
+		if (pUI)
+		{
+			UIText* pText = static_cast<UIText*>(pUI);
+			pText->ReassignText(roomTitle);
+		}
+	}
+
 	int userCount = *(ushort*)_packet;				_packet += sizeof(ushort);
 
 	for (int i = 0; i < userCount; i++)
@@ -314,6 +360,15 @@ void PacketHandler::S_EnterLobby(char* _packet)
 {
 	LobbyScene* pLobbyScene = SceneManager::GetInst()->GetCurScene<LobbyScene>();
 	pLobbyScene->ChangeSceneUI(eSessionState::Lobby);
+
+	UI* pUI = UIManager::GetInst()->FindUI(L"WaitingRoomChat");
+	if (pUI)
+	{
+		UIPanel* pPanel = static_cast<UIPanel*>(pUI);
+		pUI = pPanel->FindChildUI(L"WaitingRoomChatList");
+		UIScrollView* pScroll = static_cast<UIScrollView*>(pUI);
+		pScroll->Clear();
+	}
 
 	Debug::Log("PacketHandler::S_EnterLobby");
 }
@@ -527,7 +582,14 @@ void PacketHandler::S_UpdateUserListPage(char* _packet)
 		if (pUI)
 		{
 			pText = static_cast<UIText*>(pUI);
-			pText->ReassignText(sessionStateStr[*(char*)_packet]);				
+
+			eSessionState eState = (eSessionState)*(char*)_packet;
+			_packet += sizeof(char);
+
+			if(eState == eSessionState::Lobby)
+				pText->ReassignText(sessionStateStr[*(char*)_packet]);				
+			else
+				pText->ReassignText(std::to_wstring(*(char*)_packet) + L"¹ø¹æ");
 			_packet += sizeof(char);
 		}
 	}
@@ -562,7 +624,7 @@ void PacketHandler::S_UpdateRoomListPage(char* _packet)
 		}
 		pPanel->SetActive(true);
 
-		unsigned int roomId = *(unsigned int*)_packet;			_packet += sizeof(unsigned int);
+		unsigned int roomId = *(char*)_packet;					_packet += sizeof(char);
 		ushort eRoomState = *(ushort*)_packet;					_packet += sizeof(ushort);
 		std::wstring roomTitle = (wchar_t*)_packet;				_packet += (ushort)wcslen((wchar_t*)_packet) * 2 + 2;
 		std::wstring  roomOwner = (wchar_t*)_packet;			_packet += (ushort)wcslen((wchar_t*)_packet) * 2 + 2;

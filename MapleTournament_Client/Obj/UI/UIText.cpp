@@ -32,10 +32,18 @@ void UIText::ReassignText(std::wstring _text)
 	m_text = _text;
 
 	IDWriteFactory* pDWriteFactory = Graphics::GetInst()->GetDwriteFactory();
-
-	if (m_pLayout)	m_pLayout->Release();
-	if (m_pTextFormat)		m_pTextFormat->Release();
-
+	/*
+	if (m_pLayout)
+	{
+		m_pLayout->Release();
+		m_pLayout = nullptr;
+	}
+	if (m_pTextFormat)
+	{
+		m_pTextFormat->Release();
+		m_pTextFormat = nullptr;
+	}
+	*/
 	HRESULT hr = pDWriteFactory->CreateTextFormat(L"Arial", nullptr, DWRITE_FONT_WEIGHT_NORMAL, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL,
 		m_size, L"en-US", &m_pTextFormat);
 	if (FAILED(hr))
@@ -90,7 +98,6 @@ bool UIText::Init()
 		Debug::Log(("UIText : CreateTextFormat returned : " + std::to_string(hr)));
 		return false;
 	}
-
 
 	Graphics::GetInst()->CreateSolidColorBrush(D2D1::ColorF::Black, &m_pBrush);
 

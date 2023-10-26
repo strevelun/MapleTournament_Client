@@ -20,6 +20,8 @@ public:
 	void GameStartCallback();
 	void GameReadyCallback();
 
+	eSessionState GetState() const { return m_state; }
+
 	void Update() override;
 
 	void ChangeSceneUI(eSessionState _state);

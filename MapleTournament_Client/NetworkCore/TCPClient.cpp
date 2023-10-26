@@ -3,7 +3,6 @@
 #include "../Debug.h"
 
 #include <iostream>
-#include <thread>
 #include <string>
 
 std::map<ePacketType, void(*)(char*)> TCPClient::m_mapPacketHandlerCallback = {
@@ -26,13 +25,12 @@ std::map<ePacketType, void(*)(char*)> TCPClient::m_mapPacketHandlerCallback = {
 };
 
 TCPClient::TCPClient()
-	: m_bIsRunning(true), m_hThread(nullptr)
+	: m_bIsRunning(true)
 {
 }
 
 TCPClient::~TCPClient()
 {
-    CloseHandle(m_hThread);
 	NetworkManager::DestroyInst();
 }
 
@@ -78,8 +76,6 @@ void TCPClient::ReceivePacket()
 		m_totalSize -= m_packetSize;
 		memcpy(m_recvBuffer, m_recvBuffer + m_packetSize, m_totalSize);
 	}
-
-	return;
 }
 
 void TCPClient::ProcessPacket(char* _packet)
