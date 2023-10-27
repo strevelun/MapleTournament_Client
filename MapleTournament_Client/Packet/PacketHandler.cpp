@@ -481,19 +481,31 @@ void PacketHandler::S_InGameReady(char* _packet)
 {
 	int memberCount = *(char*)_packet;				_packet += sizeof(char);
 	int mySlotNumber = *(char*)_packet;				_packet += sizeof(char); // 내 플레이어는 빨간색
+
 	MyPlayer* myPlayer = nullptr;
 
 	for (int i = 0; i < memberCount; i++)
 	{
 		int slot = *(char*)_packet;				_packet += sizeof(char);
+		int characterChoice = *(char*)_packet;				_packet += sizeof(char);
 		UI* pUI = UIManager::GetInst()->FindUI(L"PlayerStat" + std::to_wstring(slot));
 		if (!pUI) continue;
 		UIPanel* pPanel = static_cast<UIPanel*>(pUI);
+		pUI = pPanel->FindChildUI(L"Picture");
+		UIPanel* pPicture = static_cast<UIPanel*>(pUI);
+		Bitmap* pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_room_player" + std::to_wstring(characterChoice) + L".png");
+		pPicture->SetBitmap(pBitmap);
+
 		pUI = pPanel->FindChildUI(L"Nickname");
 		if (pUI)
 		{
 			UIText* pText = static_cast<UIText*>(pUI);
 			pText->ReassignText((wchar_t*)_packet);
+			if (mySlotNumber == i)
+			{
+				ObjectManager::GetInst()->SetMyPlayer(myPlayer);
+				pText->SetTextColor(D2D1::ColorF::Red);
+			}
 		}
 
 		AnimationClip* pClip = ResourceManager::GetInst()->GetAnimClip(L"player" + std::to_wstring(slot));
@@ -510,8 +522,7 @@ void PacketHandler::S_InGameReady(char* _packet)
 		myPlayer->SetPos(1030, 280);
 		myPlayer->SetRatio(1.5f);
 		myPlayer->SetAnimator(pAnimator);
-		if(mySlotNumber == i)
-			ObjectManager::GetInst()->SetMyPlayer(myPlayer);
+		
 
 		InGameScene* pScene = SceneManager::GetInst()->GetCurScene<InGameScene>();
 		Layer* pLayer = pScene->FindLayer(L"Player");

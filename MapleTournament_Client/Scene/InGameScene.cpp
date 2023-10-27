@@ -44,31 +44,51 @@ bool InGameScene::Init()
 
 
     /* 플레이어 스텟 */
-    UIPanel* pPanel = new UIPanel(nullptr, 200, 50);
+    UIPanel* pPanel = new UIPanel(nullptr, 300, 100);
     pPanel->SetName(L"PlayerStat0");
+    pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingamescene_stat.png");
+    if (pBitmap) pPanel->SetBitmap(pBitmap);
     UIManager::GetInst()->AddUI(pPanel);
-    UIText* pPlayerName = new UIText(pPanel, L"", 20.f, 200, 50);
+    UIPanel* pPicture = new UIPanel(pPanel, 90, 80, 10, 10);
+    pPicture->SetName(L"Picture");
+    pPanel->AddChildUI(pPicture);
+    UIText* pPlayerName = new UIText(pPanel, L"", 30.f, 130, 10);
     pPlayerName->SetName(L"Nickname");
     pPanel->AddChildUI(pPlayerName);
 
-    pPanel = new UIPanel(nullptr, 200, 50, ScreenWidth, 0, 1.0f);
+    pPanel = new UIPanel(nullptr, 300, 100, ScreenWidth, 0, 1.0f);
     pPanel->SetName(L"PlayerStat1");
+    pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingamescene_stat.png");
+    if (pBitmap) pPanel->SetBitmap(pBitmap);
     UIManager::GetInst()->AddUI(pPanel);
-    pPlayerName = new UIText(pPanel, L"", 20.f, 200, 50);
+    pPicture = new UIPanel(pPanel, 90, 80, 10, 10);
+    pPicture->SetName(L"Picture");
+    pPanel->AddChildUI(pPicture);
+    pPlayerName = new UIText(pPanel, L"", 30.f, 130, 10);
     pPlayerName->SetName(L"Nickname");
     pPanel->AddChildUI(pPlayerName);
 
-    pPanel = new UIPanel(nullptr, 200, 50, 0, ScreenHeight, 0.0f, 1.0f);
+    pPanel = new UIPanel(nullptr, 300, 100, 0, ScreenHeight, 0.0f, 1.0f);
     pPanel->SetName(L"PlayerStat2");
+    pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingamescene_stat.png");
+    if (pBitmap) pPanel->SetBitmap(pBitmap);
     UIManager::GetInst()->AddUI(pPanel);
-    pPlayerName = new UIText(pPanel, L"", 20.f, 200, 50);
+    pPicture = new UIPanel(pPanel, 90, 80, 10, 10);
+    pPicture->SetName(L"Picture");
+    pPanel->AddChildUI(pPicture);
+    pPlayerName = new UIText(pPanel, L"", 30.f, 130, 10);
     pPlayerName->SetName(L"Nickname");
     pPanel->AddChildUI(pPlayerName);
 
-    pPanel = new UIPanel(nullptr, 200, 50, ScreenWidth, ScreenHeight, 1.0f, 1.0f);
+    pPanel = new UIPanel(nullptr, 300, 100, ScreenWidth, ScreenHeight, 1.0f, 1.0f);
     pPanel->SetName(L"PlayerStat3");
+    pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingamescene_stat.png");
+    if (pBitmap) pPanel->SetBitmap(pBitmap);
     UIManager::GetInst()->AddUI(pPanel);
-    pPlayerName = new UIText(pPanel, L"", 20.f, 200, 50);
+    pPicture = new UIPanel(pPanel, 90, 80, 10, 10);
+    pPicture->SetName(L"Picture");
+    pPanel->AddChildUI(pPicture);
+    pPlayerName = new UIText(pPanel, L"", 30.f, 130, 10);
     pPlayerName->SetName(L"Nickname");
     pPanel->AddChildUI(pPlayerName);
 
