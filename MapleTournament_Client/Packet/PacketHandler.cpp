@@ -508,18 +508,31 @@ void PacketHandler::S_InGameReady(char* _packet)
 			}
 		}
 
-		AnimationClip* pClip = ResourceManager::GetInst()->GetAnimClip(L"player" + std::to_wstring(slot));
+		AnimationClip* pClip = ResourceManager::GetInst()->GetAnimClip(L"player" + std::to_wstring(characterChoice));
 		if (pClip)
 		{
 			pClip->SetLoop(false);
 			pClip->SetPlayTime(1.5f);
 			pClip->SetAnyState(true);
-			pClip->SetFlip(true);
 		}
 		Animator* pAnimator = new Animator(pClip);
 
 		myPlayer = new MyPlayer((wchar_t*)_packet);			_packet += (ushort)wcslen((wchar_t*)_packet) * 2 + 2;
-		myPlayer->SetPos(1030, 280);
+		if (slot == 0)
+		{
+			myPlayer->SetPos(240, 280);
+			pClip->SetFlip(true);
+		}
+		else if(slot == 1)
+			myPlayer->SetPos(1030, 280);
+		else if (slot == 2)
+		{
+			pClip->SetFlip(true);
+			myPlayer->SetPos(240, 580);
+		}
+		else if (slot == 3)
+			myPlayer->SetPos(1030, 580);
+
 		myPlayer->SetRatio(1.5f);
 		myPlayer->SetAnimator(pAnimator);
 		
