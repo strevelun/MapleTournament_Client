@@ -24,7 +24,7 @@ public:
 	TCPClient();
 	~TCPClient();
 
-	bool Init();
+	bool Init(const char* _serverIP, int _serverPort);
 
 	void ReceivePacket();
 

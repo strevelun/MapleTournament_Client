@@ -107,6 +107,14 @@ void PacketHandler::S_CreateRoom(char* _packet)
 	if (pUI)
 	{
 		UIPanel* pSlot = static_cast<UIPanel*>(pUI);
+		UI* pTemp = pSlot->FindChildUI(L"Picture");
+		if (pTemp)
+		{
+			UIPanel* pPicture = static_cast<UIPanel*>(pTemp);
+			Bitmap* pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_room_player0.png");
+			if (pBitmap)		pPicture->SetBitmap(pBitmap);
+		}
+
 		pUI = pSlot->FindChildUI(L"Nickname");
 		if (pUI)
 		{

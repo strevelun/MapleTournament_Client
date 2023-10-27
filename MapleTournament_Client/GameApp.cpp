@@ -57,7 +57,7 @@ bool GameApp::Init(int _nCmdShow, const wchar_t* _windowName, UINT _width, UINT 
 	Graphics::GetInst()->CreateSolidColorBrush(D2D1::ColorF::Black, &m_pBrush);
 
 	m_pClient = new TCPClient();
-	if (!m_pClient->Init()) return false;
+	if (!m_pClient->Init("192.168.219.167", 30001)) return false;
 
 	if (!ResourceManager::GetInst()->Init())
 	{
