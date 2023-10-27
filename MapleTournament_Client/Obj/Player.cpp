@@ -29,10 +29,31 @@ void Player::AddSkill(Skill* _pSkill, eSkillType _type)
 void Player::UseSkill(eSkillType _type)
 {
 	std::map<eSkillType, Skill*>::const_iterator iter = m_mapSkill.find(_type);
-	if (iter != m_mapSkill.cend())
+
+
+	if (_type == eSkillType::LeftMove)
 	{
-		iter->second->Reset();
-		iter->second->SetActive(true);
-		iter->second->SetPos(m_tPos.x, m_tPos.y);
+		m_tPos.x -= 170;
+	}
+	else if (_type == eSkillType::LeftDoubleMove)
+	{
+		m_tPos.x -= 340;
+	}
+	else if (_type == eSkillType::RightMove)
+	{
+		m_tPos.x += 170;
+	}
+	else if (_type == eSkillType::RightDoubleMove)
+	{
+		m_tPos.x += 340;
+	}
+	else
+	{
+		if (iter != m_mapSkill.cend())
+		{
+			iter->second->Reset();
+			iter->second->SetActive(true);
+			iter->second->SetPos(m_tPos.x, m_tPos.y);
+		}
 	}
 }

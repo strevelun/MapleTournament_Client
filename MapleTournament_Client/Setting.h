@@ -36,6 +36,8 @@ enum class ePacketType
 	S_UpdateRoomListPage,
 	C_UpdateUserSlot,
 	S_UpdateUserSlot,
+	C_Skill,
+	S_Skill,
 };
 
 enum class eSkillType
@@ -44,6 +46,8 @@ enum class eSkillType
 	AttackCloud,
 	LeftMove,
 	LeftDoubleMove,
+	RightMove,
+	RightDoubleMove,
 
 	NumOfSkills,
 };

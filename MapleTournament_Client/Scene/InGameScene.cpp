@@ -107,6 +107,61 @@ bool InGameScene::Init()
     //pLayer->AddObj(pSkill);
     m_vecObjLayer.push_back(pLayer);
 
+    /* 스킬 버튼 */
+    pPanel = new UIPanel(nullptr, 500, 100, ScreenWidth / 2, ScreenHeight, 0.5f, 1.0f);
+    pPanel->SetName(L"SkillButtonPanel");
+    pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingame_leftmove.png");
+    UIButton* pButton = new UIButton(pPanel, 50, 50, 0, 0);
+    pButton->SetBitmap(pBitmap);
+    pButton->SetClickable(true);
+    pButton->SetCallback([this] 
+        {
+            UseSkill(eSkillType::LeftMove);
+        });
+    pPanel->AddChildUI(pButton);
+
+    pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingame_leftdoublemove.png");
+    pButton = new UIButton(pPanel, 50, 50, 50, 0);
+    pButton->SetBitmap(pBitmap);
+    pButton->SetClickable(true);
+    pButton->SetCallback([this] 
+        {
+            UseSkill(eSkillType::LeftDoubleMove);
+        });
+    pPanel->AddChildUI(pButton);
+
+    pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingame_rightmove.png");
+    pButton = new UIButton(pPanel, 50, 50, 100, 0);
+    pButton->SetBitmap(pBitmap);
+    pButton->SetClickable(true);
+    pButton->SetCallback([this]
+        {
+            UseSkill(eSkillType::RightMove);
+        });
+    pPanel->AddChildUI(pButton);
+
+    pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingame_rightdoublemove.png");
+    pButton = new UIButton(pPanel, 50, 50, 150, 0);
+    pButton->SetBitmap(pBitmap);
+    pButton->SetClickable(true);
+    pButton->SetCallback([this]
+        {
+            UseSkill(eSkillType::RightDoubleMove);
+        });
+    pPanel->AddChildUI(pButton);
+
+    pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingame_button_attackCloud.png");
+    pButton = new UIButton(pPanel, 50, 50, 200, 0);
+    pButton->SetBitmap(pBitmap);
+    pButton->SetClickable(true);
+    pButton->SetCallback([this] 
+        {
+            UseSkill(eSkillType::AttackCloud);
+        });
+    pPanel->AddChildUI(pButton);
+
+    UIManager::GetInst()->AddUI(pPanel);
+
     char buffer[255];
     ushort count = sizeof(ushort);
     *(ushort*)(buffer + count) = (ushort)ePacketType::C_InGameReady;          count += sizeof(ushort);
@@ -114,4 +169,14 @@ bool InGameScene::Init()
     NetworkManager::GetInst()->Send(buffer);
 
     return true;
+}
+
+void InGameScene::UseSkill(eSkillType _type)
+{
+    char buffer[255];
+    ushort count = sizeof(ushort);
+    *(ushort*)(buffer + count) = (ushort)ePacketType::C_Skill;				count += sizeof(ushort);
+    *(char*)(buffer + count) = (char)_type;                                 count += sizeof(char);
+    *(ushort*)buffer = count;
+    NetworkManager::GetInst()->Send(buffer);
 }

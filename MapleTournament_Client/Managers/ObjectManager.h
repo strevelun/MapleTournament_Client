@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <array>
+#include <string>
 
 #include "../Defines.h"
 #include "../Setting.h"
@@ -24,6 +25,8 @@ public:
 
 	void AddObj(Obj* _pObj);
 	void AddSkill(Skill* _pSkill, eSkillType _type);
+
+	Obj* FindObj(const std::wstring& _strName);
 
 	SINGLETON(ObjectManager)
 };

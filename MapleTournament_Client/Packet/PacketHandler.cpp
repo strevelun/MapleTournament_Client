@@ -488,6 +488,11 @@ void PacketHandler::S_InGameReady(char* _packet)
 	{
 		int slot = *(char*)_packet;				_packet += sizeof(char);
 		int characterChoice = *(char*)_packet;				_packet += sizeof(char);
+
+		myPlayer = new MyPlayer((wchar_t*)_packet);			
+		myPlayer->SetName(std::to_wstring(slot));
+		ObjectManager::GetInst()->AddObj(myPlayer);
+
 		UI* pUI = UIManager::GetInst()->FindUI(L"PlayerStat" + std::to_wstring(slot));
 		if (!pUI) continue;
 		UIPanel* pPanel = static_cast<UIPanel*>(pUI);
@@ -500,7 +505,7 @@ void PacketHandler::S_InGameReady(char* _packet)
 		if (pUI)
 		{
 			UIText* pText = static_cast<UIText*>(pUI);
-			pText->ReassignText((wchar_t*)_packet);
+			pText->ReassignText((wchar_t*)_packet);			_packet += (ushort)wcslen((wchar_t*)_packet) * 2 + 2;
 			if (mySlotNumber == i)
 			{
 				ObjectManager::GetInst()->SetMyPlayer(myPlayer);
@@ -517,7 +522,6 @@ void PacketHandler::S_InGameReady(char* _packet)
 		}
 		Animator* pAnimator = new Animator(pClip);
 
-		myPlayer = new MyPlayer((wchar_t*)_packet);			_packet += (ushort)wcslen((wchar_t*)_packet) * 2 + 2;
 		if (slot == 0)
 		{
 			myPlayer->SetPos(240, 280);
@@ -541,43 +545,6 @@ void PacketHandler::S_InGameReady(char* _packet)
 		Layer* pLayer = pScene->FindLayer(L"Player");
 		pLayer->AddObj(myPlayer);
 	}
-
-	/* 스킬 버튼 */
-	std::list<UI*>* uiList = new std::list<UI*>();
-	UIPanel* pPanel = new UIPanel(nullptr, 500, 100, ScreenWidth / 2, ScreenHeight, 0.5f, 1.0f);
-	pPanel->SetName(L"SkillButtonPanel");
-	Bitmap* pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingame_leftmove.png");
-	UIButton* pButton = new UIButton(pPanel, 50, 50, 0, 0);
-	pButton->SetBitmap(pBitmap);
-	pButton->SetClickable(true);
-	pButton->SetCallback([myPlayer] {
-		myPlayer->UseSkill(eSkillType::LeftMove);
-		});
-	uiList->push_back(pButton);
-
-	pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingame_leftdoublemove.png");
-	pButton = new UIButton(pPanel, 50, 50, 50, 0);
-	pButton->SetBitmap(pBitmap);
-	pButton->SetClickable(true);
-	pButton->SetCallback([myPlayer] {
-		myPlayer->UseSkill(eSkillType::LeftDoubleMove);
-		});
-	uiList->push_back(pButton);
-
-	pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingame_button_attackCloud.png");
-	pButton = new UIButton(pPanel, 50, 50, 100, 0);
-	pButton->SetBitmap(pBitmap);
-	pButton->SetClickable(true);
-	pButton->SetCallback([myPlayer] {
-		myPlayer->UseSkill(eSkillType::AttackCloud);
-		});
-	uiList->push_back(pButton);
-
-	std::list<UI*>::iterator iter = uiList->begin();
-	std::list<UI*>::iterator iterEnd = uiList->end();
-	for (;iter != iterEnd; iter++)
-		pPanel->AddChildUI(*iter);
-	UIManager::GetInst()->AddUI(pPanel);
 
 	Debug::Log("PacketHandler::S_InGameReady");
 }
@@ -723,5 +690,21 @@ void PacketHandler::S_UpdateUserSlot(char* _packet)
 	pPanel = static_cast<UIPanel*>(pUI);
 	Bitmap* pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_room_player" + std::to_wstring(choice) + L".png");
 	if (pBitmap)		pPanel->SetBitmap(pBitmap);
+
+	Debug::Log("PacketHandler::S_UpdateUserSlot");
+}
+
+void PacketHandler::S_Skill(char* _packet)
+{
+	u_int slotNumber = *(char*)_packet;					_packet += sizeof(char);
+	eSkillType skillType = eSkillType(*(char*)_packet);					_packet += sizeof(char);
+
+	Obj* pObj = ObjectManager::GetInst()->FindObj(std::to_wstring(slotNumber));
+	if (!pObj) return;
+
+	MyPlayer* pPlayer = static_cast<MyPlayer*>(pObj);
+	pPlayer->UseSkill(skillType);
+
+	Debug::Log("PacketHandler::S_Skill");
 }
 

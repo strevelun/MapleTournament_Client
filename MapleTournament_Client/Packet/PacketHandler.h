@@ -23,5 +23,6 @@ public:
 	static void S_UpdateUserListPage(char* _packet);
 	static void S_UpdateRoomListPage(char* _packet);
 	static void S_UpdateUserSlot(char* _packet);
+	static void S_Skill(char* _packet);
 };
 
