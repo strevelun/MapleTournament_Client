@@ -17,6 +17,7 @@ private:
     D2D1_RECT_F             m_rectCursor;
     bool                    m_showCursor = false;
     float                   m_deltaTime = 0.0f;
+    int                     m_inputMaxCount = 0;
 
     IDWriteTextFormat* m_pTextFormat = nullptr;
     ID2D1SolidColorBrush* m_pBrush = nullptr;
@@ -25,7 +26,7 @@ private:
 
 public:
     UIEditText(const UIEditText& _uiEditText);
-    UIEditText(UI* _pParentPanel, UINT _width, UINT _height, INT _xpos = 0, INT _ypos = 0, FLOAT _pivotX = 0.f, FLOAT _pivotY = 0.f);
+    UIEditText(UI* _pParentPanel, UINT _width, UINT _height, int m_inputMaxCount, INT _xpos = 0, INT _ypos = 0, FLOAT _pivotX = 0.f, FLOAT _pivotY = 0.f);
     ~UIEditText();
 
     UIEditText* Clone() const override { return new UIEditText(*this); }

@@ -39,7 +39,7 @@ bool LoginScene::Init()
     /* UI */
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_login_edittext.png");
     if (!pBitmap) return false;
-    UIEditText* pInputNickname = new UIEditText(pBackground, 500, 50, pBackground->GetWidth() / 2, pBackground->GetHeight() / 2, 0.5f, 0.5f);
+    UIEditText* pInputNickname = new UIEditText(pBackground, 500, 50, 13, pBackground->GetWidth() / 2, pBackground->GetHeight() / 2, 0.5f, 0.5f);
     pInputNickname->SetBitmap(pBitmap);
     pInputNickname->SetClickable(true);
     pInputNickname->SetCallback(&LoginScene::LoginButtonCallback, this);

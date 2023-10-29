@@ -330,7 +330,7 @@ bool LobbyScene::InitLobbyUI()
 
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_login_edittext.png");
     if (!pBitmap) return false;
-    UIEditText* pInputRoomName = new UIEditText(pPanel, pPanel->GetWidth() - 100, 50, pPanel->GetWidth() / 2, pPanel->GetHeight() / 2, 0.5f, 0.5f);
+    UIEditText* pInputRoomName = new UIEditText(pPanel, pPanel->GetWidth() - 100, 50, 20, pPanel->GetWidth() / 2, pPanel->GetHeight() / 2, 0.5f, 0.5f);
     pInputRoomName->SetBitmap(pBitmap);
     pInputRoomName->SetClickable(true);
     pInputRoomName->SetCallback(&LobbyScene::CreateRoomButtonCallback, this);
@@ -522,7 +522,7 @@ bool LobbyScene::InitLobbyUI()
 
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_login_edittext.png");
     if (!pBitmap) return false;
-    UIEditText* pChatEdit = new UIEditText(pChatPanel, 385, 40, 40, 285, 0.0f, 1.0f);
+    UIEditText* pChatEdit = new UIEditText(pChatPanel, 385, 40, 20, 40, 285, 0.0f, 1.0f);
     pChatEdit->SetBitmap(pBitmap);
     pChatEdit->SetClickable(true);
     pChatEdit->SetCallback(&LobbyScene::ChatCallback, this);
@@ -685,7 +685,7 @@ bool LobbyScene::InitWaitingRoomUI()
 
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_login_edittext.png");
     if (!pBitmap) return false;
-    UIEditText* pChatEdit = new UIEditText(pChatPanel, 350, 25, 250, 315, 0.0f, 1.0f);
+    UIEditText* pChatEdit = new UIEditText(pChatPanel, 350, 25, 20, 250, 315, 0.0f, 1.0f);
     pChatEdit->SetBitmap(pBitmap);
     pChatEdit->SetClickable(true);
     pChatEdit->SetCallback(&LobbyScene::ChatCallback, this);

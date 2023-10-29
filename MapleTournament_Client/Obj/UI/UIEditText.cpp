@@ -21,8 +21,8 @@ UIEditText::UIEditText(const UIEditText& _uiEditText)
 	Graphics::GetInst()->CreateSolidColorBrush(D2D1::ColorF::Black, &m_pBrush);
 }
 
-UIEditText::UIEditText(UI* _pParentPanel, UINT _width, UINT _height, INT _xpos, INT _ypos, FLOAT _pivotX, FLOAT _pivotY) :
-	UI(_pParentPanel, _width, _height, _xpos, _ypos, _pivotX, _pivotY)
+UIEditText::UIEditText(UI* _pParentPanel, UINT _width, UINT _height, int _inputMaxCount, INT _xpos, INT _ypos, FLOAT _pivotX, FLOAT _pivotY) :
+	UI(_pParentPanel, _width, _height, _xpos, _ypos, _pivotX, _pivotY), m_inputMaxCount(_inputMaxCount)
 {
 	m_rectCursor = { m_tPos.x + 0.f, m_tPos.y + 0.f, m_tPos.x + 1.f, m_tPos.y + (float)_height};
 
@@ -61,7 +61,7 @@ void UIEditText::Update()
 		}
 		else if (('a' <= key && key <= 'z') || ('A' <= key && key <= 'Z') || ('0' <= key && key <= '9'))
 		{
-			if (curStrInputSize < 7)
+			if (curStrInputSize < m_inputMaxCount)
 			{
 				wchar_t wkey = static_cast<wchar_t>(key);
 				m_strInput.append(1, wkey);
