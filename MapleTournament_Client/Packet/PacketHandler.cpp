@@ -559,8 +559,8 @@ void PacketHandler::S_InGameReady(char* _packet)
 
 void PacketHandler::S_UpdateUserListPage(char* _packet)
 {
-	int numOfUser = *(char*)_packet;			_packet += sizeof(char);
 	int newPage = *(char*)_packet;			_packet += sizeof(char);
+	int numOfUser = *(char*)_packet;			_packet += sizeof(char);
 
 	if (numOfUser <= 0) return;
 
