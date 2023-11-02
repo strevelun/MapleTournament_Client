@@ -27,6 +27,7 @@ public:
 	void AddSkill(Skill* _pSkill, eSkillType _type);
 
 	Obj* FindObj(const std::wstring& _strName);
+	void KillObj(const std::wstring& _strName);
 
 	SINGLETON(ObjectManager)
 };

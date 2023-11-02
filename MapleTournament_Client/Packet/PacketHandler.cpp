@@ -863,6 +863,8 @@ void PacketHandler::S_UpdateIngameUserLeave(char* _packet)
 	if (pUI)
 		pUI->SetActive(false);
 
+	ObjectManager::GetInst()->KillObj(std::to_wstring(slot));
+
 	Debug::Log("PacketHandler::S_UpdateIngameUserLeave");
 }
 

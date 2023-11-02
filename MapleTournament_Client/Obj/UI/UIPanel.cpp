@@ -107,7 +107,8 @@ void UIPanel::Update()
 		}
 		else
 		{
-			(*iter)->Update();
+			if ((*iter)->IsActive())
+				(*iter)->Update();
 			iter++;
 		}
 	}
@@ -121,6 +122,7 @@ void UIPanel::Render()
 	unsigned int size = m_vecMemberUI.size();
 	for (int i = 0; i< size; i++)
 	{
+		if (!m_vecMemberUI[i]->IsActive()) continue;
 		m_vecMemberUI[i]->Render();
 	}
 

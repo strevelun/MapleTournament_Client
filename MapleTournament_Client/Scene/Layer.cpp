@@ -26,7 +26,7 @@ void Layer::Update()
     std::vector<Obj*>::iterator iter = m_vecObj.begin();
     std::vector<Obj*>::iterator iterEnd = m_vecObj.end();
 
-    for (; iter != iterEnd;)
+    for (; iter != m_vecObj.end();)
     {
         if (!(*iter)->IsAlive())
         {

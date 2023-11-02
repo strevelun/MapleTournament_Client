@@ -40,3 +40,11 @@ Obj* ObjectManager::FindObj(const std::wstring& _strName)
 	}
 	return nullptr;
 }
+
+void ObjectManager::KillObj(const std::wstring& _strName)
+{
+	Obj* pObj = FindObj(_strName);
+	if (!pObj) return;
+
+	pObj->SetAlive(false);
+}
