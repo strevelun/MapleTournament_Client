@@ -5,6 +5,7 @@
 #include <array>
 
 class UI;
+class UIPanel;
 
 class InGameScene :
     public Scene
@@ -30,7 +31,7 @@ public:
 private:
 	void UseSkill(eSkillType _type);
 	void NextTurn();
-	void OnItemButtonClick(eSkillType _type, UI* _pPanel);
+	void OnItemButtonClick(eSkillType _type, UIPanel* _pPanel);
 	void OnTimeout();
 };
 

@@ -46,6 +46,7 @@ void UIButton::Update()
 		break;
 	case eUIState::Click:
 		OnClick();
+		m_eUIState = eUIState::Normal;
 		break;
 	}
 }

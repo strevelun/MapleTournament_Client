@@ -241,7 +241,7 @@ void InGameScene::NextTurn()
     NetworkManager::GetInst()->Send(buffer);
 }
 
-void InGameScene::OnItemButtonClick(eSkillType _type, UI* _pPanel)
+void InGameScene::OnItemButtonClick(eSkillType _type, UIPanel* _pPanel)
 {
     UI* pUI = UIManager::GetInst()->FindUI(L"Wait");
     if (pUI)
@@ -249,10 +249,10 @@ void InGameScene::OnItemButtonClick(eSkillType _type, UI* _pPanel)
         UIPanel* pPanel = static_cast<UIPanel*>(pUI);
         pPanel->SetActive(true);
     }
-    SetMyTurn(false);
     _pPanel->SetClickable(false);
     _pPanel->SetPos(ScreenWidth / 2, ScreenHeight + 80);
-    UseSkill(_type);
+    SetMyTurn(false);
+    NextTurn();
 }
 
 void InGameScene::OnTimeout()
