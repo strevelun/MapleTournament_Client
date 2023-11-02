@@ -12,6 +12,8 @@
 #include "../Obj/SkillAttackCloud.h"
 #include "../Animation/Animator.h"
 #include "../Animation/AnimationClip.h"
+#include "LobbyScene.h"
+#include "../Managers/SceneManager.h"
 #include "Layer.h"
 #include "../Timer.h"
 #include "../Debug.h"
@@ -94,11 +96,33 @@ bool InGameScene::Init()
     pPlayerName->SetName(L"Nickname");
     pPanel->AddChildUI(pPlayerName);
 
+    /* 대기하세요 UI */
+    pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_board.png");
+    pPanel = new UIPanel(nullptr, 500, 400, ScreenWidth / 2, ScreenHeight / 2, 0.5f, 0.5f);
+    if (pBitmap) 
+        pPanel->SetBitmap(pBitmap);
+    pPanel->SetName(L"Standby");
+    pPanel->SetActive(false);
+    UIText* pText = new UIText(pPanel, L"대기하세요", 20.f, pPanel->GetWidth() / 2, 100, 0.5f, 0.5f);
+    pPanel->AddChildUI(pText);
+    UIManager::GetInst()->AddUI(pPanel);
+
+    /* 게임 종료 UI */
+    pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_board.png");
+    pPanel = new UIPanel(nullptr, 500, 400, ScreenWidth / 2, ScreenHeight / 2, 0.5f, 0.5f);
+    if (pBitmap) 
+        pPanel->SetBitmap(pBitmap);
+    pPanel->SetName(L"GameOver");
+    pPanel->SetActive(false);
+    pText = new UIText(pPanel, L"게임오버!", 20.f, pPanel->GetWidth() / 2, 100, 0.5f, 0.5f);
+    pPanel->AddChildUI(pText);
+    UIManager::GetInst()->AddUI(pPanel);
+
     /* 점수판 */
     pPanel = new UIPanel(nullptr, 100, 50, ScreenWidth / 2, 0, 0.5f);
     pPanel->SetName(L"Dashboard");
     UIManager::GetInst()->AddUI(pPanel);
-    UIText *pDashboardText = new UIText(pPanel, L"1 / ", 30.f);
+    UIText *pDashboardText = new UIText(pPanel, L"1 / " + std::to_wstring(GAME_MAX_TURN), 30.f);
     pPanel->AddChildUI(pDashboardText);
     pDashboardText->SetName(L"DashboardText");
 
@@ -203,23 +227,83 @@ void InGameScene::Update()
 {
     Scene::Update();
 
-    if (!m_isMyTurn) return;
-
-    m_arrTimer[(u_int)m_timer]->SetActive(false);
-
-    m_timer -= Timer::GetInst()->GetDeltaTime();
-    if (m_timer <= 0.f)
+    if (m_eState == eInGameState::Play)
     {
-        OnTimeout();
-        return;
+        if (!m_isMyTurn) return;
+
+        m_arrTimer[(u_int)m_timer]->SetActive(false);
+        m_timer -= Timer::GetInst()->GetDeltaTime();
+        if (m_timer <= 0.f)
+        {
+            OnTimeout();
+            return;
+        }
+        m_arrTimer[(u_int)m_timer]->SetActive(true);
     }
-    m_arrTimer[(u_int)m_timer]->SetActive(true);
+    else if (m_eState == eInGameState::Prepare)
+    {
+        m_timer -= Timer::GetInst()->GetDeltaTime();
+        if (m_timer <= 0.f)
+        {
+            UI* pUI = UIManager::GetInst()->FindUI(L"Standby");
+            if (!pUI) return;
+            UIPanel* pPanel = static_cast<UIPanel*>(pUI);
+            pPanel->SetActive(false);
+            UIManager::GetInst()->PopPopupUI();
+            ChangeState(eInGameState::Play);
+
+            char buffer[255];
+            ushort count = sizeof(ushort);
+            *(ushort*)(buffer + count) = (ushort)ePacketType::C_Standby;          count += sizeof(ushort);
+            *(ushort*)buffer = count;
+            NetworkManager::GetInst()->Send(buffer);
+        }
+    }
+    else if (m_eState == eInGameState::GameOver)
+    {
+        m_timer -= Timer::GetInst()->GetDeltaTime();
+        if (m_timer <= 0.f)
+        {
+            UI* pUI = UIManager::GetInst()->FindUI(L"GameOver");
+            if (!pUI) return;
+            UIPanel* pPanel = static_cast<UIPanel*>(pUI);
+            pPanel->SetActive(false);
+            UIManager::GetInst()->PopPopupUI();
+            ChangeState(eInGameState::None);
+
+            LobbyScene* pScene = new LobbyScene;
+            SceneManager::GetInst()->ChangeScene(pScene);
+
+            char buffer[255];
+            ushort count = sizeof(ushort);
+            *(ushort*)(buffer + count) = (ushort)ePacketType::C_GameOver;				count += sizeof(ushort);
+            *(ushort*)buffer = count;
+            NetworkManager::GetInst()->Send(buffer);
+        }
+    }
 }
 
 void InGameScene::SetMyTurn(bool _isMyTurn)
 {
     m_isMyTurn = _isMyTurn;
     m_timer = StartTimer;
+}
+
+void InGameScene::ChangeState(eInGameState _state)
+{
+    m_eState = _state;
+    switch (_state)
+    {
+    case eInGameState::Prepare:
+        m_timer = PrepareTimer;
+        break;
+    case eInGameState::Play:
+        m_timer = StartTimer;
+        break;
+    case eInGameState::GameOver:
+        m_timer = GameOverTimer;
+        break;
+    }
 }
 
 void InGameScene::UseSkill(eSkillType _type)
@@ -251,6 +335,7 @@ void InGameScene::OnItemButtonClick(eSkillType _type, UIPanel* _pPanel)
     }
     _pPanel->SetClickable(false);
     _pPanel->SetPos(ScreenWidth / 2, ScreenHeight + 80);
+    m_arrTimer[(u_int)m_timer]->SetActive(false);
     SetMyTurn(false);
     NextTurn();
 }

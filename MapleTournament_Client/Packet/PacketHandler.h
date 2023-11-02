@@ -29,5 +29,6 @@ public:
 	static void S_GameOver(char* _packet);
 	static void S_GameOverSceneChange(char* _packet);
 	static void S_UpdateIngameUserLeave(char* _packet);
+	static void S_Standby(char* _packet);
 };
 

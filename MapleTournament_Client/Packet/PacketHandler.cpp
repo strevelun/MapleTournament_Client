@@ -768,14 +768,14 @@ void PacketHandler::S_UpdateDashboard(char* _packet)
 
 void PacketHandler::S_GameOver(char* _packet)
 {
-	LobbyScene* pScene = new LobbyScene;
-	SceneManager::GetInst()->ChangeScene(pScene);
+	UI* pUI = UIManager::GetInst()->FindUI(L"GameOver");
+	if (!pUI) return;
+	UIPanel* pPanel = static_cast<UIPanel*>(pUI);
+	pPanel->SetActive(true);
+	UIManager::GetInst()->AddPopupUI(pPanel);
 
-	char buffer[255];
-	ushort count = sizeof(ushort);
-	*(ushort*)(buffer + count) = (ushort)ePacketType::C_GameOver;				count += sizeof(ushort);
-	*(ushort*)buffer = count;
-	NetworkManager::GetInst()->Send(buffer);
+	InGameScene* pScene = SceneManager::GetInst()->GetCurScene<InGameScene>();
+	pScene->ChangeState(eInGameState::GameOver);
 
 	Debug::Log("PacketHandler::S_GameOver");
 }
@@ -866,5 +866,18 @@ void PacketHandler::S_UpdateIngameUserLeave(char* _packet)
 	ObjectManager::GetInst()->KillObj(std::to_wstring(slot));
 
 	Debug::Log("PacketHandler::S_UpdateIngameUserLeave");
+}
+
+void PacketHandler::S_Standby(char* _packet)
+{
+	UI* pUI = UIManager::GetInst()->FindUI(L"Standby");
+	if (!pUI) return;
+	UIPanel* pPanel = static_cast<UIPanel*>(pUI);
+	pPanel->SetActive(true);
+	UIManager::GetInst()->AddPopupUI(pPanel);
+	
+	// InGameScene* pScene = SceneManager::GetInst()->GetCurScene<InGameScene>();
+
+	Debug::Log("PacketHandler::S_Standby");
 }
 
