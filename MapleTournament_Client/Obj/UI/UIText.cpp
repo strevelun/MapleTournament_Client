@@ -72,6 +72,14 @@ void UIText::ReassignText(std::wstring _text)
 	}
 
 	SetSize(m_metrics.width, m_metrics.height);
+
+	/* // ScrollView에만 적용
+	if (m_metrics.lineCount > 1)
+	{
+		if (m_pParentUI)
+			m_pParentUI->SetSize(m_metrics.width, m_metrics.lineCount * m_pParentUI->GetHeight());
+	}
+	*/
 }
 
 void UIText::SetTextColor(D2D1::ColorF _color)
@@ -111,7 +119,7 @@ bool UIText::Init()
 		return false;
 	}
 
-	hr = m_pLayout->GetMetrics(&m_metrics);
+	hr = m_pLayout->GetMetrics(&m_metrics); 
 	if (FAILED(hr))
 	{
 		Debug::Log(("UIText : GetMetrics returned : " + std::to_string(hr)));
@@ -120,5 +128,10 @@ bool UIText::Init()
 
 	SetSize(m_metrics.width, m_metrics.height);
 
+	if (m_metrics.lineCount > 1)
+	{
+		if (m_pParentUI)
+			m_pParentUI->SetSize(m_metrics.width, m_metrics.lineCount * m_pParentUI->GetHeight());
+	}
 	return true;
 }

@@ -27,8 +27,6 @@ bool Timer::Update()
 	m_time += m_deltaTime;
 	m_tick = tick;
 
-
-
 	m_elapsedTime += m_deltaTime;
 	if (m_frameLimit > 0)
 		if (m_time < (1.0f / m_frameLimit))

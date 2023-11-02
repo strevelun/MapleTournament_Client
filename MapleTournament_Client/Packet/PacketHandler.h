@@ -24,5 +24,9 @@ public:
 	static void S_UpdateRoomListPage(char* _packet);
 	static void S_UpdateUserSlot(char* _packet);
 	static void S_Skill(char* _packet);
+	static void S_UpdateTurn(char* _packet);
+	static void S_UpdateDashboard(char* _packet);
+	static void S_GameOver(char* _packet);
+	static void S_GameOverSceneChange(char* _packet);
 };
 

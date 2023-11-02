@@ -11,6 +11,7 @@ std::map<ePacketType, void(*)(char*)> TCPClient::m_mapPacketHandlerCallback = {
 	{ ePacketType::S_CreateRoom, PacketHandler::S_CreateRoom },
 	{ ePacketType::S_Chat, PacketHandler::S_Chat },
 	{ ePacketType::S_JoinRoom, PacketHandler::S_JoinRoom },
+	{ ePacketType::S_JoinRoomFail, PacketHandler::S_JoinRoomFail },
 	{ ePacketType::S_NotifyJoinedUser, PacketHandler::S_NotifyJoinedUser },
 	{ ePacketType::S_CheckRoomReadyOK, PacketHandler::S_CheckRoomReadyOK },
 	{ ePacketType::S_CheckRoomReadyFail, PacketHandler::S_CheckRoomReadyFail },
@@ -24,6 +25,10 @@ std::map<ePacketType, void(*)(char*)> TCPClient::m_mapPacketHandlerCallback = {
 	{ ePacketType::S_UpdateRoomListPage, PacketHandler::S_UpdateRoomListPage },
 	{ ePacketType::S_UpdateUserSlot, PacketHandler::S_UpdateUserSlot },
 	{ ePacketType::S_Skill, PacketHandler::S_Skill },
+	{ ePacketType::S_UpdateTurn, PacketHandler::S_UpdateTurn },
+	{ ePacketType::S_UpdateDashboard, PacketHandler::S_UpdateDashboard },
+	{ ePacketType::S_GameOver, PacketHandler::S_GameOver },
+	{ ePacketType::S_GameOverSceneChange, PacketHandler::S_GameOverSceneChange },
 };
 
 TCPClient::TCPClient()

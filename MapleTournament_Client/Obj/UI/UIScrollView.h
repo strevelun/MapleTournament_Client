@@ -13,6 +13,7 @@ private:
 
     int m_topIdx = 0, m_bottomIdx = 0;
     int m_maxItemViewCount = 0;
+    int m_itemHeight = 0;
 
 public:
     UIScrollView(const UIScrollView& _uiScrollView);

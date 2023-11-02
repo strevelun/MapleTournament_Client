@@ -31,6 +31,7 @@ public:
 
     size_t GetItemCount() const { return m_vecItem.size(); }
     UINT GetItemHeight() const { return m_itemHeight; }
+    UINT GetCurViewItemLineCount() const;
 
     void SetItemVerticalInterval(float _interval) { m_itemVerticalInterval = _interval; }
 

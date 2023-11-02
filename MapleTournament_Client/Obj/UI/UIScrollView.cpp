@@ -19,11 +19,11 @@ UIScrollView::UIScrollView(const UIScrollView& _uiScrollView)
 }
 
 UIScrollView::UIScrollView(UI* _pParentPanel, UINT _width, UINT _height, INT _xpos, INT _ypos, UINT _itemWidth, UINT _itemHeight, float _itemVerticalInterval) :
-	UI(_pParentPanel, _width, _height, _xpos, _ypos)
+	UI(_pParentPanel, _width, _height, _xpos, _ypos), m_itemHeight(_itemHeight)
 {
 	m_pUIList = new UIList(this, _width, _height, _itemWidth, _itemHeight, 0, 0, 0.f, 0.f);
-	m_maxItemViewCount = _height / (_itemHeight + _itemVerticalInterval);
-	m_pUIList->SetItemVerticalInterval(_itemVerticalInterval);
+	m_maxItemViewCount = _height / (_itemHeight);// +_itemVerticalInterval);
+	//m_pUIList->SetItemVerticalInterval(_itemVerticalInterval);
 
 	Bitmap* pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_arrow_up.png");
 	m_pUpBtn = new UIButton(this, 50, 50, _width, 0, 1.f);
@@ -43,8 +43,7 @@ UIScrollView::UIScrollView(UI* _pParentPanel, UINT _width, UINT _height, INT _xp
 	m_pDownBtn->SetClickable(true);
 	m_pDownBtn->SetCallback([this]() 
 		{
-			if (m_pUIList->GetItemCount() < m_maxItemViewCount) return;
-			if (m_bottomIdx >= m_pUIList->GetItemCount()) return;
+			if (m_pUIList->GetCurViewItemLineCount() <= m_maxItemViewCount) return;
 
 			m_topIdx++; m_bottomIdx++; 
 		});
@@ -65,6 +64,7 @@ void UIScrollView::SetIdx(int _topIdx, int _bottomIdx)
 
 void UIScrollView::AddItem(const std::wstring& _text, float _textSize)
 {
+	// TODO : 스크롤바 자동으로 내려주는 코드는 따로 분리
 	size_t ct = m_pUIList->GetItemCount();
 	if (m_maxItemViewCount <= ct)
 		SetIdx(ct - m_maxItemViewCount + 1, ct + 1);

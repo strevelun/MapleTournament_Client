@@ -21,6 +21,7 @@ UIManager::~UIManager()
 bool UIManager::AddUI(UI* _pUI)
 {
     if (!_pUI) return false;
+
     const std::wstring& name = _pUI->GetName();
     if (FindUI(name) != nullptr)
         return false;

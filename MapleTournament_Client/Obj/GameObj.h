@@ -10,6 +10,7 @@ private:
     Animator* m_pAnimator = nullptr;
     
 protected:
+    D2D1_POINT_2L m_tDestPos; 
     float m_moveSpeed = 3.0f;
     float					m_ratio = 1.0f;
 

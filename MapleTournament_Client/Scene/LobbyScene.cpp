@@ -37,18 +37,9 @@ bool LobbyScene::Init()
     if (!InitLobbyUI()) return false;
     if (!InitWaitingRoomUI()) return false;
 
-    ShowLobbyUI();
-
     char buffer[255];
     ushort count = sizeof(ushort);
-    *(ushort*)(buffer + count) = (ushort)ePacketType::C_UpdateUserListPage;		count += sizeof(ushort);
-    *(char*)(buffer + count) = (char)0;                                         count += sizeof(char);
-    *(ushort*)buffer = count;
-    NetworkManager::GetInst()->Send(buffer);
-
-    count = sizeof(ushort);
-    *(ushort*)(buffer + count) = (ushort)ePacketType::C_UpdateRoomListPage;		count += sizeof(ushort);
-    *(char*)(buffer + count) = (char)0;                                         count += sizeof(char);
+    *(ushort*)(buffer + count) = (ushort)ePacketType::C_LobbyInit;				count += sizeof(ushort);
     *(ushort*)buffer = count;
     NetworkManager::GetInst()->Send(buffer);
 
@@ -772,13 +763,13 @@ void LobbyScene::Update()
 {
     if (m_state == eSessionState::Lobby)
     {
-        m_frameTime += Timer::GetInst()->GetDeltaTime();
-        if (m_frameTime >= 5.f)
+        m_frameTime -= Timer::GetInst()->GetDeltaTime();
+        if (m_frameTime <= 0.f)
         {
             UpdateUserListPage();
             UpdateRoomListPage();
 
-            m_frameTime = 0.f;
+            m_frameTime = 5.f;
         }
     }
 }

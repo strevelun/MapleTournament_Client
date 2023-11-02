@@ -9,6 +9,7 @@ ObjectManager::ObjectManager()
 
 ObjectManager::~ObjectManager()
 {
+	// delete
 }
 
 bool ObjectManager::Init()

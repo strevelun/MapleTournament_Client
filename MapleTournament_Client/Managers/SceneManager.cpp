@@ -25,6 +25,7 @@ void SceneManager::CheckSceneChange()
 		}
 		m_pCurScene = m_pNextScene;
 		m_pCurScene->Init();
+		
 	}
 
 	m_pNextScene = nullptr;

@@ -38,6 +38,13 @@ enum class ePacketType
 	S_UpdateUserSlot,
 	C_Skill,
 	S_Skill,
+	S_UpdateTurn,
+	S_UpdateDashboard,
+	C_NextTurn,
+	S_GameOver,
+	C_GameOver,
+	S_GameOverSceneChange,
+	C_LobbyInit,
 };
 
 enum class eSkillType

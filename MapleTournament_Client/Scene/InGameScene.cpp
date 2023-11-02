@@ -13,6 +13,8 @@
 #include "../Animation/Animator.h"
 #include "../Animation/AnimationClip.h"
 #include "Layer.h"
+#include "../Timer.h"
+#include "../Debug.h"
 
 // x : 200~1080(880)
 // y : 200~600
@@ -92,6 +94,33 @@ bool InGameScene::Init()
     pPlayerName->SetName(L"Nickname");
     pPanel->AddChildUI(pPlayerName);
 
+    /* 점수판 */
+    pPanel = new UIPanel(nullptr, 100, 50, ScreenWidth / 2, 0, 0.5f);
+    pPanel->SetName(L"Dashboard");
+    UIManager::GetInst()->AddUI(pPanel);
+    UIText *pDashboardText = new UIText(pPanel, L"1 / ", 30.f);
+    pPanel->AddChildUI(pDashboardText);
+    pDashboardText->SetName(L"DashboardText");
+
+    /* 타이머 UI */
+    for (int i = 0; i <= 9; i++)
+    {
+        pPanel = new UIPanel(nullptr, 100, 100, ScreenWidth / 2, 100, 0.5f);
+        pPanel->SetActive(false);
+        pPanel->SetName(std::to_wstring(i));
+        pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_" + std::to_wstring(i) + L".png");
+        if (pBitmap) pPanel->SetBitmap(pBitmap);
+        UIManager::GetInst()->AddUI(pPanel);
+        m_arrTimer[i] = pPanel;
+    }
+
+    UIPanel* pPanelWait = new UIPanel(nullptr, 150, 100, ScreenWidth / 2, 100, 0.5f);
+    pPanelWait->SetActive(true);
+    pPanelWait->SetName(L"Wait");
+    pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingame_wait.png");
+    if (pBitmap) pPanelWait->SetBitmap(pBitmap);
+    UIManager::GetInst()->AddUI(pPanelWait);
+
     /* 스킬 */
     AnimationClip* pClip = ResourceManager::GetInst()->GetAnimClip(L"attackCloud");
     pClip->SetLoop(true);
@@ -101,66 +130,65 @@ bool InGameScene::Init()
 
     SkillAttackCloud* pSkill = new SkillAttackCloud(2.0f);
     pSkill->SetAnimator(pAnimator);
+    // pSkill->SetActive(false);
     ObjectManager::GetInst()->AddSkill(pSkill, eSkillType::AttackCloud);
 
     pLayer = new Layer(L"Skill", 2);
     //pLayer->AddObj(pSkill);
+    
     m_vecObjLayer.push_back(pLayer);
 
     /* 스킬 버튼 */
-    pPanel = new UIPanel(nullptr, 500, 100, ScreenWidth / 2, ScreenHeight, 0.5f, 1.0f);
+    pPanel = new UIPanel(nullptr, 500, 100, ScreenWidth / 2, ScreenHeight + 80, 0.5f, 1.0f);
     pPanel->SetName(L"SkillButtonPanel");
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingame_leftmove.png");
     UIButton* pButton = new UIButton(pPanel, 50, 50, 0, 0);
     pButton->SetBitmap(pBitmap);
-    pButton->SetClickable(true);
-    pButton->SetCallback([this] 
+    pButton->SetCallback([this, pPanel] 
         {
-            UseSkill(eSkillType::LeftMove);
+            OnItemButtonClick(eSkillType::LeftMove, pPanel);
         });
     pPanel->AddChildUI(pButton);
 
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingame_leftdoublemove.png");
     pButton = new UIButton(pPanel, 50, 50, 50, 0);
     pButton->SetBitmap(pBitmap);
-    pButton->SetClickable(true);
-    pButton->SetCallback([this] 
+    pButton->SetCallback([this, pPanel]
         {
-            UseSkill(eSkillType::LeftDoubleMove);
+            OnItemButtonClick(eSkillType::LeftDoubleMove, pPanel);
         });
     pPanel->AddChildUI(pButton);
 
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingame_rightmove.png");
     pButton = new UIButton(pPanel, 50, 50, 100, 0);
     pButton->SetBitmap(pBitmap);
-    pButton->SetClickable(true);
-    pButton->SetCallback([this]
+    pButton->SetCallback([this, pPanel]
         {
-            UseSkill(eSkillType::RightMove);
+            OnItemButtonClick(eSkillType::RightMove, pPanel);
         });
     pPanel->AddChildUI(pButton);
 
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingame_rightdoublemove.png");
     pButton = new UIButton(pPanel, 50, 50, 150, 0);
     pButton->SetBitmap(pBitmap);
-    pButton->SetClickable(true);
-    pButton->SetCallback([this]
+    pButton->SetCallback([this, pPanel]
         {
-            UseSkill(eSkillType::RightDoubleMove);
+            OnItemButtonClick(eSkillType::RightDoubleMove, pPanel);
         });
     pPanel->AddChildUI(pButton);
 
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingame_button_attackCloud.png");
     pButton = new UIButton(pPanel, 50, 50, 200, 0);
     pButton->SetBitmap(pBitmap);
-    pButton->SetClickable(true);
-    pButton->SetCallback([this] 
+    pButton->SetCallback([this, pPanel]
         {
-            UseSkill(eSkillType::AttackCloud);
+            OnItemButtonClick(eSkillType::AttackCloud, pPanel);
         });
     pPanel->AddChildUI(pButton);
 
     UIManager::GetInst()->AddUI(pPanel);
+
+
 
     char buffer[255];
     ushort count = sizeof(ushort);
@@ -171,6 +199,29 @@ bool InGameScene::Init()
     return true;
 }
 
+void InGameScene::Update()
+{
+    Scene::Update();
+
+    if (!m_isMyTurn) return;
+
+    m_arrTimer[(u_int)m_timer]->SetActive(false);
+
+    m_timer -= Timer::GetInst()->GetDeltaTime();
+    if (m_timer <= 0.f)
+    {
+        OnTimeout();
+        return;
+    }
+    m_arrTimer[(u_int)m_timer]->SetActive(true);
+}
+
+void InGameScene::SetMyTurn(bool _isMyTurn)
+{
+    m_isMyTurn = _isMyTurn;
+    m_timer = StartTimer;
+}
+
 void InGameScene::UseSkill(eSkillType _type)
 {
     char buffer[255];
@@ -179,4 +230,45 @@ void InGameScene::UseSkill(eSkillType _type)
     *(char*)(buffer + count) = (char)_type;                                 count += sizeof(char);
     *(ushort*)buffer = count;
     NetworkManager::GetInst()->Send(buffer);
+}
+
+void InGameScene::NextTurn()
+{
+    char buffer[255];
+    ushort count = sizeof(ushort);
+    *(ushort*)(buffer + count) = (ushort)ePacketType::C_NextTurn;				count += sizeof(ushort);
+    *(ushort*)buffer = count;
+    NetworkManager::GetInst()->Send(buffer);
+}
+
+void InGameScene::OnItemButtonClick(eSkillType _type, UI* _pPanel)
+{
+    UI* pUI = UIManager::GetInst()->FindUI(L"Wait");
+    if (pUI)
+    {
+        UIPanel* pPanel = static_cast<UIPanel*>(pUI);
+        pPanel->SetActive(true);
+    }
+    SetMyTurn(false);
+    _pPanel->SetClickable(false);
+    _pPanel->SetPos(ScreenWidth / 2, ScreenHeight + 80);
+    UseSkill(_type);
+}
+
+void InGameScene::OnTimeout()
+{
+    UI* pUI = UIManager::GetInst()->FindUI(L"SkillButtonPanel");
+    if (!pUI) return;
+    pUI->SetPos(ScreenWidth / 2, ScreenHeight + 80);
+    pUI->SetClickable(false);
+
+    pUI = UIManager::GetInst()->FindUI(L"Wait");
+    if (pUI)
+    {
+        UIPanel* pPanel = static_cast<UIPanel*>(pUI);
+        pPanel->SetActive(true);
+    }
+
+    SetMyTurn(false);
+    NextTurn();
 }

@@ -32,7 +32,9 @@ void PacketHandler::S_OKLogin(char* _packet)
 	ObjectManager::GetInst()->SetMyPlayer(pMyPlayer);
 	ObjectManager::GetInst()->AddObj(pMyPlayer);
 
-	SceneManager::GetInst()->ChangeScene(new LobbyScene);
+	LobbyScene* pScene = new LobbyScene;
+	SceneManager::GetInst()->ChangeScene(pScene);
+	pScene->ChangeSceneUI(eSessionState::Lobby);
 
 	Debug::Log("PacketHandler::S_OKLogin");
 }
@@ -453,14 +455,21 @@ void PacketHandler::S_UpdateUserType(char* _packet)
 	eMemberType type = (eMemberType)*(char*)_packet;
 
 	LobbyScene* pLobbyScene = SceneManager::GetInst()->GetCurScene<LobbyScene>();
+	UI* pUI = UIManager::GetInst()->FindUI(L"StartGame");
+	if (!pUI) return;
+	UIButton* pBtn = static_cast<UIButton*>(pUI);
+
 	if (type == eMemberType::Owner)
 	{
-		UI* pUI = UIManager::GetInst()->FindUI(L"StartGame");
-		if (!pUI) return;
-		UIButton* pBtn = static_cast<UIButton*>(pUI);
 		pBtn->SetCallback(&LobbyScene::GameStartCallback, pLobbyScene);
 		UIText* pText = pBtn->GetUIText();
 		pText->ReassignText(L"게임 시작");
+	}
+	else if (type == eMemberType::Member)
+	{
+		pBtn->SetCallback(&LobbyScene::GameReadyCallback, pLobbyScene);
+		UIText* pText = pBtn->GetUIText();
+		pText->ReassignText(L"준비");
 	}
 
 	Debug::Log("PacketHandler::S_UpdateUserType");
@@ -516,7 +525,7 @@ void PacketHandler::S_InGameReady(char* _packet)
 			pText->ReassignText((wchar_t*)_packet);			_packet += (ushort)wcslen((wchar_t*)_packet) * 2 + 2;
 			if (mySlotNumber == i)
 			{
-				ObjectManager::GetInst()->SetMyPlayer(myPlayer);
+				//ObjectManager::GetInst()->SetMyPlayer(myPlayer);
 				pText->SetTextColor(D2D1::ColorF::Red);
 			}
 		}
@@ -714,5 +723,124 @@ void PacketHandler::S_Skill(char* _packet)
 	pPlayer->UseSkill(skillType);
 
 	Debug::Log("PacketHandler::S_Skill");
+}
+
+void PacketHandler::S_UpdateTurn(char* _packet)
+{
+	UI* pUI = UIManager::GetInst()->FindUI(L"SkillButtonPanel");
+	if (pUI)
+	{
+		pUI->SetPos(ScreenWidth / 2, ScreenHeight);
+		pUI->SetClickable(true);
+	}
+
+	pUI = UIManager::GetInst()->FindUI(L"Wait");
+	if (pUI)
+	{
+		UIPanel* pPanel = static_cast<UIPanel*>(pUI);
+		pPanel->SetActive(false);
+	}
+
+	InGameScene* pScene = SceneManager::GetInst()->GetCurScene<InGameScene>();
+	pScene->SetMyTurn(true);
+
+	Debug::Log("PacketHandler::S_UpdateTurn");
+}
+
+void PacketHandler::S_UpdateDashboard(char* _packet)
+{
+	int curTurn = int(*(char*)_packet);			_packet += sizeof(char);
+
+	UI* pUI = UIManager::GetInst()->FindUI(L"Dashboard");
+	if (!pUI) return;
+	UIPanel* pPanel = static_cast<UIPanel*>(pUI);
+	pUI = pPanel->FindChildUI(L"DashboardText");
+	if (!pUI) return;
+	UIText* pText = static_cast<UIText*>(pUI);
+	pText->ReassignText(std::to_wstring(curTurn) + L" / " + std::to_wstring(GAME_MAX_TURN));
+
+	Debug::Log("PacketHandler::S_UpdateDashboard");
+}
+
+void PacketHandler::S_GameOver(char* _packet)
+{
+	LobbyScene* pScene = new LobbyScene;
+	SceneManager::GetInst()->ChangeScene(pScene);
+
+	char buffer[255];
+	ushort count = sizeof(ushort);
+	*(ushort*)(buffer + count) = (ushort)ePacketType::C_GameOver;				count += sizeof(ushort);
+	*(ushort*)buffer = count;
+	NetworkManager::GetInst()->Send(buffer);
+
+	Debug::Log("PacketHandler::S_GameOver");
+}
+
+void PacketHandler::S_GameOverSceneChange(char* _packet)
+{
+	LobbyScene* pScene = SceneManager::GetInst()->GetCurScene<LobbyScene>();
+	pScene->ChangeSceneUI(eSessionState::WatingRoom);
+
+	std::wstring roomTitle((wchar_t*)_packet);					_packet += (ushort)wcslen((wchar_t*)_packet) * 2 + 2;
+	UI* pUI = UIManager::GetInst()->FindUI(L"RoomTitle");
+	if (pUI)
+	{
+		UIPanel* pPanel = static_cast<UIPanel*>(pUI);
+		pUI = pPanel->FindChildUI(L"Text");
+		if (pUI)
+		{
+			UIText* pText = static_cast<UIText*>(pUI);
+			pText->ReassignText(roomTitle);
+		}
+	}
+
+	int userCount = *(ushort*)_packet;				_packet += sizeof(ushort);
+
+	for (int i = 0; i < userCount; i++)
+	{
+		char slotLocation = *(char*)_packet;				_packet += sizeof(char);
+		u_int choice = *(char*)_packet;				_packet += sizeof(char);
+		eMemberType eType = (eMemberType) * (ushort*)_packet;				_packet += sizeof(ushort);
+		std::wstring nickname((wchar_t*)_packet);			_packet += (ushort)wcslen((wchar_t*)_packet) * 2 + 2;
+
+		pUI = UIManager::GetInst()->FindUI(L"UserSlot" + std::to_wstring(slotLocation));
+		if (pUI)
+		{
+			UIPanel* pSlot = static_cast<UIPanel*>(pUI);
+			UI* pTemp = pSlot->FindChildUI(L"Picture");
+			if (pTemp)
+			{
+				UIPanel* pPicture = static_cast<UIPanel*>(pTemp);
+				Bitmap* pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_room_player" + std::to_wstring(choice) + L".png");
+				if (pBitmap)		pPicture->SetBitmap(pBitmap);
+			}
+
+			pUI = pSlot->FindChildUI(L"Nickname");
+			if (pUI)
+			{
+				UIText* pTextNickname = static_cast<UIText*>(pUI);
+				pTextNickname->ReassignText(nickname);
+			}
+			Bitmap* pBitmap = nullptr;
+			pUI = pSlot->FindChildUI(L"State");
+			if (pUI)
+			{
+				UIPanel* pTextState = static_cast<UIPanel*>(pUI);
+				if (eType == eMemberType::Owner)
+				{
+					pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_waitingroomscene_owner.png");				
+				}
+				else if (eType == eMemberType::Member)
+				{
+					pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_waitingroomscene_wait.png");
+				}
+				if (pBitmap)
+					pTextState->SetBitmap(pBitmap);
+			}
+			pSlot->SetActive(true);
+		}
+	}
+
+	Debug::Log("PacketHandler::S_GameOverSceneChange");
 }
 

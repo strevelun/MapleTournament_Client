@@ -40,9 +40,10 @@ public:
 
     void SetParent(UI* _pUI) { m_pParentUI = _pUI; }
     void SetPos(INT _xpos, INT _ypos) override;
-    void SetClickable(bool _bClickable);
-    void SetSize(UINT _width, UINT _height); 
-    void SetPivot(float _pivotX, float _pivotY); 
+    virtual void SetClickable(bool _bClickable);
+    void SetSize(UINT _width, UINT _height);
+    void SetPivot(float _pivotX, float _pivotY);
+    void SetActive(bool _bActive) override { m_bActive = _bActive; }
 
     UI* GetParent() const { return m_pParentUI; }
     UINT GetWidth() const { return m_size.width; }

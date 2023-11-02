@@ -72,10 +72,24 @@ void UIPanel::SetActive(bool _bActive)
 void UIPanel::SetPos(INT _xpos, INT _ypos)
 {
 	UI::SetPos(_xpos, _ypos);
+
 	size_t size = m_vecMemberUI.size();
 	for (size_t i = 0; i < size; i++)
 	{
 		m_vecMemberUI[i]->SetPos(m_vecMemberUI[i]->GetPosXRelativeToParent(), m_vecMemberUI[i]->GetPosYRelativeToParent());
+	}
+}
+
+void UIPanel::SetClickable(bool _bClickable)
+{
+	UI::SetClickable(_bClickable);
+
+	std::vector<UI*>::iterator iter = m_vecMemberUI.begin();
+	std::vector<UI*>::iterator iterEnd = m_vecMemberUI.end();
+
+	for (; iter != iterEnd; iter++)
+	{
+		(*iter)->SetClickable(_bClickable);
 	}
 }
 

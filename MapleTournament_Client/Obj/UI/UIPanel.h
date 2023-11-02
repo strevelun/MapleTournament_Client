@@ -27,6 +27,7 @@ public:
     void SetActive(bool _bActive) override;
     void SetBitmap(Bitmap* _pBitmap) { m_pBitmap = _pBitmap; }
     void SetPos(INT _xpos, INT _ypos) override;
+    void SetClickable(bool _bClickable) override;
 
     void Update() override;
     void Render() override;
