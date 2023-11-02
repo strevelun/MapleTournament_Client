@@ -43,7 +43,7 @@ UIScrollView::UIScrollView(UI* _pParentPanel, UINT _width, UINT _height, INT _xp
 	m_pDownBtn->SetClickable(true);
 	m_pDownBtn->SetCallback([this]() 
 		{
-			if (m_pUIList->GetCurViewItemLineCount() <= m_maxItemViewCount) return;
+			if (m_bottomIdx >= m_pUIList->GetItemCount()) return;
 
 			m_topIdx++; m_bottomIdx++; 
 		});
