@@ -100,7 +100,7 @@ void PacketHandler::S_CreateRoom(char* _packet)
 		pPage->Reset();
 	}
 
-	pLobbyScene->ChangeSceneUI(eSessionState::WatingRoom);
+	pLobbyScene->ChangeSceneUI(eSessionState::WaitingRoom);
 
 	MyPlayer* pPlayer = ObjectManager::GetInst()->GetMyPlayer();
 	const std::wstring& strNickname = pPlayer->GetNickname();
@@ -162,7 +162,7 @@ void PacketHandler::S_Chat(char* _packet)
 			pScroll->AddItem(nickname + L" : " + chat, 20.f);
 		}
 	}
-	else if (eState == eSessionState::WatingRoom)
+	else if (eState == eSessionState::WaitingRoom)
 	{
 		UI* pUI = UIManager::GetInst()->FindUI(L"WaitingRoomChat");
 		if (pUI)
@@ -202,7 +202,8 @@ void PacketHandler::S_JoinRoom(char* _packet)
 	{
 		char slotLocation = *(char*)_packet;				_packet += sizeof(char);
 		u_int choice = *(char*)_packet;				_packet += sizeof(char);
-		eMemberType eType = (eMemberType) * (ushort*)_packet;				_packet += sizeof(ushort);
+		eMemberType eType = (eMemberType) * (char*)_packet;				_packet += sizeof(char);
+		eMemberState eState = (eMemberState) * (char*)_packet;				_packet += sizeof(char);
 		std::wstring nickname((wchar_t*)_packet);			_packet += (ushort)wcslen((wchar_t*)_packet) * 2 + 2;
 
 		pUI = UIManager::GetInst()->FindUI(L"UserSlot" + std::to_wstring(slotLocation));
@@ -234,7 +235,10 @@ void PacketHandler::S_JoinRoom(char* _packet)
 				}
 				else if (eType == eMemberType::Member)
 				{
-					pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_waitingroomscene_wait.png");
+					if(eState == eMemberState::Wait)
+						pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_waitingroomscene_wait.png");
+					else if(eState == eMemberState::Ready)
+						pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_waitingroomscene_ready.png");
 				}
 				if (pBitmap) 
 					pTextState->SetBitmap(pBitmap);
@@ -286,7 +290,7 @@ void PacketHandler::S_JoinRoom(char* _packet)
 	}
 
 	LobbyScene* pLobbyScene = SceneManager::GetInst()->GetCurScene<LobbyScene>();
-	pLobbyScene->ChangeSceneUI(eSessionState::WatingRoom);
+	pLobbyScene->ChangeSceneUI(eSessionState::WaitingRoom);
 
 	pUI = UIManager::GetInst()->FindUI(L"StartGame");
 	if (pUI)
@@ -779,7 +783,7 @@ void PacketHandler::S_GameOver(char* _packet)
 void PacketHandler::S_GameOverSceneChange(char* _packet)
 {
 	LobbyScene* pScene = SceneManager::GetInst()->GetCurScene<LobbyScene>();
-	pScene->ChangeSceneUI(eSessionState::WatingRoom);
+	pScene->ChangeSceneUI(eSessionState::WaitingRoom);
 
 	std::wstring roomTitle((wchar_t*)_packet);					_packet += (ushort)wcslen((wchar_t*)_packet) * 2 + 2;
 	UI* pUI = UIManager::GetInst()->FindUI(L"RoomTitle");
@@ -842,5 +846,23 @@ void PacketHandler::S_GameOverSceneChange(char* _packet)
 	}
 
 	Debug::Log("PacketHandler::S_GameOverSceneChange");
+}
+
+void PacketHandler::S_UpdateIngameUserLeave(char* _packet)
+{
+	int slot = int(*(char*)_packet);
+
+	UI* pUI = UIManager::GetInst()->FindUI(L"PlayerStat" + std::to_wstring(slot));
+	if (!pUI) return;
+	UIPanel* pPanel = static_cast<UIPanel*>(pUI);
+	pUI = pPanel->FindChildUI(L"Picture");
+	if(pUI)
+		pUI->SetActive(false);
+
+	pUI = pPanel->FindChildUI(L"Nickname");
+	if (pUI)
+		pUI->SetActive(false);
+
+	Debug::Log("PacketHandler::S_UpdateIngameUserLeave");
 }
 

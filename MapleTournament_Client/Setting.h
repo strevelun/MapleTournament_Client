@@ -45,6 +45,7 @@ enum class ePacketType
 	C_GameOver,
 	S_GameOverSceneChange,
 	C_LobbyInit,
+	S_UpdateIngameUserLeave,
 };
 
 enum class eSkillType
@@ -86,7 +87,7 @@ enum class eSessionState
 	None,
 	Login,
 	Lobby,
-	WatingRoom,
+	WaitingRoom,
 	InGame
 };
 

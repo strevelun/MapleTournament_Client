@@ -29,6 +29,7 @@ std::map<ePacketType, void(*)(char*)> TCPClient::m_mapPacketHandlerCallback = {
 	{ ePacketType::S_UpdateDashboard, PacketHandler::S_UpdateDashboard },
 	{ ePacketType::S_GameOver, PacketHandler::S_GameOver },
 	{ ePacketType::S_GameOverSceneChange, PacketHandler::S_GameOverSceneChange },
+	{ ePacketType::S_UpdateIngameUserLeave, PacketHandler::S_UpdateIngameUserLeave },
 };
 
 TCPClient::TCPClient()

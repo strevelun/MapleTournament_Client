@@ -785,7 +785,7 @@ void LobbyScene::ChangeSceneUI(eSessionState _state)
         HideWaitingRoomUI();
         m_state = _state;
     }
-    else if (_state == eSessionState::WatingRoom)
+    else if (_state == eSessionState::WaitingRoom)
     {
         ShowWaitingRoomUI();
         HideLobbyUI();
