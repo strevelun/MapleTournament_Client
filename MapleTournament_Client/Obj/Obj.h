@@ -10,18 +10,18 @@ class Obj
 {
 protected:
 	std::wstring			m_strName;
-	POINT					m_tPos;
+	D2D1_POINT_2F			m_tPos;
 	bool					m_bAlive = true; 
 	bool					m_bActive = true;
 
 public:
 	Obj();
 	Obj(const Obj& _obj);
-	Obj(INT _xpos, INT _ypos);
+	Obj(float _xpos, float _ypos);
 	virtual ~Obj();
 
 	void SetName(const std::wstring& _strName) { m_strName = _strName; }
-	virtual void SetPos(INT _xpos, INT _ypos);
+	virtual void SetPos(float _xpos, float _ypos);
 	void SetAlive(bool _bAlive) { m_bAlive = _bAlive; }
 	virtual void SetActive(bool _bActive) { m_bActive = _bActive; }
 

@@ -537,11 +537,21 @@ void PacketHandler::S_InGameReady(char* _packet)
 		AnimationClip* pClip = ResourceManager::GetInst()->GetAnimClip(L"player" + std::to_wstring(characterChoice));
 		if (pClip)
 		{
-			pClip->SetLoop(false);
+			pClip->SetLoop(true);
 			pClip->SetPlayTime(1.5f);
 			pClip->SetAnyState(true);
 		}
 		Animator* pAnimator = new Animator(pClip);
+
+		// characterChoice 정보를 MyPlayer의 멤버변수로 두고, 해당 코드를 InGameScene Init에
+		pClip = ResourceManager::GetInst()->GetAnimClip(L"player" + std::to_wstring(characterChoice) + L"Walk", L"player" + std::to_wstring(characterChoice));
+		if (pClip)
+		{
+			pClip->SetLoop(true);
+			pClip->SetPlayTime(1.5f);
+			pClip->SetAnyState(true);
+		}
+		pAnimator->AddClip(L"Walk", pClip);
 
 		if (slot == 0)
 		{
@@ -726,6 +736,10 @@ void PacketHandler::S_Skill(char* _packet)
 	MyPlayer* pPlayer = static_cast<MyPlayer*>(pObj);
 	pPlayer->UseSkill(skillType);
 
+	InGameScene* pScene = SceneManager::GetInst()->GetCurScene<InGameScene>();
+	pScene->ChangeState(eInGameState::UseSkill);
+	pScene->SetSkillTimer(pPlayer->GetMoveTime());
+
 	Debug::Log("PacketHandler::S_Skill");
 }
 
@@ -747,6 +761,7 @@ void PacketHandler::S_UpdateTurn(char* _packet)
 
 	InGameScene* pScene = SceneManager::GetInst()->GetCurScene<InGameScene>();
 	pScene->SetMyTurn(true);
+	pScene->ChangeState(eInGameState::Play);
 
 	Debug::Log("PacketHandler::S_UpdateTurn");
 }

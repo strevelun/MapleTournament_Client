@@ -25,7 +25,7 @@ protected:
     bool            m_bClickable = false;
     eUIState            m_eUIState = eUIState::Normal;
 
-    POINT					m_tPosRelativeToParent;
+    D2D1_POINT_2F					m_tPosRelativeToParent;
     D2D1_RECT_F				m_rect;
     D2D1_SIZE_U				m_size;
     FLOAT					m_pivotX, m_pivotY;
@@ -39,7 +39,7 @@ public:
     virtual UI* Clone() const = 0;
 
     void SetParent(UI* _pUI) { m_pParentUI = _pUI; }
-    void SetPos(INT _xpos, INT _ypos) override;
+    void SetPos(float _xpos, float _ypos) override;
     virtual void SetClickable(bool _bClickable);
     void SetSize(UINT _width, UINT _height);
     void SetPivot(float _pivotX, float _pivotY);
@@ -50,8 +50,8 @@ public:
     UINT GetHeight() const { return m_size.height; }
     FLOAT GetPivotX() const { return m_pivotX; }
     FLOAT GetPivotY() const { return m_pivotY; }
-    UINT GetPosXRelativeToParent() const { return (UINT)m_tPosRelativeToParent.x; }
-    UINT GetPosYRelativeToParent() const { return (UINT)m_tPosRelativeToParent.y; }
+    float GetPosXRelativeToParent() const { return m_tPosRelativeToParent.x; }
+    float GetPosYRelativeToParent() const { return m_tPosRelativeToParent.y; }
 
     bool IsClickable() const { return m_bClickable; }
 

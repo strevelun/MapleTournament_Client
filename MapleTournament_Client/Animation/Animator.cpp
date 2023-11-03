@@ -41,7 +41,7 @@ void Animator::Update()
 	}
 }
 
-void Animator::Render(UINT _xpos, UINT _ypos, float _ratio)
+void Animator::Render(float _xpos, float _ypos, float _ratio)
 {
 	m_pCurClip->Render(_xpos, _ypos, _ratio);
 }
@@ -60,4 +60,9 @@ void Animator::SetNextClip(const std::wstring& _stateName)
 		return;
 	}
 	m_pNextClip = iter->second;
+}
+
+void Animator::SetDefaultClip()
+{
+	m_pNextClip = m_pDefaultClip;
 }

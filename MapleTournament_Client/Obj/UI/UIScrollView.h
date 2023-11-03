@@ -17,7 +17,7 @@ private:
 
 public:
     UIScrollView(const UIScrollView& _uiScrollView);
-    UIScrollView(UI* _pParentPanel, UINT _width, UINT _height, INT _xpos, INT _ypos, UINT _itemWidth, UINT _itemHeight, float _itemVerticalInterval = 0.f);
+    UIScrollView(UI* _pParentPanel, UINT _width, UINT _height, float _xpos, float _ypos, UINT _itemWidth, UINT _itemHeight, float _itemVerticalInterval = 0.f);
     virtual ~UIScrollView();
 
     UIScrollView* Clone() const override { return new UIScrollView(*this); }

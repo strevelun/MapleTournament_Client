@@ -18,4 +18,5 @@ public: \
 	} 
 
 
-#define GAME_MAX_TURN			1
+#define GAME_MAX_TURN			2
+#define FRAME_PER_SEC			120

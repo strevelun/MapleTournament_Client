@@ -58,7 +58,8 @@ enum class eSkillType
 	LeftDoubleMove,
 	RightMove,
 	RightDoubleMove,
-
+	UpMove,
+	DownMove,
 	NumOfSkills,
 };
 

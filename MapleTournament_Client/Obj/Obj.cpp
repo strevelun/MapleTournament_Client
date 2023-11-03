@@ -14,7 +14,7 @@ Obj::Obj(const Obj& _obj)
 	m_bActive = _obj.m_bActive;
 }
 
-Obj::Obj(INT _xpos, INT _ypos)
+Obj::Obj(float _xpos, float _ypos)
 	: m_tPos{ _xpos, _ypos }, m_bAlive(true)
 {
 }
@@ -23,7 +23,7 @@ Obj::~Obj()
 {
 }
 
-void Obj::SetPos(INT _xpos, INT _ypos)
+void Obj::SetPos(float _xpos, float _ypos)
 {
 	m_tPos.x = _xpos;
 	m_tPos.y = _ypos;

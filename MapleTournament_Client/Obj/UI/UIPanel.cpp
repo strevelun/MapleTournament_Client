@@ -20,7 +20,7 @@ UIPanel::UIPanel(const UIPanel& _ui)
 	
 }
 
-UIPanel::UIPanel(UI* _pParentPanel, UINT _width, UINT _height, INT _xpos, INT _ypos, FLOAT _pivotX, FLOAT _pivotY) :
+UIPanel::UIPanel(UI* _pParentPanel, UINT _width, UINT _height, float _xpos, float _ypos, FLOAT _pivotX, FLOAT _pivotY) :
 	UI(_pParentPanel, _width, _height, _xpos, _ypos, _pivotX, _pivotY)
 {
 	Graphics::GetInst()->CreateSolidColorBrush(D2D1::ColorF::Red, &m_pBrush);
@@ -69,7 +69,7 @@ void UIPanel::SetActive(bool _bActive)
 	m_bActive = _bActive;
 }
 
-void UIPanel::SetPos(INT _xpos, INT _ypos)
+void UIPanel::SetPos(float _xpos, float _ypos)
 {
 	UI::SetPos(_xpos, _ypos);
 

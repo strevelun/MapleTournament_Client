@@ -19,8 +19,8 @@ Mouse::~Mouse()
 
 void Mouse::Update()
 {
-	GetCursorPos(&m_tPos);
-	ScreenToClient(m_hWnd, &m_tPos);
+	GetCursorPos(&m_tMousePos);
+	ScreenToClient(m_hWnd, &m_tMousePos);
 
 	bool bLButton = GetAsyncKeyState(VK_LBUTTON) & 0x8000;
 

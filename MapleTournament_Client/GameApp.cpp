@@ -67,7 +67,7 @@ bool GameApp::Init(int _nCmdShow, const wchar_t* _windowName, UINT _width, UINT 
 	if (!InputManager::GetInst()->Init(m_window.GetHWnd())) return false;
 	if (!UIManager::GetInst()->Init()) return false;
 	if (!ObjectManager::GetInst()->Init()) return false;
-	if (!Timer::GetInst()->Init(120)) return false;
+	if (!Timer::GetInst()->Init(FRAME_PER_SEC)) return false;
 	//if (!InstructionQueue::GetInst()->Init()) return false;
 
 	SceneManager::GetInst()->ChangeScene(new LoginScene);

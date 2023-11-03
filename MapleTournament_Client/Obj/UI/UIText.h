@@ -20,7 +20,7 @@ private:
 
 public:
     UIText(const UIText& _uiText);
-    UIText(UI* _pParentPanel, std::wstring _text, FLOAT _size, INT _xpos = 0, INT _ypos = 0, FLOAT _pivotX = 0.f, FLOAT _pivotY = 0.f);
+    UIText(UI* _pParentPanel, std::wstring _text, FLOAT _size, float _xpos = 0, float _ypos = 0, FLOAT _pivotX = 0.f, FLOAT _pivotY = 0.f);
     ~UIText();
 
     UIText* Clone() const override { return new UIText(*this); }

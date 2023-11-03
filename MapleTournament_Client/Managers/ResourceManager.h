@@ -23,7 +23,7 @@ public:
 	bool Init();
 
 	Bitmap* GetBitmap(const std::wstring& _fileWithPath);
-	AnimationClip* GetAnimClip(const std::wstring& _justFilename);
+	AnimationClip* GetAnimClip(const std::wstring& _justFilename, const std::wstring& _baseSheet = L"");
 
 private:
 	bool LoadImageFromFile(const std::wstring& _fileWithPath);

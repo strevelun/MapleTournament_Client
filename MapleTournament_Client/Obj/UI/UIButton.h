@@ -20,7 +20,7 @@ private:
 
 public:
     UIButton(const UIButton& _uiButton);
-    UIButton(UI* _pParentPanel, UINT _width, UINT _height, INT _xpos = 0, INT _ypos = 0,  FLOAT _pivotX = 0.f, FLOAT _pivotY = 0.f);
+    UIButton(UI* _pParentPanel, UINT _width, UINT _height, float _xpos = 0.f, float _ypos = 0.f,  FLOAT _pivotX = 0.f, FLOAT _pivotY = 0.f);
     ~UIButton();
 
     UIButton* Clone() const override { return new UIButton(*this); }

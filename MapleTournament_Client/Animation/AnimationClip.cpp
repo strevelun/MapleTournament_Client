@@ -31,7 +31,7 @@ void AnimationClip::Update()
 	}
 }
 
-void AnimationClip::Render(UINT _xpos, UINT _ypos, float _ratio)
+void AnimationClip::Render(float _xpos, float _ypos, float _ratio)
 {
 	ID2D1HwndRenderTarget* pRenderTarget = Graphics::GetInst()->GetRenderTarget();
 

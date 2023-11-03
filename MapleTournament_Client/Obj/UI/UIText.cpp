@@ -14,7 +14,7 @@ UIText::UIText(const UIText& _uiText)
 	SetTextColor(D2D1::ColorF(color.r, color.g, color.b, color.a));
 }
 
-UIText::UIText(UI* _pParentPanel, std::wstring _text, FLOAT _size, INT _xpos, INT _ypos, FLOAT _pivotX, FLOAT _pivotY) :
+UIText::UIText(UI* _pParentPanel, std::wstring _text, FLOAT _size, float _xpos, float _ypos, FLOAT _pivotX, FLOAT _pivotY) :
 	UI(_pParentPanel, 0, 0, _xpos, _ypos, _pivotX, _pivotY), m_size(_size), m_text(_text)
 {
 	if (!Init()) m_bAlive = false;

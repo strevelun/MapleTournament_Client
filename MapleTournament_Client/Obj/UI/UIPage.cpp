@@ -20,7 +20,7 @@ UIPage::UIPage(const UIPage& _uiPage)
 
 }
 
-UIPage::UIPage(UI* _pParentPanel, UINT _width, UINT _height, UINT _itemWidth, UINT _itemHeight, INT _xpos, INT _ypos, FLOAT _pivotX, FLOAT _pivotY, float _itemVerticalInterval) :
+UIPage::UIPage(UI* _pParentPanel, UINT _width, UINT _height, UINT _itemWidth, UINT _itemHeight, float _xpos, float _ypos, FLOAT _pivotX, FLOAT _pivotY, float _itemVerticalInterval) :
 	UI(_pParentPanel, _width, _height, _xpos, _ypos, _pivotX, _pivotY)
 {
 	m_pUIList = new UIList(this, _width, _height, _itemWidth, _itemHeight, 0, 0, 0.f, 0.f);

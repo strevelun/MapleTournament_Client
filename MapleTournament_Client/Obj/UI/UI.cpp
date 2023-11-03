@@ -39,7 +39,7 @@ UI::~UI()
 {
 }
 
-void UI::SetPos(INT _xpos, INT _ypos) 
+void UI::SetPos(float _xpos, float _ypos)
 {
 	if (m_pParentUI)
 	{
@@ -48,7 +48,7 @@ void UI::SetPos(INT _xpos, INT _ypos)
 	}
 	m_tPos.x = _xpos - (m_pivotX * m_size.width);
 	m_tPos.y = _ypos - (m_pivotY * m_size.height);
-	m_rect = { (float)m_tPos.x, (float)m_tPos.y, (float)m_tPos.x + m_size.width, (float)m_tPos.y + m_size.height };
+	m_rect = { m_tPos.x, m_tPos.y, m_tPos.x + m_size.width, m_tPos.y + m_size.height };
 }
 
 void UI::SetClickable(bool _bClickable)
@@ -122,8 +122,8 @@ void UI::Update()
 	if (m_bClickable)
 	{
 		Mouse* pMouse = InputManager::GetInst()->GetMouse();
-		int mouseXPos = pMouse->GetPosX();
-		int mouseYPos = pMouse->GetPosY();
+		int mouseXPos = pMouse->GetMouseXPos();
+		int mouseYPos = pMouse->GetMouseYPos();
 		eMouseState state = pMouse->GetState();
 
 		if (m_rect.left <= mouseXPos && mouseXPos <= m_rect.right && m_rect.top <= mouseYPos && mouseYPos <= m_rect.bottom)

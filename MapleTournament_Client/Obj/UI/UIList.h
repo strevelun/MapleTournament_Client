@@ -17,7 +17,7 @@ private:
 
 public:
     UIList(const UIList& _ui);
-    UIList(UI* _pParentPanel, UINT _width, UINT _height, UINT _itemWidth, UINT _itemHeight, INT _xpos = 0, INT _ypos = 0, FLOAT _pivotX = 0.f, FLOAT _pivotY = 0.f);
+    UIList(UI* _pParentPanel, UINT _width, UINT _height, UINT _itemWidth, UINT _itemHeight, float _xpos = 0, float _ypos = 0, FLOAT _pivotX = 0.f, FLOAT _pivotY = 0.f);
     ~UIList();
 
     UIList* Clone() const override { return new UIList(*this); }

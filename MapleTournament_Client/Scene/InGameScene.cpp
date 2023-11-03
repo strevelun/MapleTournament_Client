@@ -201,8 +201,26 @@ bool InGameScene::Init()
         });
     pPanel->AddChildUI(pButton);
 
-    pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingame_button_attackCloud.png");
+    pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingame_upmove.png");
     pButton = new UIButton(pPanel, 50, 50, 200, 0);
+    pButton->SetBitmap(pBitmap);
+    pButton->SetCallback([this, pPanel]
+        {
+            OnItemButtonClick(eSkillType::UpMove, pPanel);
+        });
+    pPanel->AddChildUI(pButton);
+
+    pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingame_downmove.png");
+    pButton = new UIButton(pPanel, 50, 50, 250, 0);
+    pButton->SetBitmap(pBitmap);
+    pButton->SetCallback([this, pPanel]
+        {
+            OnItemButtonClick(eSkillType::DownMove, pPanel);
+        });
+    pPanel->AddChildUI(pButton);
+
+    pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingame_button_attackCloud.png");
+    pButton = new UIButton(pPanel, 50, 50, 300, 0);
     pButton->SetBitmap(pBitmap);
     pButton->SetCallback([this, pPanel]
         {
@@ -211,8 +229,6 @@ bool InGameScene::Init()
     pPanel->AddChildUI(pButton);
 
     UIManager::GetInst()->AddUI(pPanel);
-
-
 
     char buffer[255];
     ushort count = sizeof(ushort);
@@ -226,6 +242,8 @@ bool InGameScene::Init()
 void InGameScene::Update()
 {
     Scene::Update();
+
+    if (m_eState == eInGameState::None) return;
 
     if (m_eState == eInGameState::Play)
     {
@@ -250,7 +268,7 @@ void InGameScene::Update()
             UIPanel* pPanel = static_cast<UIPanel*>(pUI);
             pPanel->SetActive(false);
             UIManager::GetInst()->PopPopupUI();
-            ChangeState(eInGameState::Play);
+            ChangeState(eInGameState::None);
 
             char buffer[255];
             ushort count = sizeof(ushort);
@@ -281,12 +299,23 @@ void InGameScene::Update()
             NetworkManager::GetInst()->Send(buffer);
         }
     }
+    else if (m_eState == eInGameState::UseSkill)
+    {
+        m_timer -= Timer::GetInst()->GetDeltaTime();
+        if (m_timer <= 0.f && m_isMyTurn)
+        {
+            SetMyTurn(false);
+            m_timer = StartTimer;
+            NextTurn();
+
+
+        }
+    }
 }
 
 void InGameScene::SetMyTurn(bool _isMyTurn)
 {
     m_isMyTurn = _isMyTurn;
-    m_timer = StartTimer;
 }
 
 void InGameScene::ChangeState(eInGameState _state)
@@ -304,6 +333,13 @@ void InGameScene::ChangeState(eInGameState _state)
         m_timer = GameOverTimer;
         break;
     }
+}
+
+void InGameScene::SetSkillTimer(float _timer)
+{
+    if (m_eState != eInGameState::UseSkill) return;
+
+    m_timer = _timer;
 }
 
 void InGameScene::UseSkill(eSkillType _type)
@@ -336,8 +372,10 @@ void InGameScene::OnItemButtonClick(eSkillType _type, UIPanel* _pPanel)
     _pPanel->SetClickable(false);
     _pPanel->SetPos(ScreenWidth / 2, ScreenHeight + 80);
     m_arrTimer[(u_int)m_timer]->SetActive(false);
-    SetMyTurn(false);
-    NextTurn();
+
+    ChangeState(eInGameState::None);
+    UseSkill(_type);
+    // 스킬 애니메이션 출력 후 NextTurn
 }
 
 void InGameScene::OnTimeout()
@@ -355,5 +393,6 @@ void InGameScene::OnTimeout()
     }
 
     SetMyTurn(false);
+    m_timer = StartTimer;
     NextTurn();
 }

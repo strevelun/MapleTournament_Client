@@ -21,9 +21,10 @@ public:
 	~Animator();
 
 	void Update();
-	void Render(UINT _xpos, UINT _ypos, float _ratio);
+	void Render(float _xpos, float _ypos, float _ratio);
 
 	void AddClip(const std::wstring& _stateName, AnimationClip* _pClip);
 	void SetNextClip(const std::wstring& _stateName);
+	void SetDefaultClip();
 };
 

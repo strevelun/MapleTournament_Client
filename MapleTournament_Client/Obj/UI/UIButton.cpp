@@ -14,7 +14,7 @@ UIButton::UIButton(const UIButton& _uiButton)
 	m_Callback = _uiButton.m_Callback;
 }
 
-UIButton::UIButton(UI* _pParentPanel, UINT _width, UINT _height, INT _xpos, INT _ypos,  FLOAT _pivotX, FLOAT _pivotY) :
+UIButton::UIButton(UI* _pParentPanel, UINT _width, UINT _height, float _xpos, float _ypos,  FLOAT _pivotX, FLOAT _pivotY) :
 	UI(_pParentPanel, _width, _height, _xpos, _ypos,  _pivotX, _pivotY)
 {
 }

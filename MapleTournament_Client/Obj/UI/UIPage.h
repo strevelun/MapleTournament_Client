@@ -23,7 +23,7 @@ private:
 
 public:
     UIPage(const UIPage& _uiPage);
-    UIPage(UI* _pParentPanel, UINT _width, UINT _height, UINT _itemWidth, UINT _itemHeight, INT _xpos = 0, INT _ypos = 0, FLOAT _pivotX = 0.f, FLOAT _pivotY = 0.f, float _itemVerticalInterval = 0.f);
+    UIPage(UI* _pParentPanel, UINT _width, UINT _height, UINT _itemWidth, UINT _itemHeight, float _xpos = 0, float _ypos = 0, FLOAT _pivotX = 0.f, FLOAT _pivotY = 0.f, float _itemVerticalInterval = 0.f);
     ~UIPage();
 
     UIPage* Clone() const override { return new UIPage(*this); }

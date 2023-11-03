@@ -18,7 +18,7 @@ UIScrollView::UIScrollView(const UIScrollView& _uiScrollView)
 	m_pDownBtn = _uiScrollView.m_pDownBtn->Clone();
 }
 
-UIScrollView::UIScrollView(UI* _pParentPanel, UINT _width, UINT _height, INT _xpos, INT _ypos, UINT _itemWidth, UINT _itemHeight, float _itemVerticalInterval) :
+UIScrollView::UIScrollView(UI* _pParentPanel, UINT _width, UINT _height, float _xpos, float _ypos, UINT _itemWidth, UINT _itemHeight, float _itemVerticalInterval) :
 	UI(_pParentPanel, _width, _height, _xpos, _ypos), m_itemHeight(_itemHeight)
 {
 	m_pUIList = new UIList(this, _width, _height, _itemWidth, _itemHeight, 0, 0, 0.f, 0.f);

@@ -21,7 +21,7 @@ void SkillAttackCloud::Update()
 		return;
 	}
 
-	SetPos(m_tPos.x - m_moveSpeed, m_tPos.y);
+	//SetPos(m_tPos.x - m_moveTime, m_tPos.y);
 }
 
 void SkillAttackCloud::Render()

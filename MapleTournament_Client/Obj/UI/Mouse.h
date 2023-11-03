@@ -14,6 +14,7 @@ class Mouse :
 {
 private:
     HWND m_hWnd;
+    POINT       m_tMousePos;
 
     eMouseState m_state = eMouseState::None;
 
@@ -27,6 +28,8 @@ public:
     Mouse* Clone() const override { return new Mouse(*this); }
 
     eMouseState GetState() const { return m_state; }
+    int GetMouseXPos() const { return m_tMousePos.x; }
+    int GetMouseYPos() const { return m_tMousePos.y; }
 
 
     void Update() override;

@@ -147,13 +147,20 @@ Bitmap* ResourceManager::GetBitmap(const std::wstring& _fileWithPath)
 	return m_mapBitmap.find(_fileWithPath)->second;
 }
 
-AnimationClip* ResourceManager::GetAnimClip(const std::wstring& _justFilename)
+AnimationClip* ResourceManager::GetAnimClip(const std::wstring& _justFilename, const std::wstring& _baseSheet)
 {
 	std::map<std::wstring, AnimationClip*>::const_iterator iter = m_mapAnimClip.find(_justFilename);
 	if (iter != m_mapAnimClip.cend())
 		return iter->second;
 	
-	if (!LoadAnimFile(L"Resource/Sprite/" + _justFilename + L".png", L"Resource/Anim/" + _justFilename + L".anim")) return nullptr;
+	if (_baseSheet == L"")
+	{
+		if (!LoadAnimFile(L"Resource/Sprite/" + _justFilename + L".png", L"Resource/Anim/" + _justFilename + L".anim")) return nullptr;
+	}
+	else
+	{
+		if (!LoadAnimFile(L"Resource/Sprite/" + _baseSheet + L".png", L"Resource/Anim/" + _justFilename + L".anim")) return nullptr;
+	}
 
 	return m_mapAnimClip.find(_justFilename)->second;
 }
