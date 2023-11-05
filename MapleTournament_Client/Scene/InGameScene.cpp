@@ -7,9 +7,9 @@
 #include "../Obj/UI/UIPanel.h"
 #include "../Obj/UI/UIButton.h"
 #include "../Obj/UI/UIText.h"
-#include "../Obj/MyPlayer.h"
-#include "../Obj/SkillMove.h"
-#include "../Obj/SkillAttackCloud.h"
+#include "../Obj/Player.h"
+#include "../Obj/SkillAttackThrow.h"
+#include "../Obj/SkillAttackMagic.h"
 #include "../Animation/Animator.h"
 #include "../Animation/AnimationClip.h"
 #include "LobbyScene.h"
@@ -29,12 +29,12 @@ InGameScene::InGameScene()
 
 InGameScene::~InGameScene()
 {
+    ObjectManager::GetInst()->ClearAllObj();
 }
 
 bool InGameScene::Init()
 {
     /* Background */
-
     Bitmap* pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingame_scene.png");
     UIPanel* pBackground = new UIPanel(nullptr, ScreenWidth, ScreenHeight);
     pBackground->SetBitmap(pBitmap);
@@ -44,8 +44,6 @@ bool InGameScene::Init()
     
     pLayer = new Layer(L"Player", 1);
     m_vecObjLayer.push_back(pLayer);
-
-
 
     /* 플레이어 스텟 */
     UIPanel* pPanel = new UIPanel(nullptr, 300, 100);
@@ -59,6 +57,9 @@ bool InGameScene::Init()
     UIText* pPlayerName = new UIText(pPanel, L"", 30.f, 130, 10);
     pPlayerName->SetName(L"Nickname");
     pPanel->AddChildUI(pPlayerName);
+    UIText* pScore = new UIText(pPanel, L"0", 30.f, 130, 40);
+    pScore->SetName(L"Score");
+    pPanel->AddChildUI(pScore);
 
     pPanel = new UIPanel(nullptr, 300, 100, ScreenWidth, 0, 1.0f);
     pPanel->SetName(L"PlayerStat1");
@@ -71,6 +72,9 @@ bool InGameScene::Init()
     pPlayerName = new UIText(pPanel, L"", 30.f, 130, 10);
     pPlayerName->SetName(L"Nickname");
     pPanel->AddChildUI(pPlayerName);
+    pScore = new UIText(pPanel, L"0", 30.f, 130, 40);
+    pScore->SetName(L"Score");
+    pPanel->AddChildUI(pScore);
 
     pPanel = new UIPanel(nullptr, 300, 100, 0, ScreenHeight, 0.0f, 1.0f);
     pPanel->SetName(L"PlayerStat2");
@@ -83,6 +87,9 @@ bool InGameScene::Init()
     pPlayerName = new UIText(pPanel, L"", 30.f, 130, 10);
     pPlayerName->SetName(L"Nickname");
     pPanel->AddChildUI(pPlayerName);
+    pScore = new UIText(pPanel, L"0", 30.f, 130, 40);
+    pScore->SetName(L"Score");
+    pPanel->AddChildUI(pScore);
 
     pPanel = new UIPanel(nullptr, 300, 100, ScreenWidth, ScreenHeight, 1.0f, 1.0f);
     pPanel->SetName(L"PlayerStat3");
@@ -95,6 +102,9 @@ bool InGameScene::Init()
     pPlayerName = new UIText(pPanel, L"", 30.f, 130, 10);
     pPlayerName->SetName(L"Nickname");
     pPanel->AddChildUI(pPlayerName);
+    pScore = new UIText(pPanel, L"0", 30.f, 130, 40);
+    pScore->SetName(L"Score");
+    pPanel->AddChildUI(pScore);
 
     /* 대기하세요 UI */
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_board.png");
@@ -118,7 +128,7 @@ bool InGameScene::Init()
     pPanel->AddChildUI(pText);
     UIManager::GetInst()->AddUI(pPanel);
 
-    /* 점수판 */
+    /* 대시보드 */
     pPanel = new UIPanel(nullptr, 100, 50, ScreenWidth / 2, 0, 0.5f);
     pPanel->SetName(L"Dashboard");
     UIManager::GetInst()->AddUI(pPanel);
@@ -152,13 +162,13 @@ bool InGameScene::Init()
     pClip->SetAnyState(true);
     Animator* pAnimator = new Animator(pClip);
 
-    SkillAttackCloud* pSkill = new SkillAttackCloud(2.0f);
+    SkillAttackThrow* pSkill = new SkillAttackThrow;
     pSkill->SetAnimator(pAnimator);
-    // pSkill->SetActive(false);
+    pSkill->SetActive(false);
     ObjectManager::GetInst()->AddSkill(pSkill, eSkillType::AttackCloud);
 
     pLayer = new Layer(L"Skill", 2);
-    //pLayer->AddObj(pSkill);
+    pLayer->AddObj(pSkill);
     
     m_vecObjLayer.push_back(pLayer);
 
@@ -301,14 +311,16 @@ void InGameScene::Update()
     }
     else if (m_eState == eInGameState::UseSkill)
     {
-        m_timer -= Timer::GetInst()->GetDeltaTime();
-        if (m_timer <= 0.f && m_isMyTurn)
+        if (m_eSkillState == eSkillState::End && m_isMyTurn)
         {
+            // 방어, 피격
+            // 1. 스킬 사용 애니메이션 끝 : C_CheckHit
+            // 2. hit시 : S_CheckHit에서 m_eSkillState에서 Hit로 바꾸고 애니메이션 재생
+            // 3. 재생 후 : C_UpdateScore
+            // 4. 방어시 : S_UpdateScore에서 방어막 SetPos후 SetActive하기. 
+            m_eSkillState = eSkillState::None;
             SetMyTurn(false);
-            m_timer = StartTimer;
             NextTurn();
-
-
         }
     }
 }
@@ -334,14 +346,14 @@ void InGameScene::ChangeState(eInGameState _state)
         break;
     }
 }
-
+/*
 void InGameScene::SetSkillTimer(float _timer)
 {
     if (m_eState != eInGameState::UseSkill) return;
 
     m_timer = _timer;
 }
-
+*/
 void InGameScene::UseSkill(eSkillType _type)
 {
     char buffer[255];

@@ -29,7 +29,7 @@ UIList::~UIList()
 {
 	std::vector<UI*>::iterator iter = m_vecItem.begin();
 	std::vector<UI*>::iterator iterEnd = m_vecItem.end();
-	for (; iter != iterEnd; iter++)
+	for (; iter != iterEnd; ++iter)
 	{
 		delete* iter;
 	}
@@ -57,7 +57,7 @@ bool UIList::RemoveItem(std::wstring _strName) // 중간에 아이템이 빠지면 뒤에꺼 
 	std::vector<UI*>::iterator iter = m_vecItem.begin();
 	std::vector<UI*>::iterator iterEnd = m_vecItem.end();
 
-	for (; iter != iterEnd; iter++)
+	for (; iter != iterEnd; ++iter)
 	{
 		if ((*iter)->GetName() == _strName)
 		{
@@ -74,7 +74,7 @@ UI* UIList::FindItem(std::wstring _strName)
 	std::vector<UI*>::iterator iter = m_vecItem.begin();
 	std::vector<UI*>::iterator iterEnd = m_vecItem.end();
 
-	for (; iter != iterEnd; iter++)
+	for (; iter != iterEnd; ++iter)
 	{
 		if ((*iter)->GetName() == _strName)
 			return *iter;
@@ -95,7 +95,7 @@ void UIList::RemoveAllItems()
 	std::vector<UI*>::iterator iterEnd = m_vecItem.end();
 
 
-	for (; iter != iterEnd; iter++)
+	for (; iter != iterEnd; ++iter)
 	{
 		delete (*iter);
 		//iter = m_vecItem.erase(iter);

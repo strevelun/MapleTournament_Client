@@ -16,6 +16,13 @@ enum class eInGameState
 	GameOver,
 };
 
+enum class eSkillState
+{
+	None,
+	InUse,
+	End,
+};
+
 class InGameScene :
     public Scene
 {
@@ -28,6 +35,7 @@ private:
 	std::array<UI*, 10> m_arrTimer;
 	bool m_isMyTurn = false;
 	eInGameState m_eState = eInGameState::Prepare;
+	eSkillState m_eSkillState = eSkillState::None;
 
 	float m_timer = PrepareTimer;
 
@@ -40,8 +48,9 @@ public:
 
 	void SetMyTurn(bool _isMyTurn);
 	void ChangeState(eInGameState _state);
+	void SetSkillState(eSkillState _state) { m_eSkillState = _state;  }
 
-	void SetSkillTimer(float _timer);
+	//void SetSkillTimer(float _timer);
 
 private:
 	void UseSkill(eSkillType _type);

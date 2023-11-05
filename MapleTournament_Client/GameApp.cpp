@@ -21,7 +21,7 @@ GameApp::GameApp(HINSTANCE _hInst, const wchar_t* _wndClassName)
 	: m_window(_hInst, _wndClassName),
 	m_pClient(nullptr)
 {
-	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+	//_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 }
 
 GameApp::~GameApp()
@@ -32,7 +32,7 @@ GameApp::~GameApp()
 	if (m_pBrush) m_pBrush->Release();
 
 	//InstructionQueue::DestroyInst();
-	ResourceManager::DestroyInst(); // TODO : m_mapBitmap «ÿ¡¶
+	ResourceManager::DestroyInst();
 	InputManager::DestroyInst();
 	SceneManager::DestroyInst();
 	UIManager::DestroyInst();

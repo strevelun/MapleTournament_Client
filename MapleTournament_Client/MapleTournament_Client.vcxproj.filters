@@ -120,9 +120,6 @@
     <ClCompile Include="Obj\Player.cpp">
       <Filter>Obj</Filter>
     </ClCompile>
-    <ClCompile Include="Obj\MyPlayer.cpp">
-      <Filter>Obj</Filter>
-    </ClCompile>
     <ClCompile Include="Timer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -144,10 +141,7 @@
     <ClCompile Include="Obj\Skill.cpp">
       <Filter>Obj</Filter>
     </ClCompile>
-    <ClCompile Include="Obj\SkillAttackCloud.cpp">
-      <Filter>Obj</Filter>
-    </ClCompile>
-    <ClCompile Include="Obj\SkillMove.cpp">
+    <ClCompile Include="Obj\SkillAttackThrow.cpp">
       <Filter>Obj</Filter>
     </ClCompile>
     <ClCompile Include="InstructionQueue.cpp">
@@ -158,6 +152,9 @@
     </ClCompile>
     <ClCompile Include="Obj\UI\UIScrollView.cpp">
       <Filter>Obj\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Obj\SkillAttackMagic.cpp">
+      <Filter>Obj</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -239,9 +236,6 @@
     <ClInclude Include="Obj\Player.h">
       <Filter>Obj</Filter>
     </ClInclude>
-    <ClInclude Include="Obj\MyPlayer.h">
-      <Filter>Obj</Filter>
-    </ClInclude>
     <ClInclude Include="Timer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -266,10 +260,7 @@
     <ClInclude Include="Obj\Skill.h">
       <Filter>Obj</Filter>
     </ClInclude>
-    <ClInclude Include="Obj\SkillAttackCloud.h">
-      <Filter>Obj</Filter>
-    </ClInclude>
-    <ClInclude Include="Obj\SkillMove.h">
+    <ClInclude Include="Obj\SkillAttackThrow.h">
       <Filter>Obj</Filter>
     </ClInclude>
     <ClInclude Include="InstructionQueue.h">
@@ -280,6 +271,9 @@
     </ClInclude>
     <ClInclude Include="Obj\UI\UIScrollView.h">
       <Filter>Obj\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Obj\SkillAttackMagic.h">
+      <Filter>Obj</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

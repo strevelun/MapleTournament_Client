@@ -19,7 +19,7 @@
 #include "../Managers/InputManager.h"
 #include "../Animation/AnimationClip.h"
 #include "../Animation/Animator.h"
-#include "../Obj/MyPlayer.h"
+#include "../Obj/Player.h"
 #include "../Debug.h"
 #include "../Constants.h"
 //#include "../InstructionQueue.h"
@@ -28,10 +28,6 @@ typedef unsigned short ushort;
 
 void PacketHandler::S_OKLogin(char* _packet)
 {
-	MyPlayer* pMyPlayer = new MyPlayer((wchar_t*)_packet);
-	ObjectManager::GetInst()->SetMyPlayer(pMyPlayer);
-	ObjectManager::GetInst()->AddObj(pMyPlayer);
-
 	LobbyScene* pScene = new LobbyScene;
 	SceneManager::GetInst()->ChangeScene(pScene);
 	pScene->ChangeSceneUI(eSessionState::Lobby);
@@ -57,7 +53,6 @@ void PacketHandler::S_CreateRoom(char* _packet)
 	Mouse* pMouse = InputManager::GetInst()->GetMouse();
 	pMouse->SetActive(true);
 
-	std::wstring roomTitle((wchar_t*)_packet);
 	UI* pUI = UIManager::GetInst()->FindUI(L"RoomTitle");
 	if (pUI)
 	{
@@ -66,9 +61,11 @@ void PacketHandler::S_CreateRoom(char* _packet)
 		if (pUI)
 		{
 			UIText* pText = static_cast<UIText*>(pUI);
-			pText->ReassignText(roomTitle);
+			pText->ReassignText((wchar_t*)_packet);
 		}
 	}
+
+	_packet += (ushort)wcslen((wchar_t*)_packet) * 2 + 2;
 
 	LobbyScene* pLobbyScene = SceneManager::GetInst()->GetCurScene<LobbyScene>();
 
@@ -101,9 +98,6 @@ void PacketHandler::S_CreateRoom(char* _packet)
 	}
 
 	pLobbyScene->ChangeSceneUI(eSessionState::WaitingRoom);
-
-	MyPlayer* pPlayer = ObjectManager::GetInst()->GetMyPlayer();
-	const std::wstring& strNickname = pPlayer->GetNickname();
 	
 	pUI = UIManager::GetInst()->FindUI(L"UserSlot0");
 	if (pUI)
@@ -121,7 +115,7 @@ void PacketHandler::S_CreateRoom(char* _packet)
 		if (pUI)
 		{
 			UIText* pTextNickname = static_cast<UIText*>(pUI);
-			pTextNickname->ReassignText(strNickname);
+			pTextNickname->ReassignText((wchar_t*)_packet);
 		}
 		pUI = pSlot->FindChildUI(L"State");
 		if (pUI)
@@ -503,16 +497,19 @@ void PacketHandler::S_InGameReady(char* _packet)
 	int memberCount = *(char*)_packet;				_packet += sizeof(char);
 	int mySlotNumber = *(char*)_packet;				_packet += sizeof(char); // 내 플레이어는 빨간색
 
-	MyPlayer* myPlayer = nullptr;
+	Player* myPlayer = nullptr;
+	InGameScene* pScene = SceneManager::GetInst()->GetCurScene<InGameScene>();
+	Layer* pLayer = pScene->FindLayer(L"Player");
 
 	for (int i = 0; i < memberCount; i++)
 	{
 		int slot = *(char*)_packet;				_packet += sizeof(char);
 		int characterChoice = *(char*)_packet;				_packet += sizeof(char);
 
-		myPlayer = new MyPlayer((wchar_t*)_packet);			
-		myPlayer->SetName(std::to_wstring(slot));
+		myPlayer = new Player(pScene);
 		ObjectManager::GetInst()->AddObj(myPlayer);
+		
+		myPlayer->SetName(std::to_wstring(slot));
 
 		UI* pUI = UIManager::GetInst()->FindUI(L"PlayerStat" + std::to_wstring(slot));
 		if (!pUI) continue;
@@ -529,7 +526,6 @@ void PacketHandler::S_InGameReady(char* _packet)
 			pText->ReassignText((wchar_t*)_packet);			_packet += (ushort)wcslen((wchar_t*)_packet) * 2 + 2;
 			if (mySlotNumber == i)
 			{
-				//ObjectManager::GetInst()->SetMyPlayer(myPlayer);
 				pText->SetTextColor(D2D1::ColorF::Red);
 			}
 		}
@@ -570,10 +566,7 @@ void PacketHandler::S_InGameReady(char* _packet)
 
 		myPlayer->SetRatio(1.5f);
 		myPlayer->SetAnimator(pAnimator);
-		
 
-		InGameScene* pScene = SceneManager::GetInst()->GetCurScene<InGameScene>();
-		Layer* pLayer = pScene->FindLayer(L"Player");
 		pLayer->AddObj(myPlayer);
 	}
 
@@ -716,6 +709,7 @@ void PacketHandler::S_UpdateUserSlot(char* _packet)
 
 	UI* pUI = UIManager::GetInst()->FindUI(L"UserSlot" + std::to_wstring(slotNumber));
 	if (!pUI) return;
+
 	UIPanel* pPanel = static_cast<UIPanel*>(pUI);
 	pUI = pPanel->FindChildUI(L"Picture");
 	pPanel = static_cast<UIPanel*>(pUI);
@@ -733,12 +727,20 @@ void PacketHandler::S_Skill(char* _packet)
 	Obj* pObj = ObjectManager::GetInst()->FindObj(std::to_wstring(slotNumber));
 	if (!pObj) return;
 
-	MyPlayer* pPlayer = static_cast<MyPlayer*>(pObj);
+	Player* pPlayer = static_cast<Player*>(pObj);
 	pPlayer->UseSkill(skillType);
 
 	InGameScene* pScene = SceneManager::GetInst()->GetCurScene<InGameScene>();
 	pScene->ChangeState(eInGameState::UseSkill);
-	pScene->SetSkillTimer(pPlayer->GetMoveTime());
+
+	if (skillType == eSkillType::LeftMove || skillType == eSkillType::LeftDoubleMove || skillType == eSkillType::RightMove || skillType == eSkillType::RightDoubleMove || skillType == eSkillType::DownMove || skillType == eSkillType::UpMove)
+	{
+		pScene->SetSkillState(eSkillState::InUse);
+	}
+	else if (skillType == eSkillType::AttackCloud)
+	{
+		pScene->SetSkillState(eSkillState::InUse);
+	}
 
 	Debug::Log("PacketHandler::S_Skill");
 }
@@ -772,9 +774,11 @@ void PacketHandler::S_UpdateDashboard(char* _packet)
 
 	UI* pUI = UIManager::GetInst()->FindUI(L"Dashboard");
 	if (!pUI) return;
+
 	UIPanel* pPanel = static_cast<UIPanel*>(pUI);
 	pUI = pPanel->FindChildUI(L"DashboardText");
 	if (!pUI) return;
+
 	UIText* pText = static_cast<UIText*>(pUI);
 	pText->ReassignText(std::to_wstring(curTurn) + L" / " + std::to_wstring(GAME_MAX_TURN));
 
@@ -785,6 +789,7 @@ void PacketHandler::S_GameOver(char* _packet)
 {
 	UI* pUI = UIManager::GetInst()->FindUI(L"GameOver");
 	if (!pUI) return;
+
 	UIPanel* pPanel = static_cast<UIPanel*>(pUI);
 	pPanel->SetActive(true);
 	UIManager::GetInst()->AddPopupUI(pPanel);
@@ -880,6 +885,8 @@ void PacketHandler::S_UpdateIngameUserLeave(char* _packet)
 
 	ObjectManager::GetInst()->KillObj(std::to_wstring(slot));
 
+	// 나간 플레이어가 스킬 사용 중일때
+
 	Debug::Log("PacketHandler::S_UpdateIngameUserLeave");
 }
 
@@ -894,5 +901,17 @@ void PacketHandler::S_Standby(char* _packet)
 	// InGameScene* pScene = SceneManager::GetInst()->GetCurScene<InGameScene>();
 
 	Debug::Log("PacketHandler::S_Standby");
+}
+
+void PacketHandler::S_UpdateProfile(char* _packet)
+{
+	UI* pUI = UIManager::GetInst()->FindUI(L"Profile");
+	if (!pUI) return;
+	UIPanel* pPanel = static_cast<UIPanel*>(pUI);
+	pUI = pPanel->FindChildUI(L"ProfileText");
+	UIText* pText = static_cast<UIText*>(pUI);
+	pText->ReassignText((wchar_t*)_packet);
+
+	Debug::Log("PacketHandler::S_UpdateProfile");
 }
 

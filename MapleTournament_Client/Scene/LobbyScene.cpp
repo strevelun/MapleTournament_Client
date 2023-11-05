@@ -12,7 +12,7 @@
 #include "../Obj/UI/UIList.h"
 #include "../Obj/UI/UIText.h"
 #include "../Obj/UI/UIPage.h"
-#include "../Obj/MyPlayer.h"
+#include "../Obj/Player.h"
 #include "../Setting.h"
 #include "../Constants.h"
 #include "../Debug.h"
@@ -414,9 +414,7 @@ bool LobbyScene::InitLobbyUI()
             NetworkManager::GetInst()->Send(buffer);
         });
 
-    MyPlayer* pMyPlayer = ObjectManager::GetInst()->GetMyPlayer();
-    const std::wstring& myNickname = pMyPlayer->GetNickname();
-    const wchar_t* pMyNickname = myNickname.c_str();
+
 
     /* ·ë ÀÔÀå ºÒ°¡ ¾È³» ÆË¾÷ */
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_board.png");
@@ -487,7 +485,7 @@ bool LobbyScene::InitLobbyUI()
             *(u_short*)buffer = count;
             NetworkManager::GetInst()->Send(buffer);
         });
-    delete pItem;
+    delete pItem;   
 
     /* user profile */
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_lobbyscene_profile.png");
@@ -495,7 +493,8 @@ bool LobbyScene::InitLobbyUI()
     UIPanel* pProfile = new UIPanel(nullptr, 400, 200, ScreenWidth, ScreenHeight, 1.0f, 1.0f);
     pProfile->SetBitmap(pBitmap);
     pProfile->SetName(L"Profile");
-    pText = new UIText(pProfile, pMyNickname, 20.f, pProfile->GetWidth() / 2, 10);
+    pText = new UIText(pProfile, L"", 20.f, pProfile->GetWidth() / 2, 10);
+    pText->SetName(L"ProfileText");
     pProfile->AddChildUI(pText);
     pUIManager->AddUI(pProfile);
     //pBackground->AddChildUI(pProfile);
