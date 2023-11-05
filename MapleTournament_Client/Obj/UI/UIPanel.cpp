@@ -30,7 +30,7 @@ UIPanel::~UIPanel()
 {
 	std::vector<UI*>::iterator iter = m_vecMemberUI.begin();
 	std::vector<UI*>::iterator iterEnd = m_vecMemberUI.end();
-	for (; iter != iterEnd; iter++)
+	for (; iter != iterEnd; ++iter)
 		delete* iter;
 
 	if (m_pBrush) m_pBrush->Release();
@@ -48,7 +48,7 @@ UI* UIPanel::FindChildUI(const std::wstring& _strName)
 	std::vector<UI*>::iterator iter = m_vecMemberUI.begin();
 	std::vector<UI*>::iterator iterEnd = m_vecMemberUI.end();
 
-	for (; iter != iterEnd; iter++)
+	for (; iter != iterEnd; ++iter)
 	{
 		if ((*iter)->GetName() == _strName)
 			return *iter;
@@ -61,7 +61,7 @@ void UIPanel::SetActive(bool _bActive)
 	std::vector<UI*>::iterator iter = m_vecMemberUI.begin();
 	std::vector<UI*>::iterator iterEnd = m_vecMemberUI.end();
 
-	for (; iter != iterEnd; iter++)
+	for (; iter != iterEnd; ++iter)
 	{
 		(*iter)->SetActive(_bActive);
 	}
@@ -87,7 +87,7 @@ void UIPanel::SetClickable(bool _bClickable)
 	std::vector<UI*>::iterator iter = m_vecMemberUI.begin();
 	std::vector<UI*>::iterator iterEnd = m_vecMemberUI.end();
 
-	for (; iter != iterEnd; iter++)
+	for (; iter != iterEnd; ++iter)
 	{
 		(*iter)->SetClickable(_bClickable);
 	}
@@ -109,7 +109,7 @@ void UIPanel::Update()
 		{
 			if ((*iter)->IsActive())
 				(*iter)->Update();
-			iter++;
+			++iter;
 		}
 	}
 }

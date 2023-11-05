@@ -26,6 +26,7 @@ private:
 
 public:
 	AnimationClip(Bitmap* _pBitmap, int _clipSize);
+	AnimationClip(const AnimationClip& _clip);
 	~AnimationClip();
 
 	void Update();

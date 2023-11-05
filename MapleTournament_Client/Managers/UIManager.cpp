@@ -13,7 +13,7 @@ UIManager::~UIManager()
 {
     std::map<std::wstring, UI*>::iterator iter = m_mapUI.begin();
     std::map<std::wstring, UI*>::iterator iterEnd = m_mapUI.end();
-    for (; iter != iterEnd; iter++)
+    for (; iter != iterEnd; ++iter)
         delete iter->second;
 }
 
@@ -54,7 +54,7 @@ bool UIManager::RemoveUI(const std::wstring& _strName)
 
     std::vector<UI*>::iterator iter = m_vecUI.begin();
     std::vector<UI*>::iterator iterEnd = m_vecUI.end();
-    for (; iter != iterEnd; iter++)
+    for (; iter != iterEnd; ++iter)
     {
         if ((*iter)->GetName() == _strName)
         {
@@ -88,7 +88,7 @@ void UIManager::Update()
     std::vector<UI*>::iterator iter = m_vecUI.begin();
     std::vector<UI*>::iterator iterEnd = m_vecUI.end();
 
-    for (; iter != iterEnd; iter++)
+    for (; iter != iterEnd; ++iter)
     {
         if ((*iter)->IsActive())
             (*iter)->Update();
@@ -100,7 +100,7 @@ void UIManager::Render()
     std::vector<UI*>::iterator iter = m_vecUI.begin();
     std::vector<UI*>::iterator iterEnd = m_vecUI.end();
 
-    for (; iter != iterEnd; iter++)
+    for (; iter != iterEnd; ++iter)
     {
         if ((*iter)->IsActive())
             (*iter)->Render();
@@ -120,7 +120,7 @@ void UIManager::Cleanup()
 {
     std::vector<UI*>::iterator iter = m_vecUI.begin();
     std::vector<UI*>::iterator iterEnd = m_vecUI.end();
-    for (; iter != iterEnd; iter++)
+    for (; iter != iterEnd; ++iter)
     {
         delete *iter;
     }

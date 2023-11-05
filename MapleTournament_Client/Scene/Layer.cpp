@@ -8,10 +8,10 @@ Layer::Layer(const std::wstring& _layerName, uint32_t _zOrder) :
 
 Layer::~Layer() // ObjectManager¿¡¼­´Â
 {
-    std::vector<Obj*>::const_iterator iter = m_vecObj.cbegin();
-    std::vector<Obj*>::const_iterator iterEnd = m_vecObj.cend();
+    std::vector<Obj*>::iterator iter = m_vecObj.begin();
+    std::vector<Obj*>::iterator iterEnd = m_vecObj.end();
 
-    for (; iter != iterEnd; iter++)
+    for (; iter != iterEnd; ++iter)
         delete* iter;
     m_vecObj.clear();
 }
@@ -36,7 +36,7 @@ void Layer::Update()
         else
         {
             (*iter)->Update();
-            iter++;
+            ++iter;
         }
     }
 }
@@ -46,7 +46,7 @@ void Layer::Render()
     std::vector<Obj*>::iterator iter = m_vecObj.begin();
     std::vector<Obj*>::iterator iterEnd = m_vecObj.end();
 
-    for (; iter != iterEnd; iter++)
+    for (; iter != iterEnd; ++iter)
     {
         (*iter)->Render();
     }

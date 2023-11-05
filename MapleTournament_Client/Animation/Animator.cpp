@@ -13,7 +13,7 @@ Animator::~Animator()
 {
 	std::map<std::wstring, AnimationClip*>::iterator iter = m_mapClip.begin();
 	std::map<std::wstring, AnimationClip*>::iterator iterEnd = m_mapClip.end();
-	for (; iter != iterEnd; iter++)
+	for (; iter != iterEnd; ++iter)
 	{
 		delete iter->second;
 	}
@@ -25,6 +25,7 @@ void Animator::Update()
 	{
 		m_pCurClip->Reset();
 		m_pCurClip = m_pNextClip;
+		m_pNextClip = nullptr;
 	}
 
 	m_pCurClip->Update();
@@ -43,6 +44,8 @@ void Animator::Update()
 
 void Animator::Render(float _xpos, float _ypos, float _ratio)
 {
+	//if (clip == m_pCu)
+	//	int a = 10;
 	m_pCurClip->Render(_xpos, _ypos, _ratio);
 }
 

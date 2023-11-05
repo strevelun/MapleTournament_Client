@@ -10,10 +10,10 @@ Scene::Scene()
 
 Scene::~Scene()
 {
-    std::vector<Layer*>::const_iterator iter = m_vecObjLayer.cbegin();
-    std::vector<Layer*>::const_iterator iterEnd = m_vecObjLayer.cend();
+    std::vector<Layer*>::iterator iter = m_vecObjLayer.begin();
+    std::vector<Layer*>::iterator iterEnd = m_vecObjLayer.end();
 
-    for (; iter != iterEnd; iter++)
+    for (; iter != iterEnd; ++iter)
         delete* iter;
     m_vecObjLayer.clear();
     UIManager::GetInst()->Cleanup();
@@ -21,10 +21,10 @@ Scene::~Scene()
 
 Layer* Scene::FindLayer(const std::wstring& _layerName)
 {
-    std::vector<Layer*>::const_iterator iter = m_vecObjLayer.cbegin();
-    std::vector<Layer*>::const_iterator iterEnd = m_vecObjLayer.cend();
+    std::vector<Layer*>::iterator iter = m_vecObjLayer.begin();
+    std::vector<Layer*>::iterator iterEnd = m_vecObjLayer.end();
 
-    for (; iter != iterEnd; iter++)
+    for (; iter != iterEnd; ++iter)
     {
         if ((*iter)->GetName() == _layerName) return *iter;
     }
@@ -59,7 +59,7 @@ void Scene::Update()
     std::vector<Layer*>::iterator iter = m_vecObjLayer.begin();
     std::vector<Layer*>::iterator iterEnd = m_vecObjLayer.end();
 
-    for (; iter != iterEnd; iter++)
+    for (; iter != iterEnd; ++iter)
         (*iter)->Update();
 }
 
@@ -68,6 +68,6 @@ void Scene::Render()
     std::vector<Layer*>::iterator iter = m_vecObjLayer.begin();
     std::vector<Layer*>::iterator iterEnd = m_vecObjLayer.end();
 
-    for (; iter != iterEnd; iter++)
+    for (; iter != iterEnd; ++iter)
         (*iter)->Render();
 }

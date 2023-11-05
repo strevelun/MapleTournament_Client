@@ -39,7 +39,7 @@ inline T* Layer::FindObj(const std::wstring& _strName)
 	std::vector<Obj*>::iterator iter = m_vecObj.begin();
 	std::vector<Obj*>::iterator iterEnd = m_vecObj.end();
 
-	for (; iter != iterEnd; iter++)
+	for (; iter != iterEnd; ++iter)
 	{
 		if (CompareObjName(*iter, _strName))
 		{

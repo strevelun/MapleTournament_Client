@@ -93,7 +93,7 @@ void Player::UseSkill(eSkillType _type)
 {
 	if (_type == eSkillType::None) return;
 
-	std::map<eSkillType, Skill*>::const_iterator iter = m_mapSkill.find(_type);
+	std::map<eSkillType, Skill*>::iterator iter = m_mapSkill.find(_type);
 
 	m_curSkill = _type;
 	if(_type == eSkillType::LeftMove || _type == eSkillType::LeftDoubleMove || _type == eSkillType::RightMove || _type == eSkillType::RightDoubleMove
@@ -126,7 +126,7 @@ void Player::UseSkill(eSkillType _type)
 	}
 	else
 	{
-		if (iter != m_mapSkill.cend())
+		if (iter != m_mapSkill.end())
 		{
 			iter->second->Reset();
 			iter->second->SetActive(true);
