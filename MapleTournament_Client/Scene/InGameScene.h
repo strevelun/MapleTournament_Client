@@ -7,22 +7,6 @@
 class UI;
 class UIPanel;
 
-enum class eInGameState
-{
-	None,
-	Prepare,
-	Play,
-	UseSkill,
-	GameOver,
-};
-
-enum class eSkillState
-{
-	None,
-	InUse,
-	End,
-};
-
 class InGameScene :
     public Scene
 {

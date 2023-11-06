@@ -536,33 +536,56 @@ void PacketHandler::S_InGameReady(char* _packet)
 			pClip->SetLoop(true);
 			pClip->SetPlayTime(1.5f);
 			pClip->SetAnyState(true);
+			if (slot == 0 || slot == 2)
+				pClip->SetFlip(true);
 		}
 		Animator* pAnimator = new Animator(pClip);
 
-		// characterChoice 정보를 MyPlayer의 멤버변수로 두고, 해당 코드를 InGameScene Init에
+		/* 애니메이션 클립 등록 */
 		pClip = ResourceManager::GetInst()->GetAnimClip(L"player" + std::to_wstring(characterChoice) + L"Walk", L"player" + std::to_wstring(characterChoice));
 		if (pClip)
 		{
 			pClip->SetLoop(true);
 			pClip->SetPlayTime(1.5f);
 			pClip->SetAnyState(true);
+			if (slot == 0 || slot == 2)
+				pClip->SetFlip(true);
 		}
 		pAnimator->AddClip(L"Walk", pClip);
 
+		pClip = ResourceManager::GetInst()->GetAnimClip(L"player" + std::to_wstring(characterChoice) + L"Hit", L"player" + std::to_wstring(characterChoice));
+		if (pClip)
+		{
+			pClip->SetLoop(false);
+			pClip->SetPlayTime(0.5f);
+			pClip->SetAnyState(false);
+			pClip->SetNextClip(pAnimator->GetDefaultClip());
+			if (slot == 0 || slot == 2)
+				pClip->SetFlip(true);
+		}
+		pAnimator->AddClip(L"Hit", pClip);
+
+		/* 플레이어 위치 세팅 */
 		if (slot == 0)
 		{
 			myPlayer->SetPos(240, 280);
-			pClip->SetFlip(true);
+			myPlayer->SetDir(eDir::Right);
 		}
-		else if(slot == 1)
+		else if(slot == 1) 
+		{
 			myPlayer->SetPos(1030, 280);
+			myPlayer->SetDir(eDir::Left);
+		}
 		else if (slot == 2)
 		{
-			pClip->SetFlip(true);
 			myPlayer->SetPos(240, 580);
+			myPlayer->SetDir(eDir::Right);
 		}
 		else if (slot == 3)
+		{
 			myPlayer->SetPos(1030, 580);
+			myPlayer->SetDir(eDir::Left);
+		}
 
 		myPlayer->SetRatio(1.5f);
 		myPlayer->SetAnimator(pAnimator);
@@ -724,23 +747,24 @@ void PacketHandler::S_Skill(char* _packet)
 	u_int slotNumber = *(char*)_packet;					_packet += sizeof(char);
 	eSkillType skillType = eSkillType(*(char*)_packet);					_packet += sizeof(char);
 
+
+	InGameScene* pScene = SceneManager::GetInst()->GetCurScene<InGameScene>();
+	pScene->ChangeState(eInGameState::UseSkill);
+	if (skillType == eSkillType::None)
+	{
+		pScene->SetSkillState(eSkillState::End);
+		return;
+	}
+
 	Obj* pObj = ObjectManager::GetInst()->FindObj(std::to_wstring(slotNumber));
 	if (!pObj) return;
 
 	Player* pPlayer = static_cast<Player*>(pObj);
 	pPlayer->UseSkill(skillType);
 
-	InGameScene* pScene = SceneManager::GetInst()->GetCurScene<InGameScene>();
-	pScene->ChangeState(eInGameState::UseSkill);
+	//if (skillType == eSkillType::LeftMove || skillType == eSkillType::LeftDoubleMove || skillType == eSkillType::RightMove || skillType == eSkillType::RightDoubleMove || skillType == eSkillType::DownMove || skillType == eSkillType::UpMove)
 
-	if (skillType == eSkillType::LeftMove || skillType == eSkillType::LeftDoubleMove || skillType == eSkillType::RightMove || skillType == eSkillType::RightDoubleMove || skillType == eSkillType::DownMove || skillType == eSkillType::UpMove)
-	{
-		pScene->SetSkillState(eSkillState::InUse);
-	}
-	else if (skillType == eSkillType::AttackCloud)
-	{
-		pScene->SetSkillState(eSkillState::InUse);
-	}
+	pScene->SetSkillState(eSkillState::InUse);
 
 	Debug::Log("PacketHandler::S_Skill");
 }
@@ -753,7 +777,6 @@ void PacketHandler::S_UpdateTurn(char* _packet)
 		pUI->SetPos(ScreenWidth / 2, ScreenHeight);
 		pUI->SetClickable(true);
 	}
-
 	pUI = UIManager::GetInst()->FindUI(L"Wait");
 	if (pUI)
 	{
@@ -913,5 +936,51 @@ void PacketHandler::S_UpdateProfile(char* _packet)
 	pText->ReassignText((wchar_t*)_packet);
 
 	Debug::Log("PacketHandler::S_UpdateProfile");
+}
+
+void PacketHandler::S_CheckHit(char* _packet)
+{
+	int playerSize = *(char*)_packet;			_packet += sizeof(char);
+	int slot = 0;
+	int score = 0;
+	eSkillType eType = eSkillType::None;
+	UI* pUI = nullptr;
+	UIPanel* pPanel = nullptr;
+	UIText* pText = nullptr;
+
+	for (int i = 0; i < playerSize; ++i)
+	{
+		slot = *(char*)_packet;				_packet += sizeof(char);
+		score = *(char*)_packet;			_packet += sizeof(char);
+		eType = eSkillType(*(char*)_packet);			_packet += sizeof(char);
+
+		pUI = UIManager::GetInst()->FindUI(L"PlayerStat" + std::to_wstring(slot));
+		if (!pUI) continue;
+
+		pPanel = static_cast<UIPanel*>(pUI);
+		pUI = pPanel->FindChildUI(L"Score");
+		if (!pUI) continue;
+
+		pText = static_cast<UIText*>(pUI);
+		pText->ReassignText(L"두들겨 맞은 횟수 : " + std::to_wstring(score));
+
+		if (eType != eSkillType::Shield)
+		{
+			Obj* pObj = ObjectManager::GetInst()->FindObj(std::to_wstring(slot));
+			if (pObj)
+			{
+				Player* pPlayer = static_cast<Player*>(pObj);
+				pPlayer->UseSkill(eSkillType::Hit);
+			}
+		}
+	}
+
+	if (playerSize == 0)
+	{
+		InGameScene* pScene = SceneManager::GetInst()->GetCurScene<InGameScene>();
+		pScene->SetSkillState(eSkillState::End);
+	}
+
+	Debug::Log("PacketHandler::S_CheckHit");
 }
 

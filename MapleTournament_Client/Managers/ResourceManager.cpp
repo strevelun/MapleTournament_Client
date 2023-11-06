@@ -150,8 +150,13 @@ Bitmap* ResourceManager::GetBitmap(const std::wstring& _fileWithPath)
 AnimationClip* ResourceManager::GetAnimClip(const std::wstring& _justFilename, const std::wstring& _baseSheet)
 {
 	std::map<std::wstring, AnimationClip*>::iterator iter = m_mapAnimClip.find(_justFilename);
+	AnimationClip* pClip = nullptr;
+
 	if (iter != m_mapAnimClip.end())
-		return new AnimationClip(*iter->second);
+	{
+		pClip = new AnimationClip(*iter->second);
+		return pClip;
+	}
 	
 	if (_baseSheet == L"")
 	{
@@ -162,5 +167,7 @@ AnimationClip* ResourceManager::GetAnimClip(const std::wstring& _justFilename, c
 		if (!LoadAnimFile(L"Resource/Sprite/" + _baseSheet + L".png", L"Resource/Anim/" + _justFilename + L".anim")) return nullptr;
 	}
 
-	return new AnimationClip(*m_mapAnimClip.find(_justFilename)->second);
+	pClip = new AnimationClip(*m_mapAnimClip.find(_justFilename)->second);
+
+	return pClip;
 }

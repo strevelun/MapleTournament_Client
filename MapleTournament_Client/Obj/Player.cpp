@@ -1,8 +1,8 @@
 #include "Player.h"
-#include "SkillAttackThrow.h"
-#include "SkillAttackMagic.h"
+#include "Skill.h"
 #include "../Defines.h"
 #include "../Animation/Animator.h"
+#include "../Animation/AnimationClip.h"
 #include "../Managers/ObjectManager.h"
 #include "../Scene/InGameScene.h"
 #include "../Timer.h"
@@ -20,60 +20,78 @@ void Player::Update()
 {
 	GameObj::Update();
 
+	if (m_eCurSkillType == eSkillType::None) return;
+
 	m_time = Timer::GetInst()->GetDeltaTime();
 
-	if (m_curSkill == eSkillType::LeftMove)
+	if (m_eCurSkillType == eSkillType::LeftMove)
 	{
 		m_tPos.x -= LeftRightMoveDist * m_moveSpeed * m_time;
 		if (m_tPos.x <= m_tDestPos.x)
 		{
 			m_tPos.x = m_tDestPos.x;
-			SkillEnd();
+			SkillEnd(eSkillState::End);
 		}
 	}
-	else if (m_curSkill == eSkillType::LeftDoubleMove)
+	else if (m_eCurSkillType == eSkillType::LeftDoubleMove)
 	{
 		m_tPos.x -= LeftRightMoveDist * 2 * m_moveSpeed * m_time;
 		if (m_tPos.x <= m_tDestPos.x)
 		{
 			m_tPos.x = m_tDestPos.x;
-			SkillEnd();
+			SkillEnd(eSkillState::End);
 		}
 	}
-	else if (m_curSkill == eSkillType::RightMove)
+	else if (m_eCurSkillType == eSkillType::RightMove)
 	{
 		m_tPos.x += LeftRightMoveDist * m_moveSpeed * m_time;
 		if (m_tPos.x >= m_tDestPos.x)
 		{
 			m_tPos.x = m_tDestPos.x;
-			SkillEnd();
+			SkillEnd(eSkillState::End);
 		}
 	}
-	else if (m_curSkill == eSkillType::RightDoubleMove)
+	else if (m_eCurSkillType == eSkillType::RightDoubleMove)
 	{
 		m_tPos.x += LeftRightMoveDist * 2 * m_moveSpeed * m_time ;
 		if (m_tPos.x >= m_tDestPos.x)
 		{
 			m_tPos.x = m_tDestPos.x;
-			SkillEnd();
+			SkillEnd(eSkillState::End);
 		}
 	}
-	else if (m_curSkill == eSkillType::UpMove)
+	else if (m_eCurSkillType == eSkillType::UpMove)
 	{
 		m_tPos.y -= UpDownMoveDist * m_moveSpeed * m_time;
 		if (m_tPos.y <= m_tDestPos.y)
 		{
 			m_tPos.y = m_tDestPos.y;
-			SkillEnd();
+			SkillEnd(eSkillState::End);
 		}
 	}
-	else if (m_curSkill == eSkillType::DownMove)
+	else if (m_eCurSkillType == eSkillType::DownMove)
 	{
 		m_tPos.y += UpDownMoveDist * m_moveSpeed * m_time;
 		if (m_tPos.y >= m_tDestPos.y)
 		{
 			m_tPos.y = m_tDestPos.y;
-			SkillEnd();
+			SkillEnd(eSkillState::End);
+		}
+	}
+	else if (m_eCurSkillType == eSkillType::Hit)
+	{
+		if (m_pAnimator->GetCurClip()->IsEnd())
+		{
+			SkillEnd(eSkillState::End);
+		}
+	}
+	else
+	{
+		if (m_pCurSkill && m_pCurSkill->IsEnd())
+		{
+			SkillEnd(eSkillState::CheckHit);
+			m_pCurSkill->Reset();
+			m_pCurSkill = nullptr;
 		}
 	}
 }
@@ -93,7 +111,8 @@ void Player::UseSkill(eSkillType _type)
 {
 	if (_type == eSkillType::None) return;
 
-	m_curSkill = _type;
+	m_eCurSkillType = _type;
+
 	if(_type == eSkillType::LeftMove || _type == eSkillType::LeftDoubleMove || _type == eSkillType::RightMove || _type == eSkillType::RightDoubleMove
 		 || _type == eSkillType::UpMove || _type == eSkillType::DownMove)
 		m_pAnimator->SetNextClip(L"Walk");
@@ -122,22 +141,30 @@ void Player::UseSkill(eSkillType _type)
 	{
 		m_tDestPos.y = m_tPos.y + UpDownMoveDist;
 	}
+	else if (m_eCurSkillType == eSkillType::Hit)
+	{
+		m_pAnimator->SetNextClip(L"Hit");
+	}
 	else
 	{
-		Skill* pSkill = ObjectManager::GetInst()->FindSkill(_type);
-		if (pSkill)
+		m_pCurSkill = ObjectManager::GetInst()->FindSkill(_type);
+		if (m_pCurSkill)
 		{
-			pSkill->Reset();
-			pSkill->SetActive(true);
-			pSkill->SetPos(m_tPos.x, m_tPos.y);
-			pSkill->SetDir(m_eDir);
+			m_pCurSkill->SetActive(true);
+			m_pCurSkill->SetPos(m_tPos.x, m_tPos.y);
+			m_pCurSkill->SetDir(m_eDir); // 애니메이션 출력용
 		}
 	}
 }
 
-void Player::SkillEnd()
+void Player::ChangeAnimationState(const std::wstring& _strStateName)
 {
-	m_curSkill = eSkillType::None;
+	m_pAnimator->SetNextClip(_strStateName);
+}
+
+void Player::SkillEnd(eSkillState _eSkillState)
+{
+	m_eCurSkillType = eSkillType::None;
 	m_pAnimator->SetDefaultClip();
-	m_pScene->SetSkillState(eSkillState::End);
+	m_pScene->SetSkillState(_eSkillState);
 }

@@ -29,7 +29,7 @@ public:
     GameObj();
     virtual ~GameObj();
 
-    void SetDir(eDir _eDir) { m_eDir = _eDir; }
+    virtual void SetDir(eDir _eDir);
 
     void Update() override;
     void Render() override;

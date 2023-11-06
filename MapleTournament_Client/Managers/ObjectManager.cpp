@@ -24,7 +24,6 @@ void ObjectManager::AddObj(Obj* _pObj)
 void ObjectManager::AddSkill(Skill* _pSkill, eSkillType _type)
 {
 	if (_type == eSkillType::None || _type == eSkillType::NumOfSkills) return;
-	if (m_arrSkill[(size_t)_type]) delete m_arrSkill[(size_t)_type];
 
 	m_arrSkill[(size_t)_type] = _pSkill;
 }
@@ -44,7 +43,7 @@ Obj* ObjectManager::FindObj(const std::wstring& _strName)
 
 Skill* ObjectManager::FindSkill(eSkillType _type)
 {
-	return nullptr;
+	return m_arrSkill[(size_t)_type];
 }
 
 void ObjectManager::KillObj(const std::wstring& _strName)

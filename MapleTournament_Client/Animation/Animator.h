@@ -26,5 +26,8 @@ public:
 	void AddClip(const std::wstring& _stateName, AnimationClip* _pClip);
 	void SetNextClip(const std::wstring& _stateName);
 	void SetDefaultClip();
+
+	AnimationClip* GetDefaultClip() const { return m_pDefaultClip; }
+	AnimationClip* GetCurClip() const { return m_pCurClip; }
 };
 

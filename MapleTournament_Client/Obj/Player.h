@@ -17,9 +17,10 @@ private:
 
 private:
     InGameScene* m_pScene = nullptr;
+    Skill* m_pCurSkill = nullptr;
 
 protected:
-    eSkillType              m_curSkill = eSkillType::None;
+    eSkillType              m_eCurSkillType = eSkillType::None; // TODO : ePlayerState
 
 public:
     Player(InGameScene* _pScene);
@@ -30,8 +31,9 @@ public:
 
     //void AddSkill(Skill* _pSkill, eSkillType _type);
     void UseSkill(eSkillType _type);
+    void ChangeAnimationState(const std::wstring& _strStateName);
 
 private:
-    void SkillEnd();
+    void SkillEnd(eSkillState _eSkillState);
 };
 

@@ -13,7 +13,7 @@ AnimationClip::AnimationClip(Bitmap* _pBitmap, int _clipSize) :
 AnimationClip::AnimationClip(const AnimationClip& _clip) :
 	m_pBitmap(_clip.m_pBitmap), m_isLoop(_clip.m_isLoop), m_isEnd(_clip.m_isEnd), m_curFrameIdx(_clip.m_curFrameIdx),
 	m_clipSize(_clip.m_clipSize), m_frameTime(_clip.m_frameTime), m_playTime(_clip.m_playTime), m_anyState(_clip.m_anyState),
-	m_isFlip(_clip.m_isFlip)
+	m_isFlip(_clip.m_isFlip), m_pNextClip(_clip.m_pNextClip)
 {
 	size_t size = _clip.m_vecFrame.size();
 	for(int i=0; i<size; ++i)
@@ -27,18 +27,24 @@ AnimationClip::~AnimationClip()
 
 	for (; iter != iterEnd; ++iter)
 		delete *iter;
+	m_vecFrame.clear();
 }
 
 void AnimationClip::Update()
 {
+	if (m_isEnd) return;
+
 	m_frameTime += Timer::GetInst()->GetDeltaTime();
-	Debug::Log(std::to_string(m_frameTime));
+	//Debug::Log(std::to_string(m_frameTime));
 	if (m_frameTime >= m_playTime / m_clipSize)
 	{
-		Debug::Log(std::to_string(m_frameTime) + " >= " + std::to_string(m_playTime / m_clipSize));
+		//Debug::Log(std::to_string(m_frameTime) + " >= " + std::to_string(m_playTime / m_clipSize));
 		m_curFrameIdx++;
-		if (!m_isLoop && m_curFrameIdx >= m_clipSize) 
+		if (!m_isLoop && m_curFrameIdx >= m_clipSize)
+		{
 			m_isEnd = true;
+			return;
+		}
 		m_curFrameIdx = m_curFrameIdx % m_clipSize;
 		m_frameTime = 0.0f;
 	}
@@ -46,8 +52,9 @@ void AnimationClip::Update()
 
 void AnimationClip::Render(float _xpos, float _ypos, float _ratio)
 {
-	ID2D1HwndRenderTarget* pRenderTarget = Graphics::GetInst()->GetRenderTarget();
+	if (m_isEnd) return;
 
+	ID2D1HwndRenderTarget* pRenderTarget = Graphics::GetInst()->GetRenderTarget();
 
 	float pivotX = (m_vecFrame[m_curFrameIdx]->pivotX * m_vecFrame[m_curFrameIdx]->size.width);
 	float pivotY = (m_vecFrame[m_curFrameIdx]->pivotY * m_vecFrame[m_curFrameIdx]->size.height);
@@ -73,6 +80,7 @@ void AnimationClip::Reset()
 {
 	m_frameTime = 0.0f;
 	m_curFrameIdx = 0;
+	m_isEnd = false;
 }
 
 void AnimationClip::AddFrame(tAnimationFrame* _pFrame)

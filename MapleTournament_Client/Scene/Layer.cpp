@@ -35,7 +35,10 @@ void Layer::Update()
         }
         else
         {
-            (*iter)->Update();
+            if ((*iter)->IsActive())
+            {
+                (*iter)->Update();
+            }
             ++iter;
         }
     }
@@ -48,6 +51,8 @@ void Layer::Render()
 
     for (; iter != iterEnd; ++iter)
     {
+        if (!(*iter)->IsActive()) continue;
+
         (*iter)->Render();
     }
 }

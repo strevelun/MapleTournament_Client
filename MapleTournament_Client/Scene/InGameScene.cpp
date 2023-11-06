@@ -8,8 +8,7 @@
 #include "../Obj/UI/UIButton.h"
 #include "../Obj/UI/UIText.h"
 #include "../Obj/Player.h"
-#include "../Obj/SkillAttackThrow.h"
-#include "../Obj/SkillAttackMagic.h"
+#include "../Obj/Skill.h"
 #include "../Animation/Animator.h"
 #include "../Animation/AnimationClip.h"
 #include "LobbyScene.h"
@@ -29,7 +28,7 @@ InGameScene::InGameScene()
 
 InGameScene::~InGameScene()
 {
-    ObjectManager::GetInst()->ClearAllObj();
+    ObjectManager::GetInst()->ClearAll();
 }
 
 bool InGameScene::Init()
@@ -57,7 +56,7 @@ bool InGameScene::Init()
     UIText* pPlayerName = new UIText(pPanel, L"", 30.f, 130, 10);
     pPlayerName->SetName(L"Nickname");
     pPanel->AddChildUI(pPlayerName);
-    UIText* pScore = new UIText(pPanel, L"0", 30.f, 130, 40);
+    UIText* pScore = new UIText(pPanel, L"두들겨 맞은 횟수 : 0", 15.f, 130, 40);
     pScore->SetName(L"Score");
     pPanel->AddChildUI(pScore);
 
@@ -72,7 +71,7 @@ bool InGameScene::Init()
     pPlayerName = new UIText(pPanel, L"", 30.f, 130, 10);
     pPlayerName->SetName(L"Nickname");
     pPanel->AddChildUI(pPlayerName);
-    pScore = new UIText(pPanel, L"0", 30.f, 130, 40);
+    pScore = new UIText(pPanel, L"두들겨 맞은 횟수 : 0", 15.f, 130, 40);
     pScore->SetName(L"Score");
     pPanel->AddChildUI(pScore);
 
@@ -87,7 +86,7 @@ bool InGameScene::Init()
     pPlayerName = new UIText(pPanel, L"", 30.f, 130, 10);
     pPlayerName->SetName(L"Nickname");
     pPanel->AddChildUI(pPlayerName);
-    pScore = new UIText(pPanel, L"0", 30.f, 130, 40);
+    pScore = new UIText(pPanel, L"두들겨 맞은 횟수 : 0", 15.f, 130, 40);
     pScore->SetName(L"Score");
     pPanel->AddChildUI(pScore);
 
@@ -102,7 +101,7 @@ bool InGameScene::Init()
     pPlayerName = new UIText(pPanel, L"", 30.f, 130, 10);
     pPlayerName->SetName(L"Nickname");
     pPanel->AddChildUI(pPlayerName);
-    pScore = new UIText(pPanel, L"0", 30.f, 130, 40);
+    pScore = new UIText(pPanel, L"두들겨 맞은 횟수 : 0", 15.f, 130, 40);
     pScore->SetName(L"Score");
     pPanel->AddChildUI(pScore);
 
@@ -156,16 +155,18 @@ bool InGameScene::Init()
     UIManager::GetInst()->AddUI(pPanelWait);
 
     /* 스킬 */
-    AnimationClip* pClip = ResourceManager::GetInst()->GetAnimClip(L"attackCloud");
-    pClip->SetLoop(true);
-    pClip->SetPlayTime(1.5f);
-    pClip->SetAnyState(true);
-    Animator* pAnimator = new Animator(pClip);
-
-    SkillAttackThrow* pSkill = new SkillAttackThrow;
-    pSkill->SetAnimator(pAnimator);
+    Skill* pSkill = new Skill;
+    AnimationClip* pClip = ResourceManager::GetInst()->GetAnimClip(L"attack0");
+    if (pClip)
+    {
+        Animator* pAnimator = new Animator(pClip);
+        pClip->SetLoop(false);
+        pClip->SetPlayTime(5.f);
+        pClip->SetAnyState(false);
+        pSkill->SetAnimator(pAnimator);
+    }
     pSkill->SetActive(false);
-    ObjectManager::GetInst()->AddSkill(pSkill, eSkillType::AttackCloud);
+    ObjectManager::GetInst()->AddSkill(pSkill, eSkillType::Attack0);
 
     pLayer = new Layer(L"Skill", 2);
     pLayer->AddObj(pSkill);
@@ -229,12 +230,12 @@ bool InGameScene::Init()
         });
     pPanel->AddChildUI(pButton);
 
-    pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingame_button_attackCloud.png");
+    pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingame_button_attack0.png");
     pButton = new UIButton(pPanel, 50, 50, 300, 0);
     pButton->SetBitmap(pBitmap);
     pButton->SetCallback([this, pPanel]
         {
-            OnItemButtonClick(eSkillType::AttackCloud, pPanel);
+            OnItemButtonClick(eSkillType::Attack0, pPanel);
         });
     pPanel->AddChildUI(pButton);
 
@@ -311,16 +312,26 @@ void InGameScene::Update()
     }
     else if (m_eState == eInGameState::UseSkill)
     {
-        if (m_eSkillState == eSkillState::End && m_isMyTurn)
+       if (m_eSkillState == eSkillState::CheckHit)
         {
-            // 방어, 피격
-            // 1. 스킬 사용 애니메이션 끝 : C_CheckHit
-            // 2. hit시 : S_CheckHit에서 m_eSkillState에서 Hit로 바꾸고 애니메이션 재생
-            // 3. 재생 후 : C_UpdateScore
-            // 4. 방어시 : S_UpdateScore에서 방어막 SetPos후 SetActive하기. 
+            if (m_isMyTurn)
+            {
+                char buffer[255];
+                ushort count = sizeof(ushort);
+                *(ushort*)(buffer + count) = (ushort)ePacketType::C_CheckHit;               count += sizeof(ushort);
+                *(ushort*)buffer = count;
+                NetworkManager::GetInst()->Send(buffer);
+            }
+            m_eSkillState = eSkillState::None;
+        }
+        else if (m_eSkillState == eSkillState::End)
+        {
+            if (m_isMyTurn)
+            {
+                NextTurn();
+            }
             m_eSkillState = eSkillState::None;
             SetMyTurn(false);
-            NextTurn();
         }
     }
 }

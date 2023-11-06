@@ -12,10 +12,13 @@ class AnimationClip
 private:
 	Bitmap* m_pBitmap = nullptr;
 	std::vector<tAnimationFrame*> m_vecFrame;
+
+	AnimationClip* m_pNextClip = nullptr;
+
 	bool m_isLoop = false;
 	bool m_isEnd = false;
 
-	int m_curFrameIdx = 0;
+	int m_curFrameIdx =0;
 	int m_clipSize = 0;
 
 	float m_frameTime = 0.0f;
@@ -34,8 +37,14 @@ public:
 
 	void SetLoop(bool _isLoop) { m_isLoop = _isLoop; }
 	void SetPlayTime(float _playTime) { m_playTime = _playTime; }
+	/// <summary>
+	/// 현재 클립이 재생되는 도중에 다른 클립으로 전환 가능여부
+	/// </summary>
 	void SetAnyState(bool _anyState) { m_anyState = _anyState; }
 	void SetFlip(bool _isFlip) { m_isFlip = _isFlip; }
+	void SetNextClip(AnimationClip* _pClip) { m_pNextClip = _pClip; }
+
+	AnimationClip* GetNextClip() const { return m_pNextClip; }
 
 	void Reset();
 

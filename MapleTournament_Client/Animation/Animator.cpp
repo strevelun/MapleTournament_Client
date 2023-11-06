@@ -11,6 +11,8 @@ Animator::Animator(AnimationClip* _pDefaultClip)
 
 Animator::~Animator()
 {
+	delete m_pDefaultClip;
+
 	std::map<std::wstring, AnimationClip*>::iterator iter = m_mapClip.begin();
 	std::map<std::wstring, AnimationClip*>::iterator iterEnd = m_mapClip.end();
 	for (; iter != iterEnd; ++iter)
@@ -21,15 +23,29 @@ Animator::~Animator()
 
 void Animator::Update()
 {
-	if (m_pNextClip && m_pNextClip->IstAnyState())
+	if (!m_pCurClip) return;
+
+	if (m_pCurClip->IsEnd())
+	{
+		if (m_pCurClip->GetNextClip())
+		{
+			m_pCurClip->Reset();
+			m_pCurClip = m_pCurClip->GetNextClip();
+			return;
+		}
+	}
+
+	m_pCurClip->Update();
+
+	if (m_pNextClip && m_pCurClip->IstAnyState())
 	{
 		m_pCurClip->Reset();
 		m_pCurClip = m_pNextClip;
 		m_pNextClip = nullptr;
 	}
 
-	m_pCurClip->Update();
 
+	/*
 	if (m_pCurClip->IsEnd())
 	{
 		if (m_pNextClip)
@@ -40,12 +56,13 @@ void Animator::Update()
 		else
 			m_pCurClip = m_pDefaultClip; // 유니티는 마지막 프레임에서 멈춘상태로 정지
 	}
+	*/
 }
 
 void Animator::Render(float _xpos, float _ypos, float _ratio)
 {
-	//if (clip == m_pCu)
-	//	int a = 10;
+	if (!m_pCurClip) return;
+
 	m_pCurClip->Render(_xpos, _ypos, _ratio);
 }
 

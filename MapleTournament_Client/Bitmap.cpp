@@ -12,4 +12,6 @@ Bitmap::Bitmap(ID2D1Bitmap* _bitmap) :
 
 Bitmap::~Bitmap()
 {
+	//if (m_pD2DBitmap)
+	//	m_pD2DBitmap->Release();
 }

@@ -26,7 +26,7 @@ public:
 	Obj* FindObj(const std::wstring& _strName);
 	Skill* FindSkill(eSkillType _type);
 	void KillObj(const std::wstring& _strName);
-	void ClearAllObj() { m_vecObj.clear(); }
+	void ClearAll() { m_vecObj.clear(); }
 
 	SINGLETON(ObjectManager)
 };

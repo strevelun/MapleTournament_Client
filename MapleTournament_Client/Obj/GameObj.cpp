@@ -11,6 +11,11 @@ GameObj::~GameObj()
 	if (m_pAnimator) delete m_pAnimator;
 }
 
+void GameObj::SetDir(eDir _eDir)
+{
+	m_eDir = _eDir;
+}
+
 void GameObj::Update()
 {
 	if (m_pAnimator)
