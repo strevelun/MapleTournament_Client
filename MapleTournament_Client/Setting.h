@@ -77,6 +77,7 @@ enum class eSkillType
 	None,
 	Shield,
 	Attack0,
+	Attack0_Left,
 	LeftMove,
 	LeftDoubleMove,
 	RightMove,

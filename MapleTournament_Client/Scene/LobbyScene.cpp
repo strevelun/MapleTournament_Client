@@ -493,8 +493,11 @@ bool LobbyScene::InitLobbyUI()
     UIPanel* pProfile = new UIPanel(nullptr, 400, 200, ScreenWidth, ScreenHeight, 1.0f, 1.0f);
     pProfile->SetBitmap(pBitmap);
     pProfile->SetName(L"Profile");
-    pText = new UIText(pProfile, L"", 20.f, pProfile->GetWidth() / 2, 10);
+    pText = new UIText(pProfile, L"", 20.f, pProfile->GetWidth() / 2, 50);
     pText->SetName(L"ProfileText");
+    pProfile->AddChildUI(pText);
+    pText = new UIText(pProfile, L"¸ÂÀº È½¼ö : 0", 20.f, pProfile->GetWidth() / 2 + 20, 120);
+    pText->SetName(L"HitCountText");
     pProfile->AddChildUI(pText);
     pUIManager->AddUI(pProfile);
     //pBackground->AddChildUI(pProfile);

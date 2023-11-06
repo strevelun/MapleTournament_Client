@@ -933,7 +933,10 @@ void PacketHandler::S_UpdateProfile(char* _packet)
 	UIPanel* pPanel = static_cast<UIPanel*>(pUI);
 	pUI = pPanel->FindChildUI(L"ProfileText");
 	UIText* pText = static_cast<UIText*>(pUI);
-	pText->ReassignText((wchar_t*)_packet);
+	pText->ReassignText((wchar_t*)_packet);					_packet += (ushort)wcslen((wchar_t*)_packet) * 2 + 2;
+	pUI = pPanel->FindChildUI(L"HitCountText");
+	pText = static_cast<UIText*>(pUI);
+	pText->ReassignText(L"¸ÂÀº È½¼ö : " + std::to_wstring(*(u_int*)_packet));
 
 	Debug::Log("PacketHandler::S_UpdateProfile");
 }
