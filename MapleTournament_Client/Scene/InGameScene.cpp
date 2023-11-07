@@ -59,6 +59,7 @@ bool InGameScene::Init()
     UIText* pScore = new UIText(pPanel, L"두들겨 맞은 횟수 : 0", 15.f, 130, 40);
     pScore->SetName(L"Score");
     pPanel->AddChildUI(pScore);
+    pPanel->SetActive(false);
 
     pPanel = new UIPanel(nullptr, 300, 100, ScreenWidth, 0, 1.0f);
     pPanel->SetName(L"PlayerStat1");
@@ -74,6 +75,7 @@ bool InGameScene::Init()
     pScore = new UIText(pPanel, L"두들겨 맞은 횟수 : 0", 15.f, 130, 40);
     pScore->SetName(L"Score");
     pPanel->AddChildUI(pScore);
+    pPanel->SetActive(false);
 
     pPanel = new UIPanel(nullptr, 300, 100, 0, ScreenHeight, 0.0f, 1.0f);
     pPanel->SetName(L"PlayerStat2");
@@ -89,6 +91,7 @@ bool InGameScene::Init()
     pScore = new UIText(pPanel, L"두들겨 맞은 횟수 : 0", 15.f, 130, 40);
     pScore->SetName(L"Score");
     pPanel->AddChildUI(pScore);
+    pPanel->SetActive(false);
 
     pPanel = new UIPanel(nullptr, 300, 100, ScreenWidth, ScreenHeight, 1.0f, 1.0f);
     pPanel->SetName(L"PlayerStat3");
@@ -104,6 +107,7 @@ bool InGameScene::Init()
     pScore = new UIText(pPanel, L"두들겨 맞은 횟수 : 0", 15.f, 130, 40);
     pScore->SetName(L"Score");
     pPanel->AddChildUI(pScore);
+    pPanel->SetActive(false);
 
     /* 대기하세요 UI */
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_board.png");
@@ -329,9 +333,9 @@ void InGameScene::Update()
             if (m_isMyTurn)
             {
                 NextTurn();
+                SetMyTurn(false);
             }
             m_eSkillState = eSkillState::None;
-            SetMyTurn(false);
         }
     }
 }

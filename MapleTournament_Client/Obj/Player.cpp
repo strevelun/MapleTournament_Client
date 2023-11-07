@@ -6,6 +6,10 @@
 #include "../Managers/ObjectManager.h"
 #include "../Scene/InGameScene.h"
 #include "../Timer.h"
+#include "UI/UIText.h"
+#include "UI/UIPanel.h"
+
+#include <string>
 
 Player::Player(InGameScene* _pScene) :
 	m_pScene(_pScene)
@@ -14,6 +18,7 @@ Player::Player(InGameScene* _pScene) :
 
 Player::~Player()
 {
+	if (m_pNicknameText) delete m_pNicknameText;
 }
 
 void Player::Update()
@@ -27,6 +32,7 @@ void Player::Update()
 	if (m_eCurSkillType == eSkillType::LeftMove)
 	{
 		m_tPos.x -= LeftRightMoveDist * m_moveSpeed * m_time;
+		m_pNicknameText->SetPos(m_tPos.x, m_tPos.y - 120);
 		if (m_tPos.x <= m_tDestPos.x)
 		{
 			m_tPos.x = m_tDestPos.x;
@@ -36,6 +42,7 @@ void Player::Update()
 	else if (m_eCurSkillType == eSkillType::LeftDoubleMove)
 	{
 		m_tPos.x -= LeftRightMoveDist * 2 * m_moveSpeed * m_time;
+		m_pNicknameText->SetPos(m_tPos.x, m_tPos.y - 120);
 		if (m_tPos.x <= m_tDestPos.x)
 		{
 			m_tPos.x = m_tDestPos.x;
@@ -45,6 +52,7 @@ void Player::Update()
 	else if (m_eCurSkillType == eSkillType::RightMove)
 	{
 		m_tPos.x += LeftRightMoveDist * m_moveSpeed * m_time;
+		m_pNicknameText->SetPos(m_tPos.x, m_tPos.y - 120);
 		if (m_tPos.x >= m_tDestPos.x)
 		{
 			m_tPos.x = m_tDestPos.x;
@@ -54,6 +62,7 @@ void Player::Update()
 	else if (m_eCurSkillType == eSkillType::RightDoubleMove)
 	{
 		m_tPos.x += LeftRightMoveDist * 2 * m_moveSpeed * m_time ;
+		m_pNicknameText->SetPos(m_tPos.x, m_tPos.y - 120);
 		if (m_tPos.x >= m_tDestPos.x)
 		{
 			m_tPos.x = m_tDestPos.x;
@@ -63,6 +72,7 @@ void Player::Update()
 	else if (m_eCurSkillType == eSkillType::UpMove)
 	{
 		m_tPos.y -= UpDownMoveDist * m_moveSpeed * m_time;
+		m_pNicknameText->SetPos(m_tPos.x, m_tPos.y - 120);
 		if (m_tPos.y <= m_tDestPos.y)
 		{
 			m_tPos.y = m_tDestPos.y;
@@ -72,6 +82,7 @@ void Player::Update()
 	else if (m_eCurSkillType == eSkillType::DownMove)
 	{
 		m_tPos.y += UpDownMoveDist * m_moveSpeed * m_time;
+		m_pNicknameText->SetPos(m_tPos.x, m_tPos.y - 120);
 		if (m_tPos.y >= m_tDestPos.y)
 		{
 			m_tPos.y = m_tDestPos.y;
@@ -99,6 +110,7 @@ void Player::Update()
 void Player::Render()
 {
 	GameObj::Render();
+	m_pNicknameText->Render();
 }
 /*
 void Player::AddSkill(Skill* _pSkill, eSkillType _type)
@@ -160,6 +172,13 @@ void Player::UseSkill(eSkillType _type)
 void Player::ChangeAnimationState(const std::wstring& _strStateName)
 {
 	m_pAnimator->SetNextClip(_strStateName);
+}
+
+void Player::SetNicknameUIText(std::wstring _strNickname)
+{
+	m_pNicknameText = new UIPanel(nullptr, 50, 25, m_tPos.x, m_tPos.y - 120, 0.5f, 1.0f);
+	UIText* pText = new UIText(m_pNicknameText, _strNickname, 20.f, m_pNicknameText->GetWidth() / 2, m_pNicknameText->GetHeight() / 2, 0.5f, 0.5f);
+	m_pNicknameText->AddChildUI(pText);
 }
 
 void Player::SkillEnd(eSkillState _eSkillState)

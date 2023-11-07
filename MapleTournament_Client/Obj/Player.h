@@ -7,6 +7,7 @@
 
 class InGameScene;
 class Skill;
+class UIPanel;
 
 class Player :
     public GameObj
@@ -18,6 +19,8 @@ private:
 private:
     InGameScene* m_pScene = nullptr;
     Skill* m_pCurSkill = nullptr;
+    //std::wstring m_strNickname;
+    UIPanel* m_pNicknameText = nullptr;
 
 protected:
     eSkillType              m_eCurSkillType = eSkillType::None; // TODO : ePlayerState
@@ -32,6 +35,7 @@ public:
     //void AddSkill(Skill* _pSkill, eSkillType _type);
     void UseSkill(eSkillType _type);
     void ChangeAnimationState(const std::wstring& _strStateName);
+    void SetNicknameUIText(std::wstring _strNickname);
 
 private:
     void SkillEnd(eSkillState _eSkillState);

@@ -20,6 +20,7 @@
 #include "../Animation/AnimationClip.h"
 #include "../Animation/Animator.h"
 #include "../Obj/Player.h"
+#include "../Obj/Skill.h"
 #include "../Debug.h"
 #include "../Constants.h"
 //#include "../InstructionQueue.h"
@@ -505,6 +506,7 @@ void PacketHandler::S_InGameReady(char* _packet)
 	{
 		int slot = *(char*)_packet;				_packet += sizeof(char);
 		int characterChoice = *(char*)_packet;				_packet += sizeof(char);
+		wchar_t* nickname = (wchar_t*)_packet;				_packet += (ushort)wcslen((wchar_t*)_packet) * 2 + 2;
 
 		myPlayer = new Player(pScene);
 		ObjectManager::GetInst()->AddObj(myPlayer);
@@ -513,6 +515,7 @@ void PacketHandler::S_InGameReady(char* _packet)
 
 		UI* pUI = UIManager::GetInst()->FindUI(L"PlayerStat" + std::to_wstring(slot));
 		if (!pUI) continue;
+		pUI->SetActive(true);
 		UIPanel* pPanel = static_cast<UIPanel*>(pUI);
 		pUI = pPanel->FindChildUI(L"Picture");
 		UIPanel* pPicture = static_cast<UIPanel*>(pUI);
@@ -523,8 +526,8 @@ void PacketHandler::S_InGameReady(char* _packet)
 		if (pUI)
 		{
 			UIText* pText = static_cast<UIText*>(pUI);
-			pText->ReassignText((wchar_t*)_packet);			_packet += (ushort)wcslen((wchar_t*)_packet) * 2 + 2;
-			if (mySlotNumber == i)
+			pText->ReassignText(nickname);
+			if (mySlotNumber == slot)
 			{
 				pText->SetTextColor(D2D1::ColorF::Red);
 			}
@@ -587,6 +590,7 @@ void PacketHandler::S_InGameReady(char* _packet)
 			myPlayer->SetDir(eDir::Left);
 		}
 
+		myPlayer->SetNicknameUIText(nickname);
 		myPlayer->SetRatio(1.5f);
 		myPlayer->SetAnimator(pAnimator);
 
@@ -893,20 +897,20 @@ void PacketHandler::S_GameOverSceneChange(char* _packet)
 
 void PacketHandler::S_UpdateIngameUserLeave(char* _packet)
 {
-	int slot = int(*(char*)_packet);
+	int slot = int(*(char*)_packet);				_packet += sizeof(char);
+	eSkillType type = eSkillType(*(char*)_packet);
 
 	UI* pUI = UIManager::GetInst()->FindUI(L"PlayerStat" + std::to_wstring(slot));
 	if (!pUI) return;
-	UIPanel* pPanel = static_cast<UIPanel*>(pUI);
-	pUI = pPanel->FindChildUI(L"Picture");
-	if(pUI)
-		pUI->SetActive(false);
-
-	pUI = pPanel->FindChildUI(L"Nickname");
-	if (pUI)
-		pUI->SetActive(false);
+	pUI->SetActive(false);
+	
+	//Obj* pObj = ObjectManager::GetInst()->FindObj(std::to_wstring(slot));
+	//Player* pPlayer = static_cast<Player*>(pObj);
 
 	ObjectManager::GetInst()->KillObj(std::to_wstring(slot));
+	Skill* pSkill = ObjectManager::GetInst()->FindSkill(type);
+	if(pSkill)
+		pSkill->Reset();
 
 	// 나간 플레이어가 스킬 사용 중일때
 
