@@ -151,7 +151,7 @@ bool InGameScene::Init()
         m_arrTimer[i] = pPanel;
     }
 
-    UIPanel* pPanelWait = new UIPanel(nullptr, 150, 100, ScreenWidth / 2, 100, 0.5f);
+    UIPanel* pPanelWait = new UIPanel(nullptr, 100, 50, ScreenWidth / 2, 100, 0.5f);
     pPanelWait->SetActive(true);
     pPanelWait->SetName(L"Wait");
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingame_wait.png");
@@ -160,7 +160,7 @@ bool InGameScene::Init()
 
     /* ½ºÅ³ */
     Skill* pSkill = new Skill;
-    AnimationClip* pClip = ResourceManager::GetInst()->GetAnimClip(L"attack0");
+    AnimationClip* pClip = ResourceManager::GetInst()->GetAnimClip(L"attack0", L"attack0");
     if (pClip)
     {
         Animator* pAnimator = new Animator(pClip);

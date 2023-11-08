@@ -533,7 +533,7 @@ void PacketHandler::S_InGameReady(char* _packet)
 			}
 		}
 
-		AnimationClip* pClip = ResourceManager::GetInst()->GetAnimClip(L"player" + std::to_wstring(characterChoice));
+		AnimationClip* pClip = ResourceManager::GetInst()->GetAnimClip(L"player" + std::to_wstring(characterChoice), L"player" + std::to_wstring(characterChoice));
 		if (pClip)
 		{
 			pClip->SetLoop(true);

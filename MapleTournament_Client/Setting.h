@@ -76,6 +76,7 @@ enum class eSkillType
 {
 	None,
 	Shield,
+	Heal0,
 	Attack0,
 	Attack0_Left,
 	LeftMove,

@@ -11,7 +11,7 @@ class AnimationClip
 {
 private:
 	Bitmap* m_pBitmap = nullptr;
-	std::vector<tAnimationFrame*> m_vecFrame;
+	std::vector<tAnimationFrame*>* m_pVecFrame = nullptr;
 
 	AnimationClip* m_pNextClip = nullptr;
 
@@ -28,7 +28,7 @@ private:
 	bool    m_isFlip = false;
 
 public:
-	AnimationClip(Bitmap* _pBitmap, int _clipSize);
+	AnimationClip(Bitmap* _pBitmap, std::vector<tAnimationFrame*>* _pVecFrame);
 	AnimationClip(const AnimationClip& _clip);
 	~AnimationClip();
 
@@ -50,7 +50,5 @@ public:
 
 	bool IstAnyState() const { return m_anyState; }
 	bool IsEnd() const { return m_isEnd; }
-
-	void AddFrame(tAnimationFrame* _pFrame);
 };
 

@@ -26,8 +26,8 @@ public:
 	virtual void SetActive(bool _bActive) { m_bActive = _bActive; }
 
 	const std::wstring& GetName() const { return m_strName; }
-	int GetPosX() const { return m_tPos.x; }
-	int GetPosY() const { return m_tPos.y; }
+	float GetPosX() const { return m_tPos.x; }
+	float GetPosY() const { return m_tPos.y; }
 	bool IsAlive() const { return m_bAlive; }
 	bool IsActive() const { return m_bActive; } // setVisible
 	

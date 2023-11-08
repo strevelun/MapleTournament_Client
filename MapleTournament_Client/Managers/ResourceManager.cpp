@@ -1,6 +1,5 @@
 #include "ResourceManager.h"
 #include "../Bitmap.h"
-#include "../Setting.h"
 #include "../Debug.h"
 #include "../Animation/AnimationClip.h"
 #include "../GraphicCore/Graphics.h"
@@ -25,11 +24,17 @@ ResourceManager::~ResourceManager()
 	for (; iter != iterEnd; ++iter)
 		delete iter->second;
 
-	std::map<std::wstring, AnimationClip*>::iterator iter2 = m_mapAnimClip.begin();
-	std::map<std::wstring, AnimationClip*>::iterator iterEnd2 = m_mapAnimClip.end();
+	std::map<std::wstring, std::vector<tAnimationFrame*>*>::iterator iter2 = m_mapAnimClipFrame.begin();
+	std::map<std::wstring, std::vector<tAnimationFrame*>*>::iterator iterEnd2 = m_mapAnimClipFrame.end();
 
 	for (; iter2 != iterEnd2; ++iter2)
+	{
+		for (tAnimationFrame* pFrame : *iter2->second)
+		{
+			delete pFrame;
+		}
 		delete iter2->second;
+	}
 }
 
 bool ResourceManager::Init()
@@ -114,23 +119,14 @@ bool ResourceManager::LoadAnimFile(const std::wstring& _spriteFileWithPath, cons
 	tSpriteData* arr = new tSpriteData[clipSize];
 	animFile.read((char*)arr, sizeof(tSpriteData) * clipSize);
 
-	Bitmap* pBitmap = GetBitmap(_spriteFileWithPath);
-	if (!pBitmap)
-	{
-		Debug::Log(L"ResourceManager::LoadAnimFile : " + _spriteFileWithPath + L"여는 도중 에러 발생");
-		return false;
-	}
-
-	
-	AnimationClip* animClip = new AnimationClip(pBitmap, clipSize);
+	std::vector<tAnimationFrame*>* pVecFrame = new std::vector<tAnimationFrame*>();
+	pVecFrame->resize(clipSize, nullptr);
 
 	for (int i = 0; i < clipSize; i++) 
-	{
-		tAnimationFrame* frame = new tAnimationFrame(arr[i]);
-		animClip->AddFrame(frame);
-	}
+		(*pVecFrame)[i] = new tAnimationFrame(arr[i]);
 
-	m_mapAnimClip.insert(std::make_pair(animName, animClip));
+	m_mapAnimClipFrame.insert({ animName, pVecFrame });
+
 	delete[] arr;
 
 	return true;
@@ -149,25 +145,27 @@ Bitmap* ResourceManager::GetBitmap(const std::wstring& _fileWithPath)
 
 AnimationClip* ResourceManager::GetAnimClip(const std::wstring& _justFilename, const std::wstring& _baseSheet)
 {
-	std::map<std::wstring, AnimationClip*>::iterator iter = m_mapAnimClip.find(_justFilename);
+	std::map<std::wstring, std::vector<tAnimationFrame*>*>::iterator iter = m_mapAnimClipFrame.find(_justFilename);
 	AnimationClip* pClip = nullptr;
+	Bitmap* pBitmap = nullptr;
 
-	if (iter != m_mapAnimClip.end())
+	pBitmap = GetBitmap(L"Resource/Sprite/" + _baseSheet + L".png");
+	if (!pBitmap)
 	{
-		pClip = new AnimationClip(*iter->second);
+		Debug::Log(L"Resource/Sprite/" + _baseSheet + L".png" + L"여는 도중 에러 발생");
+		return nullptr;
+	}
+
+	if (iter != m_mapAnimClipFrame.end())
+	{
+		pClip = new AnimationClip(pBitmap, iter->second);
 		return pClip;
 	}
 	
-	if (_baseSheet == L"")
-	{
-		if (!LoadAnimFile(L"Resource/Sprite/" + _justFilename + L".png", L"Resource/Anim/" + _justFilename + L".anim")) return nullptr;
-	}
-	else
-	{
-		if (!LoadAnimFile(L"Resource/Sprite/" + _baseSheet + L".png", L"Resource/Anim/" + _justFilename + L".anim")) return nullptr;
-	}
+	if (!LoadAnimFile(L"Resource/Sprite/" + _baseSheet + L".png", L"Resource/Anim/" + _justFilename + L".anim")) return nullptr;
 
-	pClip = new AnimationClip(*m_mapAnimClip.find(_justFilename)->second);
+	iter = m_mapAnimClipFrame.find(_justFilename);
+	pClip = new AnimationClip(pBitmap, iter->second);
 
 	return pClip;
 }
