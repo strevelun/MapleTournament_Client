@@ -749,12 +749,11 @@ void PacketHandler::S_UpdateUserSlot(char* _packet)
 void PacketHandler::S_Skill(char* _packet)
 {
 	u_int slotNumber = *(char*)_packet;					_packet += sizeof(char);
-	eSkillType skillType = eSkillType(*(char*)_packet);					_packet += sizeof(char);
-
+	eActionType actionType = eActionType(*(char*)_packet);					_packet += sizeof(char);
 
 	InGameScene* pScene = SceneManager::GetInst()->GetCurScene<InGameScene>();
 	pScene->ChangeState(eInGameState::UseSkill);
-	if (skillType == eSkillType::None)
+	if (actionType == eActionType::None)
 	{
 		pScene->SetSkillState(eSkillState::End);
 		return;
@@ -764,9 +763,19 @@ void PacketHandler::S_Skill(char* _packet)
 	if (!pObj) return;
 
 	Player* pPlayer = static_cast<Player*>(pObj);
-	pPlayer->UseSkill(skillType);
 
-	//if (skillType == eSkillType::LeftMove || skillType == eSkillType::LeftDoubleMove || skillType == eSkillType::RightMove || skillType == eSkillType::RightDoubleMove || skillType == eSkillType::DownMove || skillType == eSkillType::UpMove)
+	if (actionType == eActionType::Move)
+	{
+		eMoveName name = eMoveName(*(char*)_packet);
+		if(name == eMoveName::None)
+		{
+			pScene->SetSkillState(eSkillState::End);
+			return;
+		}
+		pPlayer->DoAction(name);
+	}
+	else if(actionType == eActionType::Skill)
+		pPlayer->DoAction(eSkillName(*(char*)_packet));
 
 	pScene->SetSkillState(eSkillState::InUse);
 
@@ -898,7 +907,7 @@ void PacketHandler::S_GameOverSceneChange(char* _packet)
 void PacketHandler::S_UpdateIngameUserLeave(char* _packet)
 {
 	int slot = int(*(char*)_packet);				_packet += sizeof(char);
-	eSkillType type = eSkillType(*(char*)_packet);
+	eSkillName name = eSkillName(*(char*)_packet);
 
 	UI* pUI = UIManager::GetInst()->FindUI(L"PlayerStat" + std::to_wstring(slot));
 	if (!pUI) return;
@@ -908,7 +917,7 @@ void PacketHandler::S_UpdateIngameUserLeave(char* _packet)
 	//Player* pPlayer = static_cast<Player*>(pObj);
 
 	ObjectManager::GetInst()->KillObj(std::to_wstring(slot));
-	Skill* pSkill = ObjectManager::GetInst()->FindSkill(type);
+	Skill* pSkill = ObjectManager::GetInst()->FindSkill(name);
 	if(pSkill)
 		pSkill->Reset();
 
@@ -950,7 +959,7 @@ void PacketHandler::S_CheckHit(char* _packet)
 	int playerSize = *(char*)_packet;			_packet += sizeof(char);
 	int slot = 0;
 	int score = 0;
-	eSkillType eType = eSkillType::None;
+	eActionType eType = eActionType::None;
 	UI* pUI = nullptr;
 	UIPanel* pPanel = nullptr;
 	UIText* pText = nullptr;
@@ -959,7 +968,7 @@ void PacketHandler::S_CheckHit(char* _packet)
 	{
 		slot = *(char*)_packet;				_packet += sizeof(char);
 		score = *(char*)_packet;			_packet += sizeof(char);
-		eType = eSkillType(*(char*)_packet);			_packet += sizeof(char);
+		eType = eActionType(*(char*)_packet);			_packet += sizeof(char);
 
 		pUI = UIManager::GetInst()->FindUI(L"PlayerStat" + std::to_wstring(slot));
 		if (!pUI) continue;
@@ -971,14 +980,11 @@ void PacketHandler::S_CheckHit(char* _packet)
 		pText = static_cast<UIText*>(pUI);
 		pText->ReassignText(L"두들겨 맞은 횟수 : " + std::to_wstring(score));
 
-		if (eType != eSkillType::Shield)
+		Obj* pObj = ObjectManager::GetInst()->FindObj(std::to_wstring(slot));
+		if (pObj)
 		{
-			Obj* pObj = ObjectManager::GetInst()->FindObj(std::to_wstring(slot));
-			if (pObj)
-			{
-				Player* pPlayer = static_cast<Player*>(pObj);
-				pPlayer->UseSkill(eSkillType::Hit);
-			}
+			Player* pPlayer = static_cast<Player*>(pObj);
+			pPlayer->DoAction(eActionType::Hit);
 		}
 	}
 

@@ -15,6 +15,9 @@ private:
 
 	AnimationClip* m_pNextClip = nullptr;
 
+	int m_loopCountMax = 1;
+	int m_curLoopCount = 0;
+
 	bool m_isLoop = false;
 	bool m_isEnd = false;
 
@@ -35,6 +38,7 @@ public:
 	void Update();
 	void Render(float _xpos, float _ypos, float _ratio);
 
+	void SetLoopCount(int _loopCount) { m_loopCountMax = _loopCount; }
 	void SetLoop(bool _isLoop) { m_isLoop = _isLoop; }
 	void SetPlayTime(float _playTime) { m_playTime = _playTime; }
 	/// <summary>

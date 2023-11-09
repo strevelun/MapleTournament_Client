@@ -21,11 +21,11 @@ void ObjectManager::AddObj(Obj* _pObj)
 	m_vecObj.push_back(_pObj);
 }
 
-void ObjectManager::AddSkill(Skill* _pSkill, eSkillType _type)
+void ObjectManager::AddSkill(Skill* _pSkill, eSkillName _name)
 {
-	if (_type == eSkillType::None || _type == eSkillType::NumOfSkills) return;
+	if (_name == eSkillName::None || _name == eSkillName::NumOfSkills) return;
 
-	m_arrSkill[(size_t)_type] = _pSkill;
+	m_arrSkill[(size_t)_name] = _pSkill;
 }
 
 Obj* ObjectManager::FindObj(const std::wstring& _strName)
@@ -41,7 +41,7 @@ Obj* ObjectManager::FindObj(const std::wstring& _strName)
 	return nullptr;
 }
 
-Skill* ObjectManager::FindSkill(eSkillType _type)
+Skill* ObjectManager::FindSkill(eSkillName _type)
 {
 	return m_arrSkill[(size_t)_type];
 }

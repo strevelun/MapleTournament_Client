@@ -170,12 +170,69 @@ bool InGameScene::Init()
         pSkill->SetAnimator(pAnimator);
     }
     pSkill->SetActive(false);
-    ObjectManager::GetInst()->AddSkill(pSkill, eSkillType::Attack0);
+    ObjectManager::GetInst()->AddSkill(pSkill, eSkillName::Attack0);
 
     pLayer = new Layer(L"Skill", 2);
+    m_vecObjLayer.push_back(pLayer);
+    pLayer->AddObj(pSkill);
+
+    pSkill = new Skill;
+    pClip = ResourceManager::GetInst()->GetAnimClip(L"attack1", L"attack1");
+    if (pClip)
+    {
+        Animator* pAnimator = new Animator(pClip);
+        pClip->SetLoop(false);
+        pClip->SetPlayTime(5.f);
+        pClip->SetAnyState(false);
+        pSkill->SetAnimator(pAnimator);
+    }
+    pSkill->SetActive(false);
+    ObjectManager::GetInst()->AddSkill(pSkill, eSkillName::Attack1);
+    pLayer->AddObj(pSkill);
+
+    pSkill = new Skill;
+    pClip = ResourceManager::GetInst()->GetAnimClip(L"attack2", L"attack2");
+    if (pClip)
+    {
+        Animator* pAnimator = new Animator(pClip);
+        pClip->SetLoop(false);
+        pClip->SetPlayTime(5.f);
+        pClip->SetAnyState(false);
+        pSkill->SetAnimator(pAnimator);
+    }
+    pSkill->SetActive(false);
+    ObjectManager::GetInst()->AddSkill(pSkill, eSkillName::Attack2);
+    pLayer->AddObj(pSkill);
+
+    pSkill = new Skill;
+    pClip = ResourceManager::GetInst()->GetAnimClip(L"attack3", L"attack3");
+    if (pClip)
+    {
+        Animator* pAnimator = new Animator(pClip);
+        pClip->SetLoop(false);
+        pClip->SetLoopCount(3);
+        pClip->SetPlayTime(2.f);
+        pClip->SetAnyState(false);
+        pSkill->SetAnimator(pAnimator);
+    }
+    pSkill->SetActive(false);
+    ObjectManager::GetInst()->AddSkill(pSkill, eSkillName::Attack3);
+    pLayer->AddObj(pSkill);
+
+    pSkill = new Skill;
+    pClip = ResourceManager::GetInst()->GetAnimClip(L"heal0", L"heal0");
+    if (pClip)
+    {
+        Animator* pAnimator = new Animator(pClip);
+        pClip->SetLoop(false);
+        pClip->SetPlayTime(2.f);
+        pClip->SetAnyState(false);
+        pSkill->SetAnimator(pAnimator);
+    }
+    pSkill->SetActive(false);
+    ObjectManager::GetInst()->AddSkill(pSkill, eSkillName::Heal0);
     pLayer->AddObj(pSkill);
     
-    m_vecObjLayer.push_back(pLayer);
 
     /* 스킬 버튼 */
     pPanel = new UIPanel(nullptr, 500, 100, ScreenWidth / 2, ScreenHeight + 80, 0.5f, 1.0f);
@@ -185,7 +242,8 @@ bool InGameScene::Init()
     pButton->SetBitmap(pBitmap);
     pButton->SetCallback([this, pPanel] 
         {
-            OnItemButtonClick(eSkillType::LeftMove, pPanel);
+            OnItemButtonClick(pPanel);
+            SendActionPacket(eActionType::Move, eMoveName::LeftMove);
         });
     pPanel->AddChildUI(pButton);
 
@@ -194,7 +252,8 @@ bool InGameScene::Init()
     pButton->SetBitmap(pBitmap);
     pButton->SetCallback([this, pPanel]
         {
-            OnItemButtonClick(eSkillType::LeftDoubleMove, pPanel);
+            OnItemButtonClick(pPanel);
+            SendActionPacket(eActionType::Move, eMoveName::LeftDoubleMove);
         });
     pPanel->AddChildUI(pButton);
 
@@ -203,7 +262,8 @@ bool InGameScene::Init()
     pButton->SetBitmap(pBitmap);
     pButton->SetCallback([this, pPanel]
         {
-            OnItemButtonClick(eSkillType::RightMove, pPanel);
+            OnItemButtonClick(pPanel);
+            SendActionPacket(eActionType::Move, eMoveName::RightMove);
         });
     pPanel->AddChildUI(pButton);
 
@@ -212,7 +272,8 @@ bool InGameScene::Init()
     pButton->SetBitmap(pBitmap);
     pButton->SetCallback([this, pPanel]
         {
-            OnItemButtonClick(eSkillType::RightDoubleMove, pPanel);
+            OnItemButtonClick(pPanel);
+            SendActionPacket(eActionType::Move, eMoveName::RightDoubleMove);
         });
     pPanel->AddChildUI(pButton);
 
@@ -221,7 +282,8 @@ bool InGameScene::Init()
     pButton->SetBitmap(pBitmap);
     pButton->SetCallback([this, pPanel]
         {
-            OnItemButtonClick(eSkillType::UpMove, pPanel);
+            OnItemButtonClick(pPanel);
+            SendActionPacket(eActionType::Move, eMoveName::UpMove);
         });
     pPanel->AddChildUI(pButton);
 
@@ -230,7 +292,8 @@ bool InGameScene::Init()
     pButton->SetBitmap(pBitmap);
     pButton->SetCallback([this, pPanel]
         {
-            OnItemButtonClick(eSkillType::DownMove, pPanel);
+            OnItemButtonClick(pPanel);
+            SendActionPacket(eActionType::Move, eMoveName::DownMove);
         });
     pPanel->AddChildUI(pButton);
 
@@ -239,7 +302,48 @@ bool InGameScene::Init()
     pButton->SetBitmap(pBitmap);
     pButton->SetCallback([this, pPanel]
         {
-            OnItemButtonClick(eSkillType::Attack0, pPanel);
+            OnItemButtonClick(pPanel);
+            SendActionPacket(eActionType::Skill, eSkillName::Attack0);
+        });
+    pPanel->AddChildUI(pButton);
+
+    pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingame_button_attack1.png");
+    pButton = new UIButton(pPanel, 50, 50, 350, 0);
+    pButton->SetBitmap(pBitmap);
+    pButton->SetCallback([this, pPanel]
+        {
+            OnItemButtonClick(pPanel);
+            SendActionPacket(eActionType::Skill, eSkillName::Attack1);
+        });
+    pPanel->AddChildUI(pButton);
+
+    pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingame_button_attack2.png");
+    pButton = new UIButton(pPanel, 50, 50, 400, 0);
+    pButton->SetBitmap(pBitmap);
+    pButton->SetCallback([this, pPanel]
+        {
+            OnItemButtonClick(pPanel);
+            SendActionPacket(eActionType::Skill, eSkillName::Attack2);
+        });
+    pPanel->AddChildUI(pButton);
+
+    pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingame_button_attack3.png");
+    pButton = new UIButton(pPanel, 50, 50, 450, 0);
+    pButton->SetBitmap(pBitmap);
+    pButton->SetCallback([this, pPanel]
+        {
+            OnItemButtonClick(pPanel);
+            SendActionPacket(eActionType::Skill, eSkillName::Attack3);
+        });
+    pPanel->AddChildUI(pButton);
+
+    pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingame_button_heal0.png");
+    pButton = new UIButton(pPanel, 50, 50, 0, 50);
+    pButton->SetBitmap(pBitmap);
+    pButton->SetCallback([this, pPanel]
+        {
+            OnItemButtonClick(pPanel);
+            SendActionPacket(eActionType::Skill, eSkillName::Heal0);
         });
     pPanel->AddChildUI(pButton);
 
@@ -369,12 +473,24 @@ void InGameScene::SetSkillTimer(float _timer)
     m_timer = _timer;
 }
 */
-void InGameScene::UseSkill(eSkillType _type)
+void InGameScene::SendActionPacket(eActionType _type, eMoveName _name)
 {
     char buffer[255];
     ushort count = sizeof(ushort);
     *(ushort*)(buffer + count) = (ushort)ePacketType::C_Skill;				count += sizeof(ushort);
-    *(char*)(buffer + count) = (char)_type;                                 count += sizeof(char);
+    *(char*)(buffer + count) = (char)_type;                     count += sizeof(char);
+    *(char*)(buffer + count) = (char)_name;                                 count += sizeof(char);
+    *(ushort*)buffer = count;
+    NetworkManager::GetInst()->Send(buffer);
+}
+
+void InGameScene::SendActionPacket(eActionType _type, eSkillName _name)
+{
+    char buffer[255];
+    ushort count = sizeof(ushort);
+    *(ushort*)(buffer + count) = (ushort)ePacketType::C_Skill;				count += sizeof(ushort);
+    *(char*)(buffer + count) = (char)_type;                     count += sizeof(char);
+    *(char*)(buffer + count) = (char)_name;                                 count += sizeof(char);
     *(ushort*)buffer = count;
     NetworkManager::GetInst()->Send(buffer);
 }
@@ -388,7 +504,7 @@ void InGameScene::NextTurn()
     NetworkManager::GetInst()->Send(buffer);
 }
 
-void InGameScene::OnItemButtonClick(eSkillType _type, UIPanel* _pPanel)
+void InGameScene::OnItemButtonClick(UIPanel* _pPanel)
 {
     UI* pUI = UIManager::GetInst()->FindUI(L"Wait");
     if (pUI)
@@ -401,7 +517,6 @@ void InGameScene::OnItemButtonClick(eSkillType _type, UIPanel* _pPanel)
     m_arrTimer[(u_int)m_timer]->SetActive(false);
 
     ChangeState(eInGameState::None);
-    UseSkill(_type);
     // 스킬 애니메이션 출력 후 NextTurn
 }
 

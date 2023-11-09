@@ -13,7 +13,7 @@ class Player :
     public GameObj
 {
 private:
-    static constexpr float LeftRightMoveDist = 170.f;
+    static constexpr float LeftRightMoveDist = 180.f;
     static constexpr float UpDownMoveDist = 100.f;
 
 private:
@@ -23,7 +23,9 @@ private:
     UIPanel* m_pNicknameText = nullptr;
 
 protected:
-    eSkillType              m_eCurSkillType = eSkillType::None; // TODO : ePlayerState
+    eActionType              m_eCurSkillType = eActionType::None;
+    eMoveName                   m_eMoveName = eMoveName::None;
+    eSkillName                  m_eSkillName = eSkillName::None;
 
 public:
     Player(InGameScene* _pScene);
@@ -33,11 +35,13 @@ public:
     void Render() override;
 
     //void AddSkill(Skill* _pSkill, eSkillType _type);
-    void UseSkill(eSkillType _type);
+    void DoAction(eMoveName _name);
+    void DoAction(eSkillName _name);
+    void DoAction(eActionType _type);
     void ChangeAnimationState(const std::wstring& _strStateName);
     void SetNicknameUIText(std::wstring _strNickname);
 
 private:
-    void SkillEnd(eSkillState _eSkillState);
+    void SkillEnd(eSkillState _eSkillState); // actionEnd
 };
 

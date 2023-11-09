@@ -25,78 +25,81 @@ void Player::Update()
 {
 	GameObj::Update();
 
-	if (m_eCurSkillType == eSkillType::None) return;
+	if (m_eCurSkillType == eActionType::None) return;
 
 	m_time = Timer::GetInst()->GetDeltaTime();
 
-	if (m_eCurSkillType == eSkillType::LeftMove)
+	if (m_eCurSkillType == eActionType::Move)
 	{
-		m_tPos.x -= LeftRightMoveDist * m_moveSpeed * m_time;
-		m_pNicknameText->SetPos(m_tPos.x, m_tPos.y - 120);
-		if (m_tPos.x <= m_tDestPos.x)
+		if (m_eMoveName == eMoveName::LeftMove)
 		{
-			m_tPos.x = m_tDestPos.x;
-			SkillEnd(eSkillState::End);
+			m_tPos.x -= LeftRightMoveDist * m_moveSpeed * m_time;
+			m_pNicknameText->SetPos(m_tPos.x, m_tPos.y - 120);
+			if (m_tPos.x <= m_tDestPos.x)
+			{
+				m_tPos.x = m_tDestPos.x;
+				SkillEnd(eSkillState::End);
+			}
+		}
+		else if (m_eMoveName == eMoveName::LeftDoubleMove)
+		{
+			m_tPos.x -= LeftRightMoveDist * 2 * m_moveSpeed * m_time;
+			m_pNicknameText->SetPos(m_tPos.x, m_tPos.y - 120);
+			if (m_tPos.x <= m_tDestPos.x)
+			{
+				m_tPos.x = m_tDestPos.x;
+				SkillEnd(eSkillState::End);
+			}
+		}
+		else if (m_eMoveName == eMoveName::RightMove)
+		{
+			m_tPos.x += LeftRightMoveDist * m_moveSpeed * m_time;
+			m_pNicknameText->SetPos(m_tPos.x, m_tPos.y - 120);
+			if (m_tPos.x >= m_tDestPos.x)
+			{
+				m_tPos.x = m_tDestPos.x;
+				SkillEnd(eSkillState::End);
+			}
+		}
+		else if (m_eMoveName == eMoveName::RightDoubleMove)
+		{
+			m_tPos.x += LeftRightMoveDist * 2 * m_moveSpeed * m_time;
+			m_pNicknameText->SetPos(m_tPos.x, m_tPos.y - 120);
+			if (m_tPos.x >= m_tDestPos.x)
+			{
+				m_tPos.x = m_tDestPos.x;
+				SkillEnd(eSkillState::End);
+			}
+		}
+		else if (m_eMoveName == eMoveName::UpMove)
+		{
+			m_tPos.y -= UpDownMoveDist * m_moveSpeed * m_time;
+			m_pNicknameText->SetPos(m_tPos.x, m_tPos.y - 120);
+			if (m_tPos.y <= m_tDestPos.y)
+			{
+				m_tPos.y = m_tDestPos.y;
+				SkillEnd(eSkillState::End);
+			}
+		}
+		else if (m_eMoveName == eMoveName::DownMove)
+		{
+			m_tPos.y += UpDownMoveDist * m_moveSpeed * m_time;
+			m_pNicknameText->SetPos(m_tPos.x, m_tPos.y - 120);
+			if (m_tPos.y >= m_tDestPos.y)
+			{
+				m_tPos.y = m_tDestPos.y;
+				SkillEnd(eSkillState::End);
+			}
 		}
 	}
-	else if (m_eCurSkillType == eSkillType::LeftDoubleMove)
-	{
-		m_tPos.x -= LeftRightMoveDist * 2 * m_moveSpeed * m_time;
-		m_pNicknameText->SetPos(m_tPos.x, m_tPos.y - 120);
-		if (m_tPos.x <= m_tDestPos.x)
-		{
-			m_tPos.x = m_tDestPos.x;
-			SkillEnd(eSkillState::End);
-		}
-	}
-	else if (m_eCurSkillType == eSkillType::RightMove)
-	{
-		m_tPos.x += LeftRightMoveDist * m_moveSpeed * m_time;
-		m_pNicknameText->SetPos(m_tPos.x, m_tPos.y - 120);
-		if (m_tPos.x >= m_tDestPos.x)
-		{
-			m_tPos.x = m_tDestPos.x;
-			SkillEnd(eSkillState::End);
-		}
-	}
-	else if (m_eCurSkillType == eSkillType::RightDoubleMove)
-	{
-		m_tPos.x += LeftRightMoveDist * 2 * m_moveSpeed * m_time ;
-		m_pNicknameText->SetPos(m_tPos.x, m_tPos.y - 120);
-		if (m_tPos.x >= m_tDestPos.x)
-		{
-			m_tPos.x = m_tDestPos.x;
-			SkillEnd(eSkillState::End);
-		}
-	}
-	else if (m_eCurSkillType == eSkillType::UpMove)
-	{
-		m_tPos.y -= UpDownMoveDist * m_moveSpeed * m_time;
-		m_pNicknameText->SetPos(m_tPos.x, m_tPos.y - 120);
-		if (m_tPos.y <= m_tDestPos.y)
-		{
-			m_tPos.y = m_tDestPos.y;
-			SkillEnd(eSkillState::End);
-		}
-	}
-	else if (m_eCurSkillType == eSkillType::DownMove)
-	{
-		m_tPos.y += UpDownMoveDist * m_moveSpeed * m_time;
-		m_pNicknameText->SetPos(m_tPos.x, m_tPos.y - 120);
-		if (m_tPos.y >= m_tDestPos.y)
-		{
-			m_tPos.y = m_tDestPos.y;
-			SkillEnd(eSkillState::End);
-		}
-	}
-	else if (m_eCurSkillType == eSkillType::Hit)
+	else if (m_eCurSkillType == eActionType::Hit)
 	{
 		if (m_pAnimator->GetCurClip()->IsEnd())
 		{
 			SkillEnd(eSkillState::End);
 		}
 	}
-	else
+	else if(m_eCurSkillType == eActionType::Skill)
 	{
 		if (m_pCurSkill && m_pCurSkill->IsEnd())
 		{
@@ -119,53 +122,68 @@ void Player::AddSkill(Skill* _pSkill, eSkillType _type)
 }
 */
 
-void Player::UseSkill(eSkillType _type)
+void Player::DoAction(eMoveName _name)
 {
-	if (_type == eSkillType::None) return;
+	if (_name == eMoveName::None || _name == eMoveName::NumOfMoves) return;
 
-	m_eCurSkillType = _type;
+	m_eCurSkillType = eActionType::Move;
+	m_pAnimator->SetNextClip(L"Walk");
 
-	if(_type == eSkillType::LeftMove || _type == eSkillType::LeftDoubleMove || _type == eSkillType::RightMove || _type == eSkillType::RightDoubleMove
-		 || _type == eSkillType::UpMove || _type == eSkillType::DownMove)
-		m_pAnimator->SetNextClip(L"Walk");
-
-	if (_type == eSkillType::LeftMove)
+	if (_name == eMoveName::LeftMove)
 	{
 		m_tDestPos.x = m_tPos.x - LeftRightMoveDist;
+		m_eMoveName = _name;
 	}
-	else if (_type == eSkillType::LeftDoubleMove)
+	else if (_name == eMoveName::LeftDoubleMove)
 	{
 		m_tDestPos.x = m_tPos.x - LeftRightMoveDist * 2;
+		m_eMoveName = _name;
 	}
-	else if (_type == eSkillType::RightMove)
+	else if (_name == eMoveName::RightMove)
 	{
 		m_tDestPos.x = m_tPos.x + LeftRightMoveDist;
+		m_eMoveName = _name;
 	}
-	else if (_type == eSkillType::RightDoubleMove)
+	else if (_name == eMoveName::RightDoubleMove)
 	{
 		m_tDestPos.x = m_tPos.x + LeftRightMoveDist * 2;
+		m_eMoveName = _name;
 	}
-	else if (_type == eSkillType::UpMove)
+	else if (_name == eMoveName::UpMove)
 	{
 		m_tDestPos.y = m_tPos.y - UpDownMoveDist;
+		m_eMoveName = _name;
 	}
-	else if (_type == eSkillType::DownMove)
+	else if (_name == eMoveName::DownMove)
 	{
 		m_tDestPos.y = m_tPos.y + UpDownMoveDist;
+		m_eMoveName = _name;
 	}
-	else if (m_eCurSkillType == eSkillType::Hit)
+}
+
+void Player::DoAction(eSkillName _name) // hit, die
+{
+	if (_name == eSkillName::None || _name == eSkillName::NumOfSkills) return;
+
+	m_pCurSkill = ObjectManager::GetInst()->FindSkill(_name);
+	if (m_pCurSkill)
 	{
+		m_eCurSkillType = eActionType::Skill;
+		m_pCurSkill->SetActive(true);
+		m_pCurSkill->SetPos(m_tPos.x, m_tPos.y);
+		m_pCurSkill->SetDir(m_eDir); // 애니메이션 출력용
+		m_eSkillName = _name;
+	}
+}
+
+void Player::DoAction(eActionType _type)
+{
+	if (_type == eActionType::None || _type == eActionType::NumOfActions) return;
+
+	if (_type == eActionType::Hit)
+	{
+		m_eCurSkillType = _type;
 		m_pAnimator->SetNextClip(L"Hit");
-	}
-	else
-	{
-		m_pCurSkill = ObjectManager::GetInst()->FindSkill(_type);
-		if (m_pCurSkill)
-		{
-			m_pCurSkill->SetActive(true);
-			m_pCurSkill->SetPos(m_tPos.x, m_tPos.y);
-			m_pCurSkill->SetDir(m_eDir); // 애니메이션 출력용
-		}
 	}
 }
 
@@ -183,7 +201,9 @@ void Player::SetNicknameUIText(std::wstring _strNickname)
 
 void Player::SkillEnd(eSkillState _eSkillState)
 {
-	m_eCurSkillType = eSkillType::None;
+	m_eCurSkillType = eActionType::None;
+	m_eMoveName = eMoveName::None;
+	m_eSkillName = eSkillName::None;
 	m_pAnimator->SetDefaultClip();
 	m_pScene->SetSkillState(_eSkillState);
 }

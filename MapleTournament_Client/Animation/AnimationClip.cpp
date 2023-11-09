@@ -33,8 +33,12 @@ void AnimationClip::Update()
 		m_curFrameIdx++;
 		if (!m_isLoop && m_curFrameIdx >= m_clipSize)
 		{
-			m_isEnd = true;
-			return;
+			if (m_curLoopCount >= m_loopCountMax - 1)
+			{
+				m_isEnd = true;
+				return;
+			}
+			m_curLoopCount++;
 		}
 		m_curFrameIdx = m_curFrameIdx % m_clipSize;
 		m_frameTime = 0.0f;
@@ -69,6 +73,7 @@ void AnimationClip::Render(float _xpos, float _ypos, float _ratio)
 
 void AnimationClip::Reset()
 {
+	m_curLoopCount = 0;
 	m_frameTime = 0.0f;
 	m_curFrameIdx = 0;
 	m_isEnd = false;

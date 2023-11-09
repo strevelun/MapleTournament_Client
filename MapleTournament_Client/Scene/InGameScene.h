@@ -37,9 +37,10 @@ public:
 	//void SetSkillTimer(float _timer);
 
 private:
-	void UseSkill(eSkillType _type);
+	void SendActionPacket(eActionType _type, eMoveName _name);
+	void SendActionPacket(eActionType _type, eSkillName _name);
 	void NextTurn();
-	void OnItemButtonClick(eSkillType _type, UIPanel* _pPanel);
+	void OnItemButtonClick(UIPanel* _pPanel);
 	void OnTimeout();
 };
 
