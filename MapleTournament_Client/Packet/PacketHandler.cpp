@@ -506,6 +506,8 @@ void PacketHandler::S_InGameReady(char* _packet)
 	{
 		int slot = *(char*)_packet;				_packet += sizeof(char);
 		int characterChoice = *(char*)_packet;				_packet += sizeof(char);
+		int hp = *(char*)_packet;							_packet += sizeof(char);
+		int mp = *(char*)_packet;							_packet += sizeof(char);
 		wchar_t* nickname = (wchar_t*)_packet;				_packet += (ushort)wcslen((wchar_t*)_packet) * 2 + 2;
 
 		myPlayer = new Player(pScene);
@@ -531,6 +533,22 @@ void PacketHandler::S_InGameReady(char* _packet)
 			{
 				pText->SetTextColor(D2D1::ColorF::Red);
 			}
+		}
+
+		pUI = pPanel->FindChildUI(L"HP");
+		if (pUI)
+		{
+			UIText* pText = static_cast<UIText*>(pUI);
+			pText->ReassignText(std::to_wstring(hp));
+		
+		}
+
+		pUI = pPanel->FindChildUI(L"MP");
+		if (pUI)
+		{
+			UIText* pText = static_cast<UIText*>(pUI);
+			pText->ReassignText(std::to_wstring(mp));
+	
 		}
 
 		AnimationClip* pClip = ResourceManager::GetInst()->GetAnimClip(L"player" + std::to_wstring(characterChoice), L"player" + std::to_wstring(characterChoice));
@@ -774,8 +792,21 @@ void PacketHandler::S_Skill(char* _packet)
 		}
 		pPlayer->DoAction(name);
 	}
-	else if(actionType == eActionType::Skill)
+	else if (actionType == eActionType::Skill)
+	{
+		int mana = int(*(char*)_packet);			_packet += sizeof(char);
 		pPlayer->DoAction(eSkillName(*(char*)_packet));
+
+		UI* pUI = UIManager::GetInst()->FindUI(L"PlayerStat" + std::to_wstring(slotNumber));
+		if (!pUI) return;
+
+		UIPanel* pPanel = static_cast<UIPanel*>(pUI);
+		pUI = pPanel->FindChildUI(L"MP");
+		if (!pUI) return;
+
+		UIText* pText = static_cast<UIText*>(pUI);
+		pText->ReassignText(L"MP : " + std::to_wstring(mana));
+	}
 
 	pScene->SetSkillState(eSkillState::InUse);
 
@@ -958,7 +989,7 @@ void PacketHandler::S_CheckHit(char* _packet)
 {
 	int playerSize = *(char*)_packet;			_packet += sizeof(char);
 	int slot = 0;
-	int score = 0;
+	int hp = 0;
 	eActionType eType = eActionType::None;
 	UI* pUI = nullptr;
 	UIPanel* pPanel = nullptr;
@@ -967,18 +998,18 @@ void PacketHandler::S_CheckHit(char* _packet)
 	for (int i = 0; i < playerSize; ++i)
 	{
 		slot = *(char*)_packet;				_packet += sizeof(char);
-		score = *(char*)_packet;			_packet += sizeof(char);
+		hp = *(char*)_packet;			_packet += sizeof(char);
 		eType = eActionType(*(char*)_packet);			_packet += sizeof(char);
 
 		pUI = UIManager::GetInst()->FindUI(L"PlayerStat" + std::to_wstring(slot));
 		if (!pUI) continue;
 
 		pPanel = static_cast<UIPanel*>(pUI);
-		pUI = pPanel->FindChildUI(L"Score");
+		pUI = pPanel->FindChildUI(L"HP");
 		if (!pUI) continue;
 
 		pText = static_cast<UIText*>(pUI);
-		pText->ReassignText(L"두들겨 맞은 횟수 : " + std::to_wstring(score));
+		pText->ReassignText(L"HP : " + std::to_wstring(hp));
 
 		Obj* pObj = ObjectManager::GetInst()->FindObj(std::to_wstring(slot));
 		if (pObj)
@@ -995,5 +1026,30 @@ void PacketHandler::S_CheckHit(char* _packet)
 	}
 
 	Debug::Log("PacketHandler::S_CheckHit");
+}
+
+void PacketHandler::S_UpdateHeal(char* _packet)
+{
+	bool healPossible = bool(*(char*)_packet);			_packet += sizeof(char);
+	if (healPossible)
+	{
+		int slot = int(*(char*)_packet);			_packet += sizeof(char);
+		int mana = int(*(char*)_packet);			_packet += sizeof(char);
+		
+		UI* pUI = UIManager::GetInst()->FindUI(L"PlayerStat" + std::to_wstring(slot));
+		if (!pUI) return;
+
+		UIPanel *pPanel = static_cast<UIPanel*>(pUI);
+		pUI = pPanel->FindChildUI(L"MP");
+		if (!pUI) return;
+
+		UIText* pText = static_cast<UIText*>(pUI);
+		pText->ReassignText(L"MP : " + std::to_wstring(mana));
+	}
+
+	InGameScene* pScene = SceneManager::GetInst()->GetCurScene<InGameScene>();
+	pScene->SetSkillState(eSkillState::End);
+
+	Debug::Log("PacketHandler::S_UpdateHeal");
 }
 

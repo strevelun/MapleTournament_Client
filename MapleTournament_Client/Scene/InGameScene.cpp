@@ -56,9 +56,12 @@ bool InGameScene::Init()
     UIText* pPlayerName = new UIText(pPanel, L"", 30.f, 130, 10);
     pPlayerName->SetName(L"Nickname");
     pPanel->AddChildUI(pPlayerName);
-    UIText* pScore = new UIText(pPanel, L"두들겨 맞은 횟수 : 0", 15.f, 130, 40);
-    pScore->SetName(L"Score");
-    pPanel->AddChildUI(pScore);
+    UIText* pHP = new UIText(pPanel, L"HP : 0", 15.f, 130, 40);
+    pHP->SetName(L"HP");
+    pPanel->AddChildUI(pHP);
+    UIText* pMP = new UIText(pPanel, L"MP : 0", 15.f, 130, 70);
+    pMP->SetName(L"MP");
+    pPanel->AddChildUI(pMP);
     pPanel->SetActive(false);
 
     pPanel = new UIPanel(nullptr, 300, 100, ScreenWidth, 0, 1.0f);
@@ -72,9 +75,12 @@ bool InGameScene::Init()
     pPlayerName = new UIText(pPanel, L"", 30.f, 130, 10);
     pPlayerName->SetName(L"Nickname");
     pPanel->AddChildUI(pPlayerName);
-    pScore = new UIText(pPanel, L"두들겨 맞은 횟수 : 0", 15.f, 130, 40);
-    pScore->SetName(L"Score");
-    pPanel->AddChildUI(pScore);
+    pHP = new UIText(pPanel, L"HP : 0", 15.f, 130, 40);
+    pHP->SetName(L"HP");
+    pPanel->AddChildUI(pHP);
+    pMP = new UIText(pPanel, L"MP : 0", 15.f, 130, 70);
+    pMP->SetName(L"MP");
+    pPanel->AddChildUI(pMP);
     pPanel->SetActive(false);
 
     pPanel = new UIPanel(nullptr, 300, 100, 0, ScreenHeight, 0.0f, 1.0f);
@@ -88,9 +94,12 @@ bool InGameScene::Init()
     pPlayerName = new UIText(pPanel, L"", 30.f, 130, 10);
     pPlayerName->SetName(L"Nickname");
     pPanel->AddChildUI(pPlayerName);
-    pScore = new UIText(pPanel, L"두들겨 맞은 횟수 : 0", 15.f, 130, 40);
-    pScore->SetName(L"Score");
-    pPanel->AddChildUI(pScore);
+    pHP = new UIText(pPanel, L"HP : 0", 15.f, 130, 40);
+    pHP->SetName(L"HP");
+    pPanel->AddChildUI(pHP);
+    pMP = new UIText(pPanel, L"MP : 0", 15.f, 130, 70);
+    pMP->SetName(L"MP");
+    pPanel->AddChildUI(pMP);
     pPanel->SetActive(false);
 
     pPanel = new UIPanel(nullptr, 300, 100, ScreenWidth, ScreenHeight, 1.0f, 1.0f);
@@ -104,9 +113,12 @@ bool InGameScene::Init()
     pPlayerName = new UIText(pPanel, L"", 30.f, 130, 10);
     pPlayerName->SetName(L"Nickname");
     pPanel->AddChildUI(pPlayerName);
-    pScore = new UIText(pPanel, L"두들겨 맞은 횟수 : 0", 15.f, 130, 40);
-    pScore->SetName(L"Score");
-    pPanel->AddChildUI(pScore);
+    pHP = new UIText(pPanel, L"HP : 0", 15.f, 130, 40);
+    pHP->SetName(L"HP");
+    pPanel->AddChildUI(pHP);
+    pMP = new UIText(pPanel, L"MP : 0", 15.f, 130, 70);
+    pMP->SetName(L"MP");
+    pPanel->AddChildUI(pMP);
     pPanel->SetActive(false);
 
     /* 대기하세요 UI */
@@ -432,15 +444,23 @@ void InGameScene::Update()
             }
             m_eSkillState = eSkillState::None;
         }
-        else if (m_eSkillState == eSkillState::End)
-        {
+       else if (m_eSkillState == eSkillState::CheckHeal)
+       {
+           char buffer[255];
+           ushort count = sizeof(ushort);
+           *(ushort*)(buffer + count) = (ushort)ePacketType::C_CheckHeal;               count += sizeof(ushort);
+           *(ushort*)buffer = count;
+           NetworkManager::GetInst()->Send(buffer);
+       }
+       else if (m_eSkillState == eSkillState::End)
+       {
             if (m_isMyTurn)
             {
                 NextTurn();
                 SetMyTurn(false);
             }
             m_eSkillState = eSkillState::None;
-        }
+       }
     }
 }
 

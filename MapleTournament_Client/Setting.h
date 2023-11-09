@@ -53,6 +53,8 @@ enum class ePacketType
 	S_CheckHit,
 	C_UpdateScore,
 	S_UpdateScore,
+	C_CheckHeal,
+	S_UpdateHeal,
 };
 
 enum class eInGameState
@@ -69,6 +71,7 @@ enum class eSkillState
 	None,
 	InUse,
 	CheckHit,
+	CheckHeal,
 	End,
 };
 

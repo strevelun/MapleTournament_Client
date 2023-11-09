@@ -32,5 +32,6 @@ public:
 	static void S_Standby(char* _packet);
 	static void S_UpdateProfile(char* _packet);
 	static void S_CheckHit(char* _packet);
+	static void S_UpdateHeal(char* _packet);
 };
 

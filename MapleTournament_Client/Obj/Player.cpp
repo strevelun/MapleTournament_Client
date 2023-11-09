@@ -103,10 +103,20 @@ void Player::Update()
 	{
 		if (m_pCurSkill && m_pCurSkill->IsEnd())
 		{
-			SkillEnd(eSkillState::CheckHit);
-			m_pCurSkill->Reset();
-			m_pCurSkill = nullptr;
+			if (m_eSkillName == eSkillName::Heal0)
+			{
+				SkillEnd(eSkillState::CheckHeal);
+				m_pCurSkill->Reset();
+				m_pCurSkill = nullptr;
+			}
+			else
+			{
+				SkillEnd(eSkillState::CheckHit);
+				m_pCurSkill->Reset();
+				m_pCurSkill = nullptr;
+			}
 		}
+
 	}
 }
 

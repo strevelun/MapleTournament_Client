@@ -33,6 +33,7 @@ std::map<ePacketType, void(*)(char*)> TCPClient::m_mapPacketHandlerCallback = {
 	{ ePacketType::S_Standby, PacketHandler::S_Standby },
 	{ ePacketType::S_UpdateProfile, PacketHandler::S_UpdateProfile },
 	{ ePacketType::S_CheckHit, PacketHandler::S_CheckHit },
+	{ ePacketType::S_UpdateHeal, PacketHandler::S_UpdateHeal },
 };
 
 TCPClient::TCPClient()
