@@ -55,6 +55,8 @@ enum class ePacketType
 	S_UpdateScore,
 	C_CheckHeal,
 	S_UpdateHeal,
+	S_CreatePortal,
+	S_Teleport,
 };
 
 enum class eInGameState

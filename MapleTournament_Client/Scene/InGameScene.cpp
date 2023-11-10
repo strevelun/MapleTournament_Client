@@ -41,7 +41,7 @@ bool InGameScene::Init()
     pLayer->AddObj(pBackground);
     m_vecObjLayer.push_back(pLayer);
     
-    pLayer = new Layer(L"Player", 1);
+    pLayer = new Layer(L"Player", 2);
     m_vecObjLayer.push_back(pLayer);
 
     /* ÇÃ·¹ÀÌ¾î ½ºÅÝ */
@@ -169,6 +169,21 @@ bool InGameScene::Init()
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingame_wait.png");
     if (pBitmap) pPanelWait->SetBitmap(pBitmap);
     UIManager::GetInst()->AddUI(pPanelWait);
+    
+    /* Æ÷Å» */
+    AnimationClip* pPortalClip = ResourceManager::GetInst()->GetAnimClip(L"portal", L"portal");
+    pPortalClip->SetLoop(true);
+    pPortalClip->SetPlayTime(1.f);
+    Animator* pPortalAnimator = new Animator(pPortalClip);
+    GameObj* pPortal = new GameObj();
+    pPortal->SetName(L"Portal");
+    pPortal->SetActive(false);
+    pPortal->SetAnimator(pPortalAnimator);
+    ObjectManager::GetInst()->AddObj(pPortal);
+
+    pLayer = new Layer(L"GameObj", 1);
+    pLayer->AddObj(pPortal);
+    m_vecObjLayer.push_back(pLayer);
 
     /* ½ºÅ³ */
     Skill* pSkill = new Skill;
@@ -184,7 +199,7 @@ bool InGameScene::Init()
     pSkill->SetActive(false);
     ObjectManager::GetInst()->AddSkill(pSkill, eSkillName::Attack0);
 
-    pLayer = new Layer(L"Skill", 2);
+    pLayer = new Layer(L"Skill", 3);
     m_vecObjLayer.push_back(pLayer);
     pLayer->AddObj(pSkill);
 

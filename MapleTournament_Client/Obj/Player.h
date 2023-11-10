@@ -12,7 +12,7 @@ class UIPanel;
 class Player :
     public GameObj
 {
-private:
+public:
     static constexpr float LeftRightMoveDist = 180.f;
     static constexpr float UpDownMoveDist = 100.f;
 

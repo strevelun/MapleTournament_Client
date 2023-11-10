@@ -1065,3 +1065,30 @@ void PacketHandler::S_UpdateHeal(char* _packet)
 	Debug::Log("PacketHandler::S_UpdateHeal");
 }
 
+void PacketHandler::S_CreatePortal(char* _packet)
+{
+	int xpos = *(char*)_packet;					_packet += sizeof(char);
+	int ypos = *(char*)_packet;					_packet += sizeof(char);
+
+	Obj* pObj = ObjectManager::GetInst()->FindObj(L"Portal");
+	pObj->SetPos(240 + (xpos * Player::LeftRightMoveDist), 280 + (ypos * Player::UpDownMoveDist));
+	pObj->SetActive(true);
+
+	Debug::Log("PacketHandler::S_CreatePortal");
+}
+
+void PacketHandler::S_Teleport(char* _packet)
+{
+	Obj* pObj = ObjectManager::GetInst()->FindObj(L"Portal");
+	pObj->SetActive(false);
+
+	int slot = *(char*)_packet;				_packet += sizeof(char);
+	int xpos = *(char*)_packet;				_packet += sizeof(char);
+	int ypos = *(char*)_packet;				_packet += sizeof(char);
+
+	pObj = ObjectManager::GetInst()->FindObj(std::to_wstring(slot));
+	pObj->SetPos(240 + (xpos * Player::LeftRightMoveDist), 280 + (ypos * Player::UpDownMoveDist));
+
+	Debug::Log("PacketHandler::S_DestroyPortal");
+}
+
