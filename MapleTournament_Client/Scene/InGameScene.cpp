@@ -312,6 +312,7 @@ bool InGameScene::Init()
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingame_button_attack0.png");
     pButton = new UIButton(pPanel, 50, 50, 300, 0);
     pButton->SetBitmap(pBitmap);
+    pButton->SetName(std::to_wstring((int)eSkillName::Attack0));
     pButton->SetCallback([this, pPanel]
         {
             OnItemButtonClick(pPanel);
@@ -322,6 +323,7 @@ bool InGameScene::Init()
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingame_button_attack1.png");
     pButton = new UIButton(pPanel, 50, 50, 350, 0);
     pButton->SetBitmap(pBitmap);
+    pButton->SetName(std::to_wstring((int)eSkillName::Attack1));
     pButton->SetCallback([this, pPanel]
         {
             OnItemButtonClick(pPanel);
@@ -332,6 +334,7 @@ bool InGameScene::Init()
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingame_button_attack2.png");
     pButton = new UIButton(pPanel, 50, 50, 400, 0);
     pButton->SetBitmap(pBitmap);
+    pButton->SetName(std::to_wstring((int)eSkillName::Attack2));
     pButton->SetCallback([this, pPanel]
         {
             OnItemButtonClick(pPanel);
@@ -342,6 +345,7 @@ bool InGameScene::Init()
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingame_button_attack3.png");
     pButton = new UIButton(pPanel, 50, 50, 450, 0);
     pButton->SetBitmap(pBitmap);
+    pButton->SetName(std::to_wstring((int)eSkillName::Attack3));
     pButton->SetCallback([this, pPanel]
         {
             OnItemButtonClick(pPanel);
@@ -532,6 +536,7 @@ void InGameScene::OnItemButtonClick(UIPanel* _pPanel)
         UIPanel* pPanel = static_cast<UIPanel*>(pUI);
         pPanel->SetActive(true);
     }
+    _pPanel->SetActive(true);
     _pPanel->SetClickable(false);
     _pPanel->SetPos(ScreenWidth / 2, ScreenHeight + 80);
     m_arrTimer[(u_int)m_timer]->SetActive(false);

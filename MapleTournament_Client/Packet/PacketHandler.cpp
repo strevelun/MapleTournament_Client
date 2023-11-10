@@ -820,7 +820,19 @@ void PacketHandler::S_UpdateTurn(char* _packet)
 	{
 		pUI->SetPos(ScreenWidth / 2, ScreenHeight);
 		pUI->SetClickable(true);
+
+		UIPanel* pPanel = static_cast<UIPanel*>(pUI);
+
+		int skillNameListSize = *(char*)_packet;				_packet += sizeof(char);
+		for (int i = 0; i < skillNameListSize; i++)
+		{
+			eSkillName name = (eSkillName)*(char*)_packet;
+			pUI = pPanel->FindChildUI(std::to_wstring((int)name));				_packet += sizeof(char);
+			if(pUI)
+				pUI->SetActive(false);
+		}
 	}
+
 	pUI = UIManager::GetInst()->FindUI(L"Wait");
 	if (pUI)
 	{

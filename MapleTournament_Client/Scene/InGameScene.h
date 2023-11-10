@@ -11,7 +11,7 @@ class InGameScene :
     public Scene
 {
 private:
-	static constexpr float StartTimer = 4.9f;
+	static constexpr float StartTimer = 6.9f;
 	static constexpr float PrepareTimer = 2.f;
 	static constexpr float GameOverTimer = 2.f;
 
