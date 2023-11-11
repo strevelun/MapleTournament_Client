@@ -43,7 +43,8 @@ public:
     void ChangeAnimationState(const std::wstring& _strStateName);
     void SetNicknameUIText(std::wstring _strNickname);
 
-private:
+    eActionType GetActionType() const { return m_eCurSkillType; }
+    
     void SkillEnd(eSkillState _eSkillState); // actionEnd
 };
 

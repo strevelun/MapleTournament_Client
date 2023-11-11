@@ -601,12 +601,12 @@ void PacketHandler::S_InGameReady(char* _packet)
 		/* 플레이어 위치 세팅 */
 		if (slot == 0)
 		{
-			myPlayer->SetPos(240, 280);
+			myPlayer->SetPos(240, 220);
 			myPlayer->SetDir(eDir::Right);
 		}
 		else if(slot == 1) 
 		{
-			myPlayer->SetPos(1030, 280);
+			myPlayer->SetPos(1030, 220);
 			myPlayer->SetDir(eDir::Left);
 		}
 		else if (slot == 2)
@@ -838,8 +838,8 @@ void PacketHandler::S_UpdateTurn(char* _packet)
 		int skillNameListSize = *(char*)_packet;				_packet += sizeof(char);
 		for (int i = 0; i < skillNameListSize; i++)
 		{
-			eSkillName name = (eSkillName)*(char*)_packet;
-			pUI = pPanel->FindChildUI(std::to_wstring((int)name));				_packet += sizeof(char);
+			eSkillName name = (eSkillName)*(char*)_packet;				_packet += sizeof(char);
+			pUI = pPanel->FindChildUI(std::to_wstring((int)name));				
 			if(pUI)
 				pUI->SetActive(false);
 		}
@@ -1105,7 +1105,7 @@ void PacketHandler::S_CreatePortal(char* _packet)
 	int ypos = *(char*)_packet;					_packet += sizeof(char);
 
 	Obj* pObj = ObjectManager::GetInst()->FindObj(L"Portal");
-	pObj->SetPos(240 + (xpos * Player::LeftRightMoveDist), 280 + (ypos * Player::UpDownMoveDist));
+	pObj->SetPos(260 + (xpos * Player::LeftRightMoveDist), 280 + (ypos * Player::UpDownMoveDist));
 	pObj->SetActive(true);
 
 	Debug::Log("PacketHandler::S_CreatePortal");
@@ -1116,13 +1116,26 @@ void PacketHandler::S_Teleport(char* _packet)
 	Obj* pObj = ObjectManager::GetInst()->FindObj(L"Portal");
 	pObj->SetActive(false);
 
-	int slot = *(char*)_packet;				_packet += sizeof(char);
-	int xpos = *(char*)_packet;				_packet += sizeof(char);
-	int ypos = *(char*)_packet;				_packet += sizeof(char);
+	int slot = (int)*(char*)_packet;				_packet += sizeof(char);
+	int xpos = (int)*(char*)_packet;				_packet += sizeof(char);
+	int ypos = (int)*(char*)_packet;				_packet += sizeof(char);
 
 	pObj = ObjectManager::GetInst()->FindObj(std::to_wstring(slot));
-	pObj->SetPos(240 + (xpos * Player::LeftRightMoveDist), 280 + (ypos * Player::UpDownMoveDist));
 
-	Debug::Log("PacketHandler::S_DestroyPortal");
+	int slotXPos = 240;
+	int slotYPos = 220;
+	if (slot == 2 || slot == 3)
+		slotYPos = 280;
+
+	if (slot == 1 || slot == 3)
+		slotXPos = 310;
+
+	// Player의 Move상태가 None이어야 함
+	pObj->SetPos(slotXPos + (xpos * Player::LeftRightMoveDist), slotYPos + (ypos * Player::UpDownMoveDist));
+	Player* pPlayer = static_cast<Player*>(pObj);
+	if(pPlayer->GetActionType() != eActionType::None)
+		pPlayer->SkillEnd(eSkillState::End);
+
+	Debug::Log("PacketHandler::S_Teleport (slot : " + std::to_string(slot) + ", xpos : " + std::to_string(xpos) + ", ypos : " + std::to_string(ypos) + ")");
 }
 

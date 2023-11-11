@@ -25,7 +25,7 @@ void Player::SetPos(float _xpos, float _ypos)
 {
 	Obj::SetPos(_xpos, _ypos);
 	if(m_pNicknameText)
-		m_pNicknameText->SetPos(m_tPos.x, m_tPos.y - 120);
+		m_pNicknameText->SetPos(_xpos, _ypos - 120);
 }
 
 void Player::Update()

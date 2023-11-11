@@ -13,7 +13,7 @@ class InGameScene :
 private:
 	static constexpr float StartTimer = 6.9f;
 	static constexpr float PrepareTimer = 2.f;
-	static constexpr float GameOverTimer = 2.f;
+	static constexpr float GameOverTimer = 4.f;
 
 private:
 	std::array<UI*, 10> m_arrTimer;
@@ -34,6 +34,7 @@ public:
 	void ChangeState(eInGameState _state);
 	void SetSkillState(eSkillState _state) { m_eSkillState = _state;  }
 
+	bool IsMyTurn() const { return m_isMyTurn; }
 	//void SetSkillTimer(float _timer);
 
 private:

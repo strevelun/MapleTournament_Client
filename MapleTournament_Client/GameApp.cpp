@@ -133,7 +133,7 @@ void GameApp::Render()
 
 	Mouse* pMouse = InputManager::GetInst()->GetMouse(); 
 	wchar_t output[50];
-	wsprintf(output, L"x: %d, y: %d", pMouse->GetPosX(), pMouse->GetPosY());
+	wsprintf(output, L"x: %d, y: %d", (int)pMouse->GetMouseXPos(), (int)pMouse->GetMouseYPos());
 	D2D1_RECT_F outputRect = D2D1::RectF(5.0f, 5.0f, 500.0f, 20.0f);
 	Graphics::GetInst()->GetRenderTarget()->DrawText(output, wcslen(output), m_pTextFormat, outputRect, m_pBrush);
 
