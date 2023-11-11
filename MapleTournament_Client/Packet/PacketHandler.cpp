@@ -539,7 +539,7 @@ void PacketHandler::S_InGameReady(char* _packet)
 		if (pUI)
 		{
 			UIText* pText = static_cast<UIText*>(pUI);
-			pText->ReassignText(std::to_wstring(hp));
+			pText->ReassignText(L"HP : " + std::to_wstring(hp));
 		
 		}
 
@@ -547,7 +547,7 @@ void PacketHandler::S_InGameReady(char* _packet)
 		if (pUI)
 		{
 			UIText* pText = static_cast<UIText*>(pUI);
-			pText->ReassignText(std::to_wstring(mp));
+			pText->ReassignText(L"MP : " + std::to_wstring(mp));
 	
 		}
 
@@ -585,6 +585,18 @@ void PacketHandler::S_InGameReady(char* _packet)
 				pClip->SetFlip(true);
 		}
 		pAnimator->AddClip(L"Hit", pClip);
+
+		pClip = ResourceManager::GetInst()->GetAnimClip(L"player" + std::to_wstring(characterChoice) + L"Die", L"player" + std::to_wstring(characterChoice));
+		if (pClip)
+		{
+			pClip->SetLoop(false);
+			pClip->SetPlayTime(1.5f);
+			pClip->SetAnyState(false);
+			pClip->SetNextClip(pAnimator->GetDefaultClip());
+			if (slot == 0 || slot == 2)
+				pClip->SetFlip(true);
+		}
+		pAnimator->AddClip(L"Die", pClip);
 
 		/* 플레이어 위치 세팅 */
 		if (slot == 0)
@@ -1002,7 +1014,7 @@ void PacketHandler::S_CheckHit(char* _packet)
 	int playerSize = *(char*)_packet;			_packet += sizeof(char);
 	int slot = 0;
 	int hp = 0;
-	eActionType eType = eActionType::None;
+	//eActionType eType = eActionType::None;
 	UI* pUI = nullptr;
 	UIPanel* pPanel = nullptr;
 	UIText* pText = nullptr;
@@ -1011,7 +1023,6 @@ void PacketHandler::S_CheckHit(char* _packet)
 	{
 		slot = *(char*)_packet;				_packet += sizeof(char);
 		hp = *(char*)_packet;			_packet += sizeof(char);
-		eType = eActionType(*(char*)_packet);			_packet += sizeof(char);
 
 		pUI = UIManager::GetInst()->FindUI(L"PlayerStat" + std::to_wstring(slot));
 		if (!pUI) continue;
@@ -1028,6 +1039,29 @@ void PacketHandler::S_CheckHit(char* _packet)
 		{
 			Player* pPlayer = static_cast<Player*>(pObj);
 			pPlayer->DoAction(eActionType::Hit);
+		}
+	}
+
+	int deadPlayerSize = *(char*)_packet;			_packet += sizeof(char);
+	for (int i = 0; i < deadPlayerSize; ++i)
+	{
+		slot = *(char*)_packet;				_packet += sizeof(char);
+
+		pUI = UIManager::GetInst()->FindUI(L"PlayerStat" + std::to_wstring(slot));
+		if (!pUI) continue;
+
+		pPanel = static_cast<UIPanel*>(pUI);
+		pUI = pPanel->FindChildUI(L"HP");
+		if (!pUI) continue;
+
+		pText = static_cast<UIText*>(pUI);
+		pText->ReassignText(L"HP : " + std::to_wstring(0));
+
+		Obj* pObj = ObjectManager::GetInst()->FindObj(std::to_wstring(slot));
+		if (pObj)
+		{
+			Player* pPlayer = static_cast<Player*>(pObj);
+			pPlayer->DoAction(eActionType::Die);
 		}
 	}
 

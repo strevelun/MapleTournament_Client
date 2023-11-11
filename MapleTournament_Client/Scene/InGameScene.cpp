@@ -37,12 +37,10 @@ bool InGameScene::Init()
     Bitmap* pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingame_scene.png");
     UIPanel* pBackground = new UIPanel(nullptr, ScreenWidth, ScreenHeight);
     pBackground->SetBitmap(pBitmap);
-    Layer* pLayer = new Layer(L"Background", 0);
+    Layer* pLayer = CreateLayer(L"Background", 0);
     pLayer->AddObj(pBackground);
-    m_vecObjLayer.push_back(pLayer);
     
-    pLayer = new Layer(L"Player", 2);
-    m_vecObjLayer.push_back(pLayer);
+    pLayer = CreateLayer(L"Player", 2);
 
     /* 플레이어 스텟 */
     UIPanel* pPanel = new UIPanel(nullptr, 300, 100);
@@ -56,7 +54,7 @@ bool InGameScene::Init()
     UIText* pPlayerName = new UIText(pPanel, L"", 30.f, 130, 10);
     pPlayerName->SetName(L"Nickname");
     pPanel->AddChildUI(pPlayerName);
-    UIText* pHP = new UIText(pPanel, L"HP : 0", 15.f, 130, 40);
+    UIText* pHP = new UIText(pPanel, L"HP : 0", 15.f, 130, 50);
     pHP->SetName(L"HP");
     pPanel->AddChildUI(pHP);
     UIText* pMP = new UIText(pPanel, L"MP : 0", 15.f, 130, 70);
@@ -75,7 +73,7 @@ bool InGameScene::Init()
     pPlayerName = new UIText(pPanel, L"", 30.f, 130, 10);
     pPlayerName->SetName(L"Nickname");
     pPanel->AddChildUI(pPlayerName);
-    pHP = new UIText(pPanel, L"HP : 0", 15.f, 130, 40);
+    pHP = new UIText(pPanel, L"HP : 0", 15.f, 130, 50);
     pHP->SetName(L"HP");
     pPanel->AddChildUI(pHP);
     pMP = new UIText(pPanel, L"MP : 0", 15.f, 130, 70);
@@ -94,7 +92,7 @@ bool InGameScene::Init()
     pPlayerName = new UIText(pPanel, L"", 30.f, 130, 10);
     pPlayerName->SetName(L"Nickname");
     pPanel->AddChildUI(pPlayerName);
-    pHP = new UIText(pPanel, L"HP : 0", 15.f, 130, 40);
+    pHP = new UIText(pPanel, L"HP : 0", 15.f, 130, 50);
     pHP->SetName(L"HP");
     pPanel->AddChildUI(pHP);
     pMP = new UIText(pPanel, L"MP : 0", 15.f, 130, 70);
@@ -113,7 +111,7 @@ bool InGameScene::Init()
     pPlayerName = new UIText(pPanel, L"", 30.f, 130, 10);
     pPlayerName->SetName(L"Nickname");
     pPanel->AddChildUI(pPlayerName);
-    pHP = new UIText(pPanel, L"HP : 0", 15.f, 130, 40);
+    pHP = new UIText(pPanel, L"HP : 0", 15.f, 130, 50);
     pHP->SetName(L"HP");
     pPanel->AddChildUI(pHP);
     pMP = new UIText(pPanel, L"MP : 0", 15.f, 130, 70);
@@ -181,9 +179,8 @@ bool InGameScene::Init()
     pPortal->SetAnimator(pPortalAnimator);
     ObjectManager::GetInst()->AddObj(pPortal);
 
-    pLayer = new Layer(L"GameObj", 1);
+    pLayer = CreateLayer(L"GameObj", 1);
     pLayer->AddObj(pPortal);
-    m_vecObjLayer.push_back(pLayer);
 
     /* 스킬 */
     Skill* pSkill = new Skill;
@@ -199,8 +196,7 @@ bool InGameScene::Init()
     pSkill->SetActive(false);
     ObjectManager::GetInst()->AddSkill(pSkill, eSkillName::Attack0);
 
-    pLayer = new Layer(L"Skill", 3);
-    m_vecObjLayer.push_back(pLayer);
+    pLayer = CreateLayer(L"Skill", 3);
     pLayer->AddObj(pSkill);
 
     pSkill = new Skill;

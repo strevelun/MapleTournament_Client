@@ -21,6 +21,13 @@ Player::~Player()
 	if (m_pNicknameText) delete m_pNicknameText;
 }
 
+void Player::SetPos(float _xpos, float _ypos)
+{
+	Obj::SetPos(_xpos, _ypos);
+	if(m_pNicknameText)
+		m_pNicknameText->SetPos(m_tPos.x, m_tPos.y - 120);
+}
+
 void Player::Update()
 {
 	GameObj::Update();
@@ -97,6 +104,16 @@ void Player::Update()
 		if (m_pAnimator->GetCurClip()->IsEnd())
 		{
 			SkillEnd(eSkillState::End);
+		}
+	}
+	else if (m_eCurSkillType == eActionType::Die)
+	{
+		if (m_pAnimator->GetCurClip()->IsEnd())
+		{
+			SkillEnd(eSkillState::End);
+			m_bAlive = false;
+			
+
 		}
 	}
 	else if(m_eCurSkillType == eActionType::Skill)
@@ -194,6 +211,11 @@ void Player::DoAction(eActionType _type)
 	{
 		m_eCurSkillType = _type;
 		m_pAnimator->SetNextClip(L"Hit");
+	}
+	else if (_type == eActionType::Die)
+	{
+		m_eCurSkillType = _type;
+		m_pAnimator->SetNextClip(L"Die");
 	}
 }
 

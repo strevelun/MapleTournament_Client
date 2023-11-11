@@ -15,7 +15,7 @@ class Graphics;
 
 class Scene
 {
-protected:
+private:
 	std::vector<Layer*> m_vecObjLayer;
 
 	bool m_bLoading = false;

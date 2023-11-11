@@ -31,6 +31,8 @@ public:
     Player(InGameScene* _pScene);
     virtual ~Player();
 
+    void SetPos(float _xpos, float _ypos) override;
+
     void Update() override;
     void Render() override;
 

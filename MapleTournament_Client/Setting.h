@@ -51,6 +51,7 @@ enum class ePacketType
 	S_UpdateProfile,
 	C_CheckHit,
 	S_CheckHit,
+	S_DeadPlayers,
 	C_UpdateScore,
 	S_UpdateScore,
 	C_CheckHeal,
@@ -83,6 +84,7 @@ enum class eActionType
 	Skill,
 	Move,
 	Hit,
+	Die,
 	NumOfActions,
 };
 
