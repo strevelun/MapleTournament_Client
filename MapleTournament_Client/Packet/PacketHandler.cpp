@@ -1004,7 +1004,7 @@ void PacketHandler::S_UpdateProfile(char* _packet)
 	pText->ReassignText((wchar_t*)_packet);					_packet += (ushort)wcslen((wchar_t*)_packet) * 2 + 2;
 	pUI = pPanel->FindChildUI(L"HitCountText");
 	pText = static_cast<UIText*>(pUI);
-	pText->ReassignText(L"맞은 횟수 : " + std::to_wstring(*(u_int*)_packet));
+	pText->ReassignText(L"킬 수 : " + std::to_wstring(*(u_int*)_packet));
 
 	Debug::Log("PacketHandler::S_UpdateProfile");
 }
@@ -1116,9 +1116,9 @@ void PacketHandler::S_Teleport(char* _packet)
 	Obj* pObj = ObjectManager::GetInst()->FindObj(L"Portal");
 	pObj->SetActive(false);
 
-	int slot = (int)*(char*)_packet;				_packet += sizeof(char);
-	int xpos = (int)*(char*)_packet;				_packet += sizeof(char);
-	int ypos = (int)*(char*)_packet;				_packet += sizeof(char);
+	int slot = *(char*)_packet;				_packet += sizeof(char);
+	int xpos = *(char*)_packet;				_packet += sizeof(char);
+	int ypos = *(char*)_packet;				_packet += sizeof(char);
 
 	pObj = ObjectManager::GetInst()->FindObj(std::to_wstring(slot));
 

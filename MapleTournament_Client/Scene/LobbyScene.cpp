@@ -496,7 +496,7 @@ bool LobbyScene::InitLobbyUI()
     pText = new UIText(pProfile, L"", 20.f, pProfile->GetWidth() / 2, 50);
     pText->SetName(L"ProfileText");
     pProfile->AddChildUI(pText);
-    pText = new UIText(pProfile, L"맞은 횟수 : 0", 20.f, pProfile->GetWidth() / 2 + 20, 120);
+    pText = new UIText(pProfile, L"킬 수 : 0", 20.f, pProfile->GetWidth() / 2 + 20, 120);
     pText->SetName(L"HitCountText");
     pProfile->AddChildUI(pText);
     pUIManager->AddUI(pProfile);
