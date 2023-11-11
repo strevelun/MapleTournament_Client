@@ -8,6 +8,7 @@
 #include "../Timer.h"
 #include "UI/UIText.h"
 #include "UI/UIPanel.h"
+#include "../Managers/UIManager.h"
 
 #include <string>
 
@@ -18,7 +19,6 @@ Player::Player(InGameScene* _pScene) :
 
 Player::~Player()
 {
-	if (m_pNicknameText) delete m_pNicknameText;
 }
 
 void Player::SetPos(float _xpos, float _ypos)
@@ -229,6 +229,7 @@ void Player::SetNicknameUIText(std::wstring _strNickname)
 	m_pNicknameText = new UIPanel(nullptr, 50, 25, m_tPos.x, m_tPos.y - 120, 0.5f, 1.0f);
 	UIText* pText = new UIText(m_pNicknameText, _strNickname, 20.f, m_pNicknameText->GetWidth() / 2, m_pNicknameText->GetHeight() / 2, 0.5f, 0.5f);
 	m_pNicknameText->AddChildUI(pText);
+	UIManager::GetInst()->AddUI(m_pNicknameText);
 }
 
 void Player::SkillEnd(eSkillState _eSkillState)
