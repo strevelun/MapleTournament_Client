@@ -14,8 +14,10 @@ class Layer
 	std::wstring		m_layerName;
 	uint32_t			m_zOrder;
 
+	bool				m_isActive;
+
 public:
-	Layer(const std::wstring& _layerName, uint32_t _zOrder);
+	Layer(const std::wstring& _layerName, uint32_t _zOrder, bool _isActive);
 	~Layer();
 
 	void AddObj(Obj* _pObj);
@@ -25,6 +27,9 @@ public:
 
 	const std::wstring& GetName() const { return m_layerName;}
 	uint32_t GetZOrder() const { return m_zOrder; }
+	bool IsActive() const { return m_isActive; }
+
+	void SetActive(bool _isActive) { m_isActive = _isActive; }
 
 	void Update();
 	void Render();

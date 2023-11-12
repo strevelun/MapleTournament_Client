@@ -25,7 +25,7 @@ public:
 	virtual ~Scene();
 
 	Layer* FindLayer(const std::wstring& _layerName);
-	Layer* CreateLayer(const std::wstring& _layerName, uint32_t _zOrder);
+	Layer* CreateLayer(const std::wstring& _layerName, uint32_t _zOrder, bool _isActive = true);
 
 	static bool SortLayer(const Layer* a, const Layer* b);
 

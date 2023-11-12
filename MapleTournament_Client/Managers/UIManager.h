@@ -17,19 +17,20 @@ class UIManager
 {
 private:
 	std::map<std::wstring, UI*>				m_mapUI;
-	std::vector<UI*>						m_vecUI;
-	std::vector<UIPanel*>			m_vecPopupUI; // UIPopup
+	std::map<std::wstring, UIPanel*>		m_mapPopupUI;
+	std::vector<UIPanel*>			m_vecPopupUI; 
 
 public:
-	bool AddUI(UI* _pUI);
+	void AddUI(UI* _pUI);
+	void SetPopupUI(UIPanel* _pUI);
 	void AddPopupUI(UIPanel* _pUI);
 
 	UI* FindUI(const std::wstring& _strName);
 	bool RemoveUI(const std::wstring& _strName);
 
-	//
 	void PopPopupUI();
-	//void DelPopupUI();
+
+	bool PopupUIExist();
 
 	bool Init();
 	void Update();

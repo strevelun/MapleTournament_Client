@@ -115,3 +115,8 @@ void UIEditText::Render()
 	}
 }
 
+void UIEditText::ClearEditText()
+{
+	m_strInput.clear();
+	m_rectCursor = { m_tPos.x + 0.f, m_tPos.y + 0.f, m_tPos.x + 1.f, m_tPos.y + (float)m_size.height};
+}

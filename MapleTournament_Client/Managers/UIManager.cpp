@@ -3,6 +3,8 @@
 #include "../Obj/UI/UIPanel.h"
 #include "../Obj/UI/UIEditText.h"
 
+#include <cassert>
+
 UIManager* UIManager::m_pInst = nullptr;
 
 UIManager::UIManager()
@@ -11,29 +13,40 @@ UIManager::UIManager()
 
 UIManager::~UIManager()
 {
-    std::map<std::wstring, UI*>::iterator iter = m_mapUI.begin();
-    std::map<std::wstring, UI*>::iterator iterEnd = m_mapUI.end();
+    std::map<std::wstring, UIPanel*>::iterator iter = m_mapPopupUI.begin();
+    std::map<std::wstring, UIPanel*>::iterator iterEnd = m_mapPopupUI.end();
     for (; iter != iterEnd; ++iter)
         delete iter->second;
 }
 
 
-bool UIManager::AddUI(UI* _pUI)
+void UIManager::AddUI(UI* _pUI)
 {
-    if (!_pUI) return false;
+    if (!_pUI) return;
 
     const std::wstring& name = _pUI->GetName();
     if (FindUI(name) != nullptr)
-        return false;
+        assert(false);
     m_mapUI.insert({ name, _pUI });
-    m_vecUI.push_back(_pUI);
-    return true;
+}
+
+void UIManager::SetPopupUI(UIPanel* _pUI)
+{
+    if (!_pUI) return;
+
+    _pUI->SetActive(true);
+    _pUI->SetPopup(true);
+    m_vecPopupUI.push_back(_pUI);
 }
 
 void UIManager::AddPopupUI(UIPanel* _pUI)
 {
     if (!_pUI) return;
-    m_vecPopupUI.push_back(_pUI);
+
+    const std::wstring& name = _pUI->GetName();
+    if (FindUI(name) != nullptr)
+        assert(false);
+    m_mapPopupUI.insert({ name, _pUI });
 }
 
 UI* UIManager::FindUI(const std::wstring& _strName)
@@ -41,6 +54,11 @@ UI* UIManager::FindUI(const std::wstring& _strName)
     std::map<std::wstring, UI*>::iterator iter = m_mapUI.find(_strName);
     if (iter != m_mapUI.end())
         return iter->second;
+
+    std::map<std::wstring, UIPanel*>::iterator iter2 = m_mapPopupUI.find(_strName);
+    if (iter2 != m_mapPopupUI.end())
+        return iter2->second;
+
     return nullptr;
 }
 
@@ -52,16 +70,6 @@ bool UIManager::RemoveUI(const std::wstring& _strName)
     delete pUI;
     m_mapUI.erase(_strName);
 
-    std::vector<UI*>::iterator iter = m_vecUI.begin();
-    std::vector<UI*>::iterator iterEnd = m_vecUI.end();
-    for (; iter != iterEnd; ++iter)
-    {
-        if ((*iter)->GetName() == _strName)
-        {
-            m_vecUI.erase(iter);
-            return true;
-        }
-    }
     return false;
 }
 
@@ -69,7 +77,14 @@ void UIManager::PopPopupUI()
 {
     if (m_vecPopupUI.empty()) return;
 
+    m_vecPopupUI.back()->SetActive(false);
+    m_vecPopupUI.back()->SetPopup(false);
     m_vecPopupUI.pop_back();
+}
+
+bool UIManager::PopupUIExist()
+{
+    return !m_vecPopupUI.empty();
 }
 
 bool UIManager::Init()
@@ -82,30 +97,11 @@ void UIManager::Update()
     if (!m_vecPopupUI.empty())
     {
         m_vecPopupUI.back()->Update();
-        return;
-    }
-
-    std::vector<UI*>::iterator iter = m_vecUI.begin();
-    std::vector<UI*>::iterator iterEnd = m_vecUI.end();
-
-    for (; iter != iterEnd; ++iter)
-    {
-        if ((*iter)->IsActive())
-            (*iter)->Update();
     }
 }
 
 void UIManager::Render()
 {
-    std::vector<UI*>::iterator iter = m_vecUI.begin();
-    std::vector<UI*>::iterator iterEnd = m_vecUI.end();
-
-    for (; iter != iterEnd; ++iter)
-    {
-        if ((*iter)->IsActive())
-            (*iter)->Render();
-    }
-
     std::vector<UIPanel*>::iterator iter2 = m_vecPopupUI.begin();
     std::vector<UIPanel*>::iterator iterEnd2 = m_vecPopupUI.end();
 
@@ -118,13 +114,12 @@ void UIManager::Render()
 
 void UIManager::Cleanup()
 {
-    std::vector<UI*>::iterator iter = m_vecUI.begin();
-    std::vector<UI*>::iterator iterEnd = m_vecUI.end();
+    std::map<std::wstring, UIPanel*>::iterator iter = m_mapPopupUI.begin();
+    std::map<std::wstring, UIPanel*>::iterator iterEnd = m_mapPopupUI.end();
     for (; iter != iterEnd; ++iter)
-    {
-        delete *iter;
-    }
+        delete iter->second;
+    
     m_mapUI.clear();
-    m_vecUI.clear();
+    m_mapPopupUI.clear();
     m_vecPopupUI.clear();
 }

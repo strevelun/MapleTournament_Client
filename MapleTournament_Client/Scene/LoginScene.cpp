@@ -29,12 +29,16 @@ LoginScene::~LoginScene()
 // - 실패 (양식에 어긋남 or 누가 해당 닉네임으로 로그인 중 or 
 bool LoginScene::Init()
 {
+    Layer* pLayer = CreateLayer(L"Background", 0);
+    
     /* Background */;
     Bitmap* pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_loginscene_background.png");
     if (!pBitmap) return false;
     UIPanel* pBackground = new UIPanel(nullptr, ScreenWidth, ScreenHeight);
     pBackground->SetBitmap(pBitmap);
-    UIManager::GetInst()->AddUI(pBackground);
+    pLayer->AddObj(pBackground);
+
+    pLayer = CreateLayer(L"UI", 1);
 
     /* UI */
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_login_edittext.png");
@@ -65,13 +69,14 @@ bool LoginScene::Init()
     pPanel->SetActive(false);
     pText = new UIText(pPanel, L"잘못된 입력입니다.", 20.f, pPanel->GetWidth() / 2, 100, 0.5f, 0.5f);
     pPanel->AddChildUI(pText);
-    UIManager::GetInst()->AddUI(pPanel);
+    UIManager::GetInst()->AddPopupUI(pPanel);
+    //pLayer->AddObj(pPanel);
 
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_button.png");
     if (!pBitmap) return false;
     UIButton* pOKButton = new UIButton(pPanel, 150, 100, pPanel->GetWidth() / 2, pPanel->GetHeight() / 2 + (pPanel->GetHeight() / 4), 0.5f, 0.5f);
     pOKButton->SetBitmap(pBitmap);
-    pOKButton->SetCallback([pPanel]() { pPanel->SetActive(false); UIManager::GetInst()->PopPopupUI(); });
+    pOKButton->SetCallback([]() { UIManager::GetInst()->PopPopupUI(); });
     pText = new UIText(pOKButton, L"확인", 20.f, pOKButton->GetWidth() / 2, pOKButton->GetHeight() / 2, 0.5f, 0.7f);
     pOKButton->SetUIText(pText);
     pPanel->AddChildUI(pOKButton);
@@ -87,13 +92,14 @@ bool LoginScene::Init()
     pPanel->SetActive(false);
     pText = new UIText(pPanel, L"누군가 이 닉네임으로 로그인 중", 20.f, pPanel->GetWidth() / 2, 100, 0.5f, 0.5f);
     pPanel->AddChildUI(pText);
-    UIManager::GetInst()->AddUI(pPanel);
+    UIManager::GetInst()->AddPopupUI(pPanel);
+    //pLayer->AddObj(pPanel);
 
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_button.png");
     if (!pBitmap) return false;
     pOKButton = new UIButton(pPanel, 150, 100, pPanel->GetWidth() / 2, pPanel->GetHeight() / 2 + (pPanel->GetHeight() / 4), 0.5f, 0.5f);
     pOKButton->SetBitmap(pBitmap);
-    pOKButton->SetCallback([pPanel]() { pPanel->SetActive(false); UIManager::GetInst()->PopPopupUI(); });
+    pOKButton->SetCallback([]() { UIManager::GetInst()->PopPopupUI(); });
     pText = new UIText(pOKButton, L"확인", 20.f, pOKButton->GetWidth()/2, pOKButton->GetHeight()/2, 0.5f, 0.7f);
     pOKButton->SetUIText(pText);
     pPanel->AddChildUI(pOKButton);
@@ -107,10 +113,7 @@ void LoginScene::LoginButtonCallback(UIEditText* _pEditText, const std::wstring&
     if (_str.length() <= 0 || std::all_of(_str.begin(), _str.end(), [](wchar_t c) { return c == L' '; }))
     {
         UI* pUI = UIManager::GetInst()->FindUI(L"WrongInput");
-        if (!pUI) return;
-        UIPanel* pFailedLoginUI = static_cast<UIPanel*>(pUI);
-        pFailedLoginUI->SetActive(true);
-        UIManager::GetInst()->AddPopupUI(pFailedLoginUI);
+        if (pUI) UIManager::GetInst()->SetPopupUI(static_cast<UIPanel*>(pUI));
         return;
     }
     char buffer[255];

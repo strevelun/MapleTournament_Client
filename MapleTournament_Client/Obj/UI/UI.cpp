@@ -3,6 +3,7 @@
 #include "../../GraphicCore/Graphics.h"
 #include "Mouse.h"
 #include "../../Managers/InputManager.h"
+#include "../../Managers/UIManager.h"
 #include "UIText.h"
 
 #include <d2d1.h>
@@ -133,6 +134,12 @@ void UI::Update()
 {
 	if (m_bClickable)
 	{
+		if (UIManager::GetInst()->PopupUIExist() && !m_isPopup)
+		{
+			if (m_bFocus) m_bFocus = false;
+			return;
+		}
+
 		int mouseXPos = m_pMouse->GetMouseXPos();
 		int mouseYPos = m_pMouse->GetMouseYPos();
 		eMouseState state = m_pMouse->GetState();

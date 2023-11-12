@@ -10,6 +10,7 @@ class LobbyScene :
 	float m_frameTime = 0.f;
 
 	eSessionState m_state = eSessionState::Lobby;
+	eSessionState m_nextState = eSessionState::None;
 
 public:
 	LobbyScene();

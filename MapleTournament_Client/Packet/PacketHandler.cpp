@@ -41,9 +41,7 @@ void PacketHandler::S_FailedLogin(char* _packet) // 누가 이 닉네임으로 로그인 중
 	UI* pUI = UIManager::GetInst()->FindUI(L"AlreadyLogin");
 	if (pUI)
 	{
-		UIPanel* pFailedLoginUI = static_cast<UIPanel*>(pUI);
-		pFailedLoginUI->SetActive(true);
-		UIManager::GetInst()->AddPopupUI(pFailedLoginUI);
+		UIManager::GetInst()->SetPopupUI(static_cast<UIPanel*>(pUI));
 	}
 
 	Debug::Log("PacketHandler::S_FailedLogin");
@@ -307,9 +305,7 @@ void PacketHandler::S_JoinRoomFail(char* _packet)
 	UI* pUI = UIManager::GetInst()->FindUI(L"JoinRoomFail");
 	if (pUI)
 	{
-		UIPanel* pPanel = static_cast<UIPanel*>(pUI);
-		UIManager::GetInst()->AddPopupUI(pPanel);
-		pUI->SetActive(true);
+		UIManager::GetInst()->SetPopupUI(static_cast<UIPanel*>(pUI));
 	}
 
 	Debug::Log("PacketHandler::S_JoinRoomFail");
@@ -375,9 +371,7 @@ void PacketHandler::S_CheckRoomReadyFail(char* _packet)
 	UI* pUI = UIManager::GetInst()->FindUI(L"StartGameFail");
 	if (pUI)
 	{
-		UIPanel* popup = static_cast<UIPanel*>(pUI);
-		popup->SetActive(true);
-		UIManager::GetInst()->AddPopupUI(popup);
+		UIManager::GetInst()->SetPopupUI(static_cast<UIPanel*>(pUI));
 	}
 
 	Debug::Log("PacketHandler::S_CheckRoomReadyFail");
@@ -501,6 +495,7 @@ void PacketHandler::S_InGameReady(char* _packet)
 	Player* myPlayer = nullptr;
 	InGameScene* pScene = SceneManager::GetInst()->GetCurScene<InGameScene>();
 	Layer* pLayer = pScene->FindLayer(L"Player");
+	Layer* pNicknameLayer = pScene->FindLayer(L"PlayerNickname");
 
 	for (int i = 0; i < memberCount; i++)
 	{
@@ -620,7 +615,8 @@ void PacketHandler::S_InGameReady(char* _packet)
 			myPlayer->SetDir(eDir::Left);
 		}
 
-		myPlayer->SetNicknameUIText(nickname);
+		UIPanel* nicknameUI = myPlayer->SetNicknameUI(nickname);
+		pNicknameLayer->AddObj(nicknameUI);
 		myPlayer->SetRatio(1.5f);
 		myPlayer->SetAnimator(pAnimator);
 
@@ -881,9 +877,7 @@ void PacketHandler::S_GameOver(char* _packet)
 	UI* pUI = UIManager::GetInst()->FindUI(L"GameOver");
 	if (!pUI) return;
 
-	UIPanel* pPanel = static_cast<UIPanel*>(pUI);
-	pPanel->SetActive(true);
-	UIManager::GetInst()->AddPopupUI(pPanel);
+	UIManager::GetInst()->SetPopupUI(static_cast<UIPanel*>(pUI));
 
 	InGameScene* pScene = SceneManager::GetInst()->GetCurScene<InGameScene>();
 	pScene->ChangeState(eInGameState::GameOver);
@@ -982,11 +976,7 @@ void PacketHandler::S_Standby(char* _packet)
 {
 	UI* pUI = UIManager::GetInst()->FindUI(L"Standby");
 	if (!pUI) return;
-	UIPanel* pPanel = static_cast<UIPanel*>(pUI);
-	pPanel->SetActive(true);
-	UIManager::GetInst()->AddPopupUI(pPanel);
-	
-	// InGameScene* pScene = SceneManager::GetInst()->GetCurScene<InGameScene>();
+	UIManager::GetInst()->SetPopupUI(static_cast<UIPanel*>(pUI));
 
 	Debug::Log("PacketHandler::S_Standby");
 }
@@ -1140,6 +1130,7 @@ void PacketHandler::S_ExitInGame(char* _packet)
 {
 	LobbyScene* pScene = new LobbyScene;
 	SceneManager::GetInst()->ChangeScene(pScene);
+	pScene->ChangeSceneUI(eSessionState::Lobby);
 
 	Debug::Log("PacketHandler::S_ExitInGame");
 }

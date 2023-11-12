@@ -40,7 +40,7 @@ public:
     void SetCallback(void (T::*pFunc)(UIEditText*, const std::wstring&), T* _pObj) { m_Callback = std::bind(pFunc, _pObj, std::placeholders::_1, std::placeholders::_2); }
     void SetBitmap(Bitmap* _pBitmap) { m_pBitmap = _pBitmap; }
 
-    void ClearEditText() { m_strInput.clear(); }
+    void ClearEditText();
 
     //void SetButton(UIButton* _pButton) { m_pButton = _pButton; }
 };

@@ -93,6 +93,19 @@ void UIPanel::SetClickable(bool _bClickable)
 	}
 }
 
+void UIPanel::SetPopup(bool _isPopup)
+{
+	m_isPopup = _isPopup;
+
+	std::vector<UI*>::iterator iter = m_vecMemberUI.begin();
+	std::vector<UI*>::iterator iterEnd = m_vecMemberUI.end();
+
+	for (; iter != iterEnd; ++iter)
+	{
+		(*iter)->SetPopup(_isPopup);
+	}
+}
+
 void UIPanel::Update()
 {
 	std::vector<UI*>::iterator iter = m_vecMemberUI.begin();

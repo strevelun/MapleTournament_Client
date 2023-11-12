@@ -24,6 +24,7 @@ protected:
     bool m_bFocus = false;
     UI* m_pParentUI = nullptr;
     bool            m_bClickable = false;
+    bool            m_isPopup = false;
     eUIState            m_eUIState = eUIState::Normal;
 
     D2D1_POINT_2F					m_tPosRelativeToParent;
@@ -47,6 +48,7 @@ public:
     void SetSize(UINT _width, UINT _height);
     void SetPivot(float _pivotX, float _pivotY);
     void SetActive(bool _bActive) override { m_bActive = _bActive; }
+    virtual void SetPopup(bool _isPopup) { m_isPopup = _isPopup; }
 
     UI* GetParent() const { return m_pParentUI; }
     UINT GetWidth() const { return m_size.width; }

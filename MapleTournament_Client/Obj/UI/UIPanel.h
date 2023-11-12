@@ -29,6 +29,8 @@ public:
     void SetPos(float _xpos, float _ypos) override;
     void SetClickable(bool _bClickable) override;
 
+    void SetPopup(bool _isPopup) override;
+
     void Update() override;
     void Render() override;
 };

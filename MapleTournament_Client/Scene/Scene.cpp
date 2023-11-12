@@ -32,10 +32,10 @@ Layer* Scene::FindLayer(const std::wstring& _layerName)
     return nullptr;
 }
 
-Layer* Scene::CreateLayer(const std::wstring& _layerName, uint32_t _zOrder)
+Layer* Scene::CreateLayer(const std::wstring& _layerName, uint32_t _zOrder, bool _isActive)
 {
     Layer* pLayer = FindLayer(_layerName);
-    if(!pLayer) pLayer = new Layer(_layerName, _zOrder);
+    if(!pLayer) pLayer = new Layer(_layerName, _zOrder, _isActive);
 
     m_vecObjLayer.push_back(pLayer);
     if (m_vecObjLayer.size() >= 2)
@@ -60,7 +60,10 @@ void Scene::Update()
     std::vector<Layer*>::iterator iterEnd = m_vecObjLayer.end();
 
     for (; iter != iterEnd; ++iter)
-        (*iter)->Update();
+    {
+        if((*iter)->IsActive())
+            (*iter)->Update();
+    }
 }
 
 void Scene::Render()
@@ -69,5 +72,6 @@ void Scene::Render()
     std::vector<Layer*>::iterator iterEnd = m_vecObjLayer.end();
 
     for (; iter != iterEnd; ++iter)
-        (*iter)->Render();
+        if ((*iter)->IsActive())
+            (*iter)->Render();
 }

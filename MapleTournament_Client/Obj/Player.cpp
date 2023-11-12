@@ -224,13 +224,13 @@ void Player::ChangeAnimationState(const std::wstring& _strStateName)
 	m_pAnimator->SetNextClip(_strStateName);
 }
 
-void Player::SetNicknameUIText(std::wstring _strNickname)
+UIPanel* Player::SetNicknameUI(std::wstring _strNickname)
 {
 	m_pNicknameText = new UIPanel(nullptr, 50, 25, m_tPos.x, m_tPos.y - 120, 0.5f, 1.0f);
 	m_pNicknameText->SetName(_strNickname);
 	UIText* pText = new UIText(m_pNicknameText, _strNickname, 20.f, m_pNicknameText->GetWidth() / 2, m_pNicknameText->GetHeight() / 2, 0.5f, 0.5f);
 	m_pNicknameText->AddChildUI(pText);
-	UIManager::GetInst()->AddUI(m_pNicknameText);
+	return m_pNicknameText;
 }
 
 void Player::SkillEnd(eSkillState _eSkillState)

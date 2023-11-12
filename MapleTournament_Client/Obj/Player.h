@@ -36,12 +36,11 @@ public:
     void Update() override;
     void Render() override;
 
-    //void AddSkill(Skill* _pSkill, eSkillType _type);
     void DoAction(eMoveName _name);
     void DoAction(eSkillName _name);
     void DoAction(eActionType _type);
     void ChangeAnimationState(const std::wstring& _strStateName);
-    void SetNicknameUIText(std::wstring _strNickname);
+    UIPanel* SetNicknameUI(std::wstring _strNickname);
 
     eActionType GetActionType() const { return m_eCurSkillType; }
     

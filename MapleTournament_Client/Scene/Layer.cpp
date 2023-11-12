@@ -1,8 +1,8 @@
 #include "Layer.h"
 #include "../Obj/Obj.h"
 
-Layer::Layer(const std::wstring& _layerName, uint32_t _zOrder) :
-    m_layerName(_layerName), m_zOrder(_zOrder)
+Layer::Layer(const std::wstring& _layerName, uint32_t _zOrder, bool _isActive) :
+    m_layerName(_layerName), m_zOrder(_zOrder), m_isActive(_isActive)
 {
 }
 
