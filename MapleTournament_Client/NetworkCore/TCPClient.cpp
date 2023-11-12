@@ -36,6 +36,7 @@ std::map<ePacketType, void(*)(char*)> TCPClient::m_mapPacketHandlerCallback = {
 	{ ePacketType::S_UpdateHeal, PacketHandler::S_UpdateHeal },
 	{ ePacketType::S_CreatePortal, PacketHandler::S_CreatePortal },
 	{ ePacketType::S_Teleport, PacketHandler::S_Teleport },
+	{ ePacketType::S_ExitInGame, PacketHandler::S_ExitInGame },
 };
 
 TCPClient::TCPClient()

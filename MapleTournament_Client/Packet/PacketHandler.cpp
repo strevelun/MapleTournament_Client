@@ -967,9 +967,6 @@ void PacketHandler::S_UpdateIngameUserLeave(char* _packet)
 	UI* pUI = UIManager::GetInst()->FindUI(L"PlayerStat" + std::to_wstring(slot));
 	if (!pUI) return;
 	pUI->SetActive(false);
-	
-	//Obj* pObj = ObjectManager::GetInst()->FindObj(std::to_wstring(slot));
-	//Player* pPlayer = static_cast<Player*>(pObj);
 
 	ObjectManager::GetInst()->KillObj(std::to_wstring(slot));
 	Skill* pSkill = ObjectManager::GetInst()->FindSkill(name);
@@ -1137,5 +1134,13 @@ void PacketHandler::S_Teleport(char* _packet)
 		pPlayer->SkillEnd(eSkillState::End);
 
 	Debug::Log("PacketHandler::S_Teleport (slot : " + std::to_string(slot) + ", xpos : " + std::to_string(xpos) + ", ypos : " + std::to_string(ypos) + ")");
+}
+
+void PacketHandler::S_ExitInGame(char* _packet)
+{
+	LobbyScene* pScene = new LobbyScene;
+	SceneManager::GetInst()->ChangeScene(pScene);
+
+	Debug::Log("PacketHandler::S_ExitInGame");
 }
 

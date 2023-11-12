@@ -35,5 +35,6 @@ public:
 	static void S_UpdateHeal(char* _packet);
 	static void S_CreatePortal(char* _packet);
 	static void S_Teleport(char* _packet);
+	static void S_ExitInGame(char* _packet);
 };
 

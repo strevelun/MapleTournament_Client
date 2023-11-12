@@ -19,6 +19,7 @@ Player::Player(InGameScene* _pScene) :
 
 Player::~Player()
 {
+	m_pNicknameText->SetActive(false);
 }
 
 void Player::SetPos(float _xpos, float _ypos)

@@ -43,5 +43,6 @@ private:
 	void NextTurn();
 	void OnItemButtonClick(UIPanel* _pPanel);
 	void OnTimeout();
+	void SendExitPacket();
 };
 

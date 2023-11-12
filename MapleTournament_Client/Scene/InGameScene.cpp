@@ -119,6 +119,22 @@ bool InGameScene::Init()
     pPanel->AddChildUI(pMP);
     pPanel->SetActive(false);
 
+    /* 게임 중도 퇴장 버튼 */
+    pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_button.png");
+    UIButton* pButton = new UIButton(nullptr, 100, 100, ScreenWidth, ScreenHeight / 2, 1.f, 0.5f);
+    if (pBitmap)
+        pButton->SetBitmap(pBitmap);
+    pButton->SetName(L"ExitButton");
+    pButton->SetActive(true);
+    pButton->SetClickable(true);
+    pButton->SetCallback([this]() 
+        {
+            SendExitPacket();
+        });
+    UIText* pText = new UIText(pButton, L"나가기", 20.f, pButton->GetWidth() / 2, pButton->GetHeight() / 2, 0.5f, 0.5f);
+    pButton->SetUIText(pText);
+    UIManager::GetInst()->AddUI(pButton);
+
     /* 대기하세요 UI */
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_board.png");
     pPanel = new UIPanel(nullptr, 500, 400, ScreenWidth / 2, ScreenHeight / 2, 0.5f, 0.5f);
@@ -126,7 +142,7 @@ bool InGameScene::Init()
         pPanel->SetBitmap(pBitmap);
     pPanel->SetName(L"Standby");
     pPanel->SetActive(false);
-    UIText* pText = new UIText(pPanel, L"대기하세요", 20.f, pPanel->GetWidth() / 2, 100, 0.5f, 0.5f);
+    pText = new UIText(pPanel, L"대기하세요", 20.f, pPanel->GetWidth() / 2, 100, 0.5f, 0.5f);
     pPanel->AddChildUI(pText);
     UIManager::GetInst()->AddUI(pPanel);
 
@@ -261,7 +277,7 @@ bool InGameScene::Init()
     pPanel = new UIPanel(nullptr, 500, 100, ScreenWidth / 2, ScreenHeight + 80, 0.5f, 1.0f);
     pPanel->SetName(L"SkillButtonPanel");
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingame_leftmove.png");
-    UIButton* pButton = new UIButton(pPanel, 50, 50, 0, 0);
+    pButton = new UIButton(pPanel, 50, 50, 0, 0);
     pButton->SetBitmap(pBitmap);
     pButton->SetCallback([this, pPanel] 
         {
@@ -581,4 +597,13 @@ void InGameScene::OnTimeout()
     SetMyTurn(false);
     m_timer = StartTimer;
     NextTurn();
+}
+
+void InGameScene::SendExitPacket()
+{
+    char buffer[255];
+    ushort count = sizeof(ushort);
+    *(ushort*)(buffer + count) = (ushort)ePacketType::C_ExitInGame;				count += sizeof(ushort);
+    *(ushort*)buffer = count;
+    NetworkManager::GetInst()->Send(buffer);
 }
