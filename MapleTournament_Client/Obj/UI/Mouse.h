@@ -9,6 +9,8 @@ enum class eMouseState
     Click
 };
 
+class Bitmap;
+
 class Mouse :
     public UI
 {
@@ -17,6 +19,9 @@ private:
     POINT       m_tMousePos;
 
     eMouseState m_state = eMouseState::None;
+
+    Bitmap* m_pHoverBitmap = nullptr;
+    D2D1_RECT_F m_rectHoverBitmap;
 
     bool m_bPressed = false;
 
@@ -31,6 +36,7 @@ public:
     int GetMouseXPos() const { return m_tMousePos.x; }
     int GetMouseYPos() const { return m_tMousePos.y; }
 
+    void SetHoverBitmap(Bitmap* _pBitmap) { m_pHoverBitmap = _pBitmap; }
 
     void Update() override;
     void Render() override;

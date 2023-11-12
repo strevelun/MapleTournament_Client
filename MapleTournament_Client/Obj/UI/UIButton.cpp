@@ -38,6 +38,9 @@ void UIButton::Update()
 	case eUIState::Out:
 		MouseOut();
 		break;
+	case eUIState::Hover:
+		MouseHover();
+		break;
 	case eUIState::LButtonDown:
 		OnLButtonDown();
 		break;
@@ -71,7 +74,8 @@ UIText* UIButton::GetUIText()
 void UIButton::OnClick()
 {
 	if (m_Callback) m_Callback();
-	//SetPos(m_tPos.x, m_tPos.y - 3);
+	
+	m_pMouse->SetHoverBitmap(nullptr);
 }
 
 void UIButton::OnLButtonDown()
@@ -85,11 +89,16 @@ void UIButton::MousePressed()
 
 void UIButton::MouseOn()
 {
-
+	m_pMouse->SetHoverBitmap(m_pHoverBitmap);
 }
 
 void UIButton::MouseOut()
 {
-	//SetPos(m_tPos.x, m_tPos.y - 3);
+	m_pMouse->SetHoverBitmap(nullptr);
+}
+
+void UIButton::MouseHover()
+{
+	
 }
 

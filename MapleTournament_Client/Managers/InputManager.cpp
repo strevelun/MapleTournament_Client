@@ -27,6 +27,11 @@ void InputManager::Update()
 	ClearVecKeyInput();
 }
 
+void InputManager::Render()
+{
+	m_pMouse->Render();
+}
+
 void InputManager::RegisterVKKey(int _vkKey)
 {
 }

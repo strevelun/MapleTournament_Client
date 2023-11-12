@@ -11,6 +11,7 @@ enum class eUIState
     Normal,
     On,
     Out,
+    Hover,
     LButtonDown,
     Pressed,
     Click
@@ -28,7 +29,9 @@ protected:
     D2D1_POINT_2F					m_tPosRelativeToParent;
     D2D1_RECT_F				m_rect;
     D2D1_SIZE_U				m_size;
-    FLOAT					m_pivotX, m_pivotY;
+    FLOAT					m_pivotX = 0.f, m_pivotY = 0.f;
+
+    Mouse* m_pMouse = nullptr;
 
 public:
     UI();
@@ -60,6 +63,7 @@ public:
     virtual void MousePressed();
     virtual void MouseOn();
     virtual void MouseOut();
+    virtual void MouseHover();
 
     virtual void Update();
     virtual void Render() = 0;

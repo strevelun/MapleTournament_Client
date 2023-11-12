@@ -1,4 +1,6 @@
 #include "Mouse.h"
+#include "../../Bitmap.h"
+#include "../../GraphicCore/Graphics.h"
 
 Mouse::Mouse(HWND _hWnd) :
 	m_hWnd(_hWnd)
@@ -44,4 +46,10 @@ void Mouse::Update()
 
 void Mouse::Render()
 {
+	if (m_pHoverBitmap)
+	{
+		m_rectHoverBitmap = { (float)m_tMousePos.x, (float)m_tMousePos.y - 150, (float)m_tMousePos.x + 150, (float)m_tMousePos.y };
+
+		Graphics::GetInst()->GetRenderTarget()->DrawBitmap(m_pHoverBitmap->GetBitmap(), m_rectHoverBitmap);
+	}
 }

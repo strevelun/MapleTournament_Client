@@ -130,6 +130,7 @@ void GameApp::Render()
 
 	SceneManager::GetInst()->Render();
 	UIManager::GetInst()->Render();
+	InputManager::GetInst()->Render();
 
 	Mouse* pMouse = InputManager::GetInst()->GetMouse(); 
 	wchar_t output[50];

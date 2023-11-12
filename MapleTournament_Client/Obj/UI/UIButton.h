@@ -11,7 +11,7 @@ class UIButton :
 {
 private:    
     //Bitmap* m_pNormalBitmap;
-    //Bitmap* m_pHoverBitmap;
+    Bitmap* m_pHoverBitmap = nullptr;
     //Bitmap* m_pPressedBitmap;
 
     UIText* m_pUIText = nullptr;
@@ -32,6 +32,7 @@ public:
     void SetCallback(const std::function<void()>& _func) {  m_Callback = _func; }
     void SetBitmap(Bitmap* _pBitmap) { m_pBitmap = _pBitmap; }
 
+    void SetHoverBitmap(Bitmap* _pBitmap) { m_pHoverBitmap = _pBitmap; }
     void SetUIText(UIText* _pUIText);
     UIText* GetUIText();
 
@@ -40,5 +41,6 @@ public:
     void MousePressed() override;
     void MouseOn() override;
     void MouseOut() override;
+    void MouseHover() override;
 };
 

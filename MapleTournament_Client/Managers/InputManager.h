@@ -20,6 +20,7 @@ private:
 public:
 	bool Init(HWND _hWnd);
 	void Update();
+	void Render();
 
 	const std::vector<WPARAM>& GetVecKeyInput() const { return m_vecKeyInput; }
 	void RegisterVKKey(int _vkKey);

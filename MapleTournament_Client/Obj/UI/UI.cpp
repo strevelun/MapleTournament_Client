@@ -9,12 +9,15 @@
 
 UI::UI()
 {
+	m_pMouse = InputManager::GetInst()->GetMouse();
 }
 
 UI::UI(UI* _pParentPanel, UINT _width, UINT _height, INT _xpos, INT _ypos, FLOAT _pivotX, FLOAT _pivotY) :
 	Obj(_xpos, _ypos), m_size{_width, _height}, m_pivotX(_pivotX), m_pivotY(_pivotY),
 	m_pParentUI(_pParentPanel)
 {
+	m_pMouse = InputManager::GetInst()->GetMouse();
+
 	m_tPosRelativeToParent.x = _xpos - (m_pivotX * m_size.width);
 	m_tPosRelativeToParent.y = _ypos - (m_pivotY * m_size.height);
 
@@ -24,6 +27,7 @@ UI::UI(UI* _pParentPanel, UINT _width, UINT _height, INT _xpos, INT _ypos, FLOAT
 UI::UI(const UI& _ui) :
 	Obj(_ui)
 {
+	m_pMouse = InputManager::GetInst()->GetMouse();
 	m_tPosRelativeToParent = _ui.m_tPosRelativeToParent;
 	m_bFocus = _ui.m_bFocus;
 	m_pParentUI = _ui.m_pParentUI; 
@@ -83,7 +87,7 @@ void UI::OnClick()
 
 void UI::OnLButtonDown()
 {
-	if (m_eUIState == eUIState::On)
+	if (m_eUIState == eUIState::On || m_eUIState == eUIState::Hover)
 	{
 		m_eUIState = eUIState::LButtonDown;
 	}
@@ -117,14 +121,21 @@ void UI::MouseOut()
 	else if(m_eUIState == eUIState::Out)		m_eUIState = eUIState::Normal;
 }
 
+void UI::MouseHover()
+{
+	if (m_eUIState == eUIState::On)
+	{
+		m_eUIState = eUIState::Hover;
+	}
+}
+
 void UI::Update()
 {
 	if (m_bClickable)
 	{
-		Mouse* pMouse = InputManager::GetInst()->GetMouse();
-		int mouseXPos = pMouse->GetMouseXPos();
-		int mouseYPos = pMouse->GetMouseYPos();
-		eMouseState state = pMouse->GetState();
+		int mouseXPos = m_pMouse->GetMouseXPos();
+		int mouseYPos = m_pMouse->GetMouseYPos();
+		eMouseState state = m_pMouse->GetState();
 
 		if (m_rect.left <= mouseXPos && mouseXPos <= m_rect.right && m_rect.top <= mouseYPos && mouseYPos <= m_rect.bottom)
 		{
