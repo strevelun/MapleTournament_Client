@@ -176,6 +176,8 @@ bool InGameScene::Init()
     pPanel->AddChildUI(pDashboardText);
     pDashboardText->SetName(L"DashboardText");
 
+    pLayer = CreateLayer(L"StateUI", INT_MAX - 1);
+
     /* ≈∏¿Ã∏” UI */
     for (int i = 0; i <= 9; i++)
     {

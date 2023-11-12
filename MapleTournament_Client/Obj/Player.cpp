@@ -29,6 +29,12 @@ void Player::SetPos(float _xpos, float _ypos)
 		m_pNicknameText->SetPos(_xpos, _ypos - 120);
 }
 
+void Player::SetBoardPos(int _xpos, int _ypos)
+{
+	m_boardXPos = _xpos;
+	m_boardYPos = _ypos;
+}
+
 void Player::Update()
 {
 	GameObj::Update();
@@ -159,31 +165,37 @@ void Player::DoAction(eMoveName _name)
 	if (_name == eMoveName::LeftMove)
 	{
 		m_tDestPos.x = m_tPos.x - LeftRightMoveDist;
+		m_boardXPos -= 1;
 		m_eMoveName = _name;
 	}
 	else if (_name == eMoveName::LeftDoubleMove)
 	{
 		m_tDestPos.x = m_tPos.x - LeftRightMoveDist * 2;
+		m_boardXPos -= 2;
 		m_eMoveName = _name;
 	}
 	else if (_name == eMoveName::RightMove)
 	{
 		m_tDestPos.x = m_tPos.x + LeftRightMoveDist;
+		m_boardXPos += 1;
 		m_eMoveName = _name;
 	}
 	else if (_name == eMoveName::RightDoubleMove)
 	{
 		m_tDestPos.x = m_tPos.x + LeftRightMoveDist * 2;
+		m_boardXPos += 2;
 		m_eMoveName = _name;
 	}
 	else if (_name == eMoveName::UpMove)
 	{
 		m_tDestPos.y = m_tPos.y - UpDownMoveDist;
+		m_boardYPos -= 1;
 		m_eMoveName = _name;
 	}
 	else if (_name == eMoveName::DownMove)
 	{
 		m_tDestPos.y = m_tPos.y + UpDownMoveDist;
+		m_boardYPos += 1;
 		m_eMoveName = _name;
 	}
 }
@@ -197,7 +209,7 @@ void Player::DoAction(eSkillName _name) // hit, die
 	{
 		m_eCurSkillType = eActionType::Skill;
 		m_pCurSkill->SetActive(true);
-		m_pCurSkill->SetPos(m_tPos.x, m_tPos.y); // 플레이어가 위치한 칸 중앙 (290,300)
+		m_pCurSkill->SetPos(288+(176* m_boardXPos), 298+(100* m_boardYPos)); // 플레이어가 위치한 칸 중앙 (290,300)
 		m_pCurSkill->SetDir(m_eDir); // 애니메이션 출력용
 		m_eSkillName = _name;
 	}

@@ -17,6 +17,8 @@ public:
     static constexpr float UpDownMoveDist = 100.f;
 
 private:
+    int m_boardXPos = 0, m_boardYPos = 0;
+
     InGameScene* m_pScene = nullptr;
     Skill* m_pCurSkill = nullptr;
     //std::wstring m_strNickname;
@@ -32,6 +34,7 @@ public:
     virtual ~Player();
 
     void SetPos(float _xpos, float _ypos) override;
+    void SetBoardPos(int _xpos, int _ypos);
 
     void Update() override;
     void Render() override;

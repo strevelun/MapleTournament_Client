@@ -597,21 +597,25 @@ void PacketHandler::S_InGameReady(char* _packet)
 		if (slot == 0)
 		{
 			myPlayer->SetPos(240, 220);
+			myPlayer->SetBoardPos(0, 0);
 			myPlayer->SetDir(eDir::Right);
 		}
 		else if(slot == 1) 
 		{
 			myPlayer->SetPos(1030, 220);
+			myPlayer->SetBoardPos(4, 0);
 			myPlayer->SetDir(eDir::Left);
 		}
 		else if (slot == 2)
 		{
 			myPlayer->SetPos(240, 580);
+			myPlayer->SetBoardPos(0, 3);
 			myPlayer->SetDir(eDir::Right);
 		}
 		else if (slot == 3)
 		{
 			myPlayer->SetPos(1030, 580);
+			myPlayer->SetBoardPos(4, 3);
 			myPlayer->SetDir(eDir::Left);
 		}
 
@@ -1146,6 +1150,7 @@ void PacketHandler::S_Teleport(char* _packet)
 	Player* pPlayer = static_cast<Player*>(pObj);
 	if(pPlayer->GetActionType() != eActionType::None)
 		pPlayer->SkillEnd(eSkillState::End);
+	pPlayer->SetBoardPos(xpos, ypos);
 
 	Debug::Log("PacketHandler::S_Teleport (slot : " + std::to_string(slot) + ", xpos : " + std::to_string(xpos) + ", ypos : " + std::to_string(ypos) + ")");
 }
