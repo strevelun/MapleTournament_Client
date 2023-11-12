@@ -37,6 +37,7 @@ public:
     int GetMouseYPos() const { return m_tMousePos.y; }
 
     void SetHoverBitmap(Bitmap* _pBitmap) { m_pHoverBitmap = _pBitmap; }
+    Bitmap* GetHoverBitmap() const { return m_pHoverBitmap; }
 
     void Update() override;
     void Render() override;

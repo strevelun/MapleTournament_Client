@@ -139,6 +139,7 @@ void UI::Update()
 
 		if (m_rect.left <= mouseXPos && mouseXPos <= m_rect.right && m_rect.top <= mouseYPos && mouseYPos <= m_rect.bottom)
 		{
+			UI::MouseHover();
 			UI::MouseOn();
 
 			if (state == eMouseState::Click)

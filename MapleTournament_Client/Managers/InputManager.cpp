@@ -10,7 +10,7 @@ InputManager::InputManager() :
 
 InputManager::~InputManager()
 {
- 
+	delete m_pMouse;
 }
 
 bool InputManager::Init(HWND _hWnd)

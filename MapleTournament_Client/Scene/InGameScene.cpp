@@ -13,9 +13,11 @@
 #include "../Animation/AnimationClip.h"
 #include "LobbyScene.h"
 #include "../Managers/SceneManager.h"
+#include "../Managers/InputManager.h"
 #include "Layer.h"
 #include "../Timer.h"
 #include "../Debug.h"
+#include "../Obj/UI/Mouse.h"
 
 // x : 200~1080(880)
 // y : 200~600
@@ -586,6 +588,9 @@ void InGameScene::OnTimeout()
     if (!pUI) return;
     pUI->SetPos(ScreenWidth / 2, ScreenHeight + 80);
     pUI->SetClickable(false);
+
+    Mouse* pMouse = InputManager::GetInst()->GetMouse();
+    pMouse->SetHoverBitmap(nullptr);
 
     pUI = UIManager::GetInst()->FindUI(L"Wait");
     if (pUI)

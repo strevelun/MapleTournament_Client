@@ -4,6 +4,7 @@
 #include "UIText.h"
 #include "../../GraphicCore/Graphics.h"
 #include "../../Bitmap.h"
+#include "../../Debug.h"
 
 UIButton::UIButton(const UIButton& _uiButton)
 	: UI(_uiButton)
@@ -90,11 +91,13 @@ void UIButton::MousePressed()
 void UIButton::MouseOn()
 {
 	m_pMouse->SetHoverBitmap(m_pHoverBitmap);
+	Debug::Log("MouseOn");
 }
 
 void UIButton::MouseOut()
 {
-	m_pMouse->SetHoverBitmap(nullptr);
+	if(m_pMouse->GetHoverBitmap() == m_pHoverBitmap)
+		m_pMouse->SetHoverBitmap(nullptr);
 }
 
 void UIButton::MouseHover()
