@@ -13,7 +13,7 @@ UI::UI()
 	m_pMouse = InputManager::GetInst()->GetMouse();
 }
 
-UI::UI(UI* _pParentPanel, UINT _width, UINT _height, INT _xpos, INT _ypos, FLOAT _pivotX, FLOAT _pivotY) :
+UI::UI(UI* _pParentPanel, UINT _width, UINT _height, FLOAT _xpos, FLOAT _ypos, FLOAT _pivotX, FLOAT _pivotY) :
 	Obj(_xpos, _ypos), m_size{_width, _height}, m_pivotX(_pivotX), m_pivotY(_pivotY),
 	m_pParentUI(_pParentPanel)
 {

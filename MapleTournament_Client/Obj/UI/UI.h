@@ -36,7 +36,7 @@ protected:
 
 public:
     UI();
-    UI(UI* _pParentPanel, UINT _width, UINT _height, INT _xpos = 0, INT _ypos = 0, FLOAT _pivotX = 0.f, FLOAT _pivotY = 0.f);
+    UI(UI* _pParentPanel, UINT _width, UINT _height, FLOAT _xpos = 0, FLOAT _ypos = 0, FLOAT _pivotX = 0.f, FLOAT _pivotY = 0.f);
     UI(const UI& _ui);
     virtual ~UI();
 

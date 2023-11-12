@@ -42,8 +42,9 @@ bool InGameScene::Init()
     Layer* pLayer = CreateLayer(L"Background", 0);
     pLayer->AddObj(pBackground);
 
-    pLayer = CreateLayer(L"Player", 3);
+    pLayer = CreateLayer(L"Player", 4);
     pLayer = CreateLayer(L"PlayerNickname", INT_MAX);
+    pLayer = CreateLayer(L"RangeBlock", 2);
     pLayer = CreateLayer(L"UI", 1);
 
     /* 플레이어 스텟 */
@@ -207,7 +208,7 @@ bool InGameScene::Init()
     pPortal->SetAnimator(pPortalAnimator);
     ObjectManager::GetInst()->AddObj(pPortal);
 
-    pLayer = CreateLayer(L"GameObj", 2);
+    pLayer = CreateLayer(L"GameObj", 3);
     pLayer->AddObj(pPortal);
 
     /* 스킬 */
@@ -217,14 +218,14 @@ bool InGameScene::Init()
     {
         Animator* pAnimator = new Animator(pClip);
         pClip->SetLoop(false);
-        pClip->SetPlayTime(5.f);
+        pClip->SetPlayTime(4.f);
         pClip->SetAnyState(false);
         pSkill->SetAnimator(pAnimator);
     }
     pSkill->SetActive(false);
     ObjectManager::GetInst()->AddSkill(pSkill, eSkillName::Attack0);
 
-    pLayer = CreateLayer(L"Skill", 4);
+    pLayer = CreateLayer(L"Skill", 5);
     pLayer->AddObj(pSkill);
 
     pSkill = new Skill;
@@ -233,7 +234,7 @@ bool InGameScene::Init()
     {
         Animator* pAnimator = new Animator(pClip);
         pClip->SetLoop(false);
-        pClip->SetPlayTime(5.f);
+        pClip->SetPlayTime(4.f);
         pClip->SetAnyState(false);
         pSkill->SetAnimator(pAnimator);
     }
@@ -247,7 +248,7 @@ bool InGameScene::Init()
     {
         Animator* pAnimator = new Animator(pClip);
         pClip->SetLoop(false);
-        pClip->SetPlayTime(5.f);
+        pClip->SetPlayTime(3.f);
         pClip->SetAnyState(false);
         pSkill->SetAnimator(pAnimator);
     }
@@ -416,6 +417,25 @@ bool InGameScene::Init()
     UIManager::GetInst()->AddUI(pPanel);
     pLayer->AddObj(pPanel);
 
+    pLayer = FindLayer(L"RangeBlock");
+    UIPanel* pRangeBlockPanel = new UIPanel(nullptr, 880, 400, 202.f, 202.f);
+    pRangeBlockPanel->SetName(L"RangeBlock");
+    UIManager::GetInst()->AddUI(pRangeBlockPanel);
+    pLayer->AddObj(pRangeBlockPanel);
+
+    pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ingame_rangeBlock.png");
+    for (int ypos = 0; ypos < 4; ypos++)
+    {
+        for (int xpos = 0; xpos < 5; xpos++)
+        {
+            pPanel = new UIPanel(pRangeBlockPanel, 173, 97, 176*xpos, 100*ypos);
+            pPanel->SetBitmap(pBitmap);
+            pPanel->SetName(std::to_wstring((ypos*10) + xpos));
+            pRangeBlockPanel->AddChildUI(pPanel);
+        }
+    }
+    pRangeBlockPanel->SetActive(false);
+
     char buffer[255];
     ushort count = sizeof(ushort);
     *(ushort*)(buffer + count) = (ushort)ePacketType::C_InGameReady;          count += sizeof(ushort);
@@ -505,7 +525,7 @@ void InGameScene::Update()
             {
                 NextTurn();
                 SetMyTurn(false);
-            }
+            }			
             m_eSkillState = eSkillState::None;
        }
     }

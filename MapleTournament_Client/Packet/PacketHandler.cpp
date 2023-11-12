@@ -803,7 +803,9 @@ void PacketHandler::S_Skill(char* _packet)
 	else if (actionType == eActionType::Skill)
 	{
 		int mana = int(*(char*)_packet);			_packet += sizeof(char);
-		pPlayer->DoAction(eSkillName(*(char*)_packet));
+		pPlayer->DoAction(eSkillName(*(char*)_packet));					_packet += sizeof(char);
+		int size = *(char*)_packet;					_packet += sizeof(char);
+		int xpos = 0, ypos = 0;
 
 		UI* pUI = UIManager::GetInst()->FindUI(L"PlayerStat" + std::to_wstring(slotNumber));
 		if (!pUI) return;
@@ -814,6 +816,20 @@ void PacketHandler::S_Skill(char* _packet)
 
 		UIText* pText = static_cast<UIText*>(pUI);
 		pText->ReassignText(L"MP : " + std::to_wstring(mana));
+
+		if (size > 0)
+		{
+			pUI = UIManager::GetInst()->FindUI(L"RangeBlock");
+			pUI->UI::SetActive(true);
+			pPanel = static_cast<UIPanel*>(pUI);
+			for (int i = 0; i < size; i++)
+			{
+				xpos = *(char*)_packet;					_packet += sizeof(char);
+				ypos = *(char*)_packet;					_packet += sizeof(char);
+				pUI = pPanel->FindChildUI(std::to_wstring((ypos * 10) + xpos));
+				pUI->SetActive(true);
+			}
+		}
 	}
 
 	pScene->SetSkillState(eSkillState::InUse);
@@ -967,6 +983,9 @@ void PacketHandler::S_UpdateIngameUserLeave(char* _packet)
 	if(pSkill)
 		pSkill->Reset();
 
+	pUI = UIManager::GetInst()->FindUI(L"RangeBlock");
+	UIPanel* pPanel = static_cast<UIPanel*>(pUI);
+	pPanel->SetActive(false);
 	// 나간 플레이어가 스킬 사용 중일때
 
 	Debug::Log("PacketHandler::S_UpdateIngameUserLeave");
@@ -1057,6 +1076,11 @@ void PacketHandler::S_CheckHit(char* _packet)
 		InGameScene* pScene = SceneManager::GetInst()->GetCurScene<InGameScene>();
 		pScene->SetSkillState(eSkillState::End);
 	}
+
+
+	pUI = UIManager::GetInst()->FindUI(L"RangeBlock");
+	pPanel = static_cast<UIPanel*>(pUI);
+	pPanel->SetActive(false);
 
 	Debug::Log("PacketHandler::S_CheckHit");
 }
