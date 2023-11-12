@@ -140,7 +140,6 @@ void Player::Update()
 void Player::Render()
 {
 	GameObj::Render();
-	m_pNicknameText->Render();
 }
 /*
 void Player::AddSkill(Skill* _pSkill, eSkillType _type)
@@ -197,7 +196,7 @@ void Player::DoAction(eSkillName _name) // hit, die
 	{
 		m_eCurSkillType = eActionType::Skill;
 		m_pCurSkill->SetActive(true);
-		m_pCurSkill->SetPos(m_tPos.x, m_tPos.y);
+		m_pCurSkill->SetPos(m_tPos.x, m_tPos.y); // 플레이어가 위치한 칸 중앙 (290,300)
 		m_pCurSkill->SetDir(m_eDir); // 애니메이션 출력용
 		m_eSkillName = _name;
 	}
@@ -227,6 +226,7 @@ void Player::ChangeAnimationState(const std::wstring& _strStateName)
 void Player::SetNicknameUIText(std::wstring _strNickname)
 {
 	m_pNicknameText = new UIPanel(nullptr, 50, 25, m_tPos.x, m_tPos.y - 120, 0.5f, 1.0f);
+	m_pNicknameText->SetName(_strNickname);
 	UIText* pText = new UIText(m_pNicknameText, _strNickname, 20.f, m_pNicknameText->GetWidth() / 2, m_pNicknameText->GetHeight() / 2, 0.5f, 0.5f);
 	m_pNicknameText->AddChildUI(pText);
 	UIManager::GetInst()->AddUI(m_pNicknameText);

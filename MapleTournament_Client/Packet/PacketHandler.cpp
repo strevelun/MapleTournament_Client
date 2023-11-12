@@ -1105,7 +1105,7 @@ void PacketHandler::S_CreatePortal(char* _packet)
 	int ypos = *(char*)_packet;					_packet += sizeof(char);
 
 	Obj* pObj = ObjectManager::GetInst()->FindObj(L"Portal");
-	pObj->SetPos(260 + (xpos * Player::LeftRightMoveDist), 280 + (ypos * Player::UpDownMoveDist));
+	pObj->SetPos(285 + (xpos * Player::LeftRightMoveDist), 300 + (ypos * Player::UpDownMoveDist));
 	pObj->SetActive(true);
 
 	Debug::Log("PacketHandler::S_CreatePortal");
