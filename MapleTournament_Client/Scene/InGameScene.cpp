@@ -157,14 +157,14 @@ bool InGameScene::Init()
     UIManager::GetInst()->AddPopupUI(pPanel);
 
     /* 게임 종료 UI */
-    pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_board.png");
-    pPanel = new UIPanel(nullptr, 500, 400, ScreenWidth / 2, ScreenHeight / 2, 0.5f, 0.5f);
+    pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingame_gameover_nowinner.png");
+    pPanel = new UIPanel(nullptr, 430, 560, ScreenWidth / 2, ScreenHeight / 2 - 100, 0.5f, 0.5f);
     if (pBitmap) 
         pPanel->SetBitmap(pBitmap);
     pPanel->SetName(L"GameOver");
     pPanel->SetActive(false);
-    pText = new UIText(pPanel, L"게임오버!", 20.f, pPanel->GetWidth() / 2, 100, 0.5f, 0.5f);
-    pPanel->AddChildUI(pText);
+   // pText = new UIText(pPanel, L"게임오버!", 20.f, pPanel->GetWidth() / 2, 100, 0.5f, 0.5f);
+    //pPanel->AddChildUI(pText);
     UIManager::GetInst()->AddPopupUI(pPanel);
 
     /* 대시보드 */

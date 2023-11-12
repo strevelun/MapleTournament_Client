@@ -91,7 +91,7 @@ void UIText::SetTextColor(D2D1::ColorF _color)
 
 void UIText::Render()
 {
-	Graphics::GetInst()->GetRenderTarget()->DrawRectangle(m_rect, m_pBrush);
+	//Graphics::GetInst()->GetRenderTarget()->DrawRectangle(m_rect, m_pBrush);
 	Graphics::GetInst()->GetRenderTarget()->DrawTextLayout(D2D1::Point2F(m_rect.left, m_rect.top), m_pLayout, m_pBrush);
 }
 

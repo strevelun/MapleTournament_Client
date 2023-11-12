@@ -16,14 +16,14 @@ UIPanel::UIPanel(const UIPanel& _ui)
 
 	m_pBitmap = _ui.m_pBitmap;
 
-	Graphics::GetInst()->CreateSolidColorBrush(D2D1::ColorF::Red, &m_pBrush);
+	//Graphics::GetInst()->CreateSolidColorBrush(D2D1::ColorF::Red, &m_pBrush);
 	
 }
 
 UIPanel::UIPanel(UI* _pParentPanel, UINT _width, UINT _height, float _xpos, float _ypos, FLOAT _pivotX, FLOAT _pivotY) :
 	UI(_pParentPanel, _width, _height, _xpos, _ypos, _pivotX, _pivotY)
 {
-	Graphics::GetInst()->CreateSolidColorBrush(D2D1::ColorF::Red, &m_pBrush);
+	//Graphics::GetInst()->CreateSolidColorBrush(D2D1::ColorF::Red, &m_pBrush);
 }
 
 UIPanel::~UIPanel()
@@ -33,7 +33,7 @@ UIPanel::~UIPanel()
 	for (; iter != iterEnd; ++iter)
 		delete* iter;
 
-	if (m_pBrush) m_pBrush->Release();
+	//if (m_pBrush) m_pBrush->Release();
 }
 
 void UIPanel::AddChildUI(UI* _pUI)
@@ -139,5 +139,5 @@ void UIPanel::Render()
 		m_vecMemberUI[i]->Render();
 	}
 
-	Graphics::GetInst()->GetRenderTarget()->DrawRectangle(m_rect, m_pBrush);
+	//Graphics::GetInst()->GetRenderTarget()->DrawRectangle(m_rect, m_pBrush);
 }

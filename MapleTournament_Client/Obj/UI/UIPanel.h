@@ -11,7 +11,7 @@ class UIPanel :
     std::vector<UI*> m_vecMemberUI;
     Bitmap* m_pBitmap = nullptr;
 
-    ID2D1SolidColorBrush* m_pBrush = nullptr; // for rect visualization
+    //ID2D1SolidColorBrush* m_pBrush = nullptr; // for rect visualization
 
 public:
     UIPanel(const UIPanel& _ui);

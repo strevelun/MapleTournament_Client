@@ -19,7 +19,7 @@ private:
     u_int m_curPage = 0;
     u_int m_maxPageCount = 0;
 
-    ID2D1SolidColorBrush* m_pBrush = nullptr;
+   // ID2D1SolidColorBrush* m_pBrush = nullptr;
 
 public:
     UIPage(const UIPage& _uiPage);

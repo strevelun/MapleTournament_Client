@@ -41,7 +41,7 @@ UIPage::UIPage(UI* _pParentPanel, UINT _width, UINT _height, UINT _itemWidth, UI
 
 	m_pNextBtn->SetClickable(true);
 
-	Graphics::GetInst()->CreateSolidColorBrush(D2D1::ColorF::Blue, &m_pBrush);
+	//Graphics::GetInst()->CreateSolidColorBrush(D2D1::ColorF::Blue, &m_pBrush);
 }
 
 UIPage::~UIPage()
@@ -50,7 +50,7 @@ UIPage::~UIPage()
 	delete m_pPrevBtn;
 	delete m_pNextBtn;
 
-	if (m_pBrush) m_pBrush->Release();
+	//if (m_pBrush) m_pBrush->Release();
 }
 
 void UIPage::SetItemTemplate(UIPanel* _pItem)
@@ -84,7 +84,7 @@ void UIPage::Render()
 	m_pPrevBtn->Render();
 	m_pNextBtn->Render();
 
-	Graphics::GetInst()->GetRenderTarget()->DrawRectangle(m_rect, m_pBrush);
+	//Graphics::GetInst()->GetRenderTarget()->DrawRectangle(m_rect, m_pBrush);
 }
 
 void UIPage::Reset()
