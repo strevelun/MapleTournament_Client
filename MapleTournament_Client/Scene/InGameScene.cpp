@@ -152,12 +152,15 @@ bool InGameScene::Init()
     UIManager::GetInst()->AddPopupUI(pPanel);
 
     /* 게임 종료 UI */
-    pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingame_gameover_nowinner.png");
+    pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingame_gameover.png");
     pPanel = new UIPanel(nullptr, 430, 640, ScreenWidth / 2, 0, 0.5f);
     if (pBitmap) 
         pPanel->SetBitmap(pBitmap);
     pPanel->SetName(L"GameOver");
     pPanel->SetActive(false);
+    UIText* pGameoverText = new UIText(pPanel, L"", 30.f, pPanel->GetWidth() / 2, pPanel->GetHeight() - 200, 0.5f, 1.f);
+    pGameoverText->SetName(L"GameOverText");
+    pPanel->AddChildUI(pGameoverText);
     UIManager::GetInst()->AddPopupUI(pPanel);
 
     /* 대시보드 */
@@ -260,7 +263,7 @@ bool InGameScene::Init()
     {
         Animator* pAnimator = new Animator(pClip);
         pClip->SetLoop(false);
-        pClip->SetLoopCount(3);
+        pClip->SetLoopCount(2);
         pClip->SetPlayTime(2.f);
         pClip->SetAnyState(false);
         pSkill->SetAnimator(pAnimator);
@@ -275,7 +278,7 @@ bool InGameScene::Init()
     {
         Animator* pAnimator = new Animator(pClip);
         pClip->SetLoop(false);
-        pClip->SetPlayTime(2.f);
+        pClip->SetPlayTime(1.5f);
         pClip->SetAnyState(false);
         pSkill->SetAnimator(pAnimator);
     }

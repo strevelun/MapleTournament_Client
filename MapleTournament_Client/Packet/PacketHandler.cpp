@@ -911,7 +911,12 @@ void PacketHandler::S_GameOver(char* _packet)
 	UI* pUI = UIManager::GetInst()->FindUI(L"GameOver");
 	if (!pUI) return;
 
-	UIManager::GetInst()->SetPopupUI(static_cast<UIPanel*>(pUI));
+	UIPanel* pPanel = static_cast<UIPanel*>(pUI);
+	UIManager::GetInst()->SetPopupUI(pPanel);
+	pUI = pPanel->FindChildUI(L"GameOverText");
+	UIText* pText = static_cast<UIText*>(pUI);
+	pText->ReassignText(std::to_wstring(*(char*)_packet) + L" Å³!");
+	// Å³ ¼ö 
 
 	InGameScene* pScene = SceneManager::GetInst()->GetCurScene<InGameScene>();
 	pScene->ChangeState(eInGameState::GameOver);
