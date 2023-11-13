@@ -25,9 +25,11 @@ UIScrollView::UIScrollView(UI* _pParentPanel, UINT _width, UINT _height, float _
 	m_maxItemViewCount = _height / (_itemHeight);// +_itemVerticalInterval);
 	//m_pUIList->SetItemVerticalInterval(_itemVerticalInterval);
 
-	Bitmap* pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_arrow_up.png");
+	Bitmap* pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_arrow_up_normal.png");
 	m_pUpBtn = new UIButton(this, 50, 50, _width, 0, 1.f);
 	if (pBitmap) m_pUpBtn->SetBitmap(pBitmap);
+	pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_arrow_up_pressed.png");
+	m_pUpBtn->SetPressedBitmap(pBitmap);
 	m_pUpBtn->SetClickable(true);
 	m_pUpBtn->SetCallback([this]() 
 		{ 
@@ -36,10 +38,11 @@ UIScrollView::UIScrollView(UI* _pParentPanel, UINT _width, UINT _height, float _
 			m_topIdx--; m_bottomIdx--; 
 		});
 
-	pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_arrow_down.png");
+	pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_arrow_down_normal.png");
 	m_pDownBtn = new UIButton(this, 50, 50, _width, _height, 1.f, 1.f);
 	if (pBitmap) m_pDownBtn->SetBitmap(pBitmap);
-
+	pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_arrow_down_pressed.png");
+	m_pDownBtn->SetPressedBitmap(pBitmap);
 	m_pDownBtn->SetClickable(true);
 	m_pDownBtn->SetCallback([this]() 
 		{

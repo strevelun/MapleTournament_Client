@@ -9,12 +9,17 @@
 #include "UI/UIText.h"
 #include "UI/UIPanel.h"
 #include "../Managers/UIManager.h"
+#include "../Managers/ResourceManager.h"
 
 #include <string>
 
-Player::Player(InGameScene* _pScene) :
-	m_pScene(_pScene)
+Player::Player(InGameScene* _pScene, int _slot) :
+	m_pScene(_pScene), m_slot(_slot)
 {
+	if (_slot == 1 || _slot == 3)
+		m_nicknamePanelYPos = 55;
+	else
+		m_nicknamePanelYPos = 30;
 }
 
 Player::~Player()
@@ -26,7 +31,7 @@ void Player::SetPos(float _xpos, float _ypos)
 {
 	Obj::SetPos(_xpos, _ypos);
 	if(m_pNicknameText)
-		m_pNicknameText->SetPos(_xpos, _ypos - 120);
+		m_pNicknameText->SetPos(_xpos, _ypos + m_nicknamePanelYPos);
 }
 
 void Player::SetBoardPos(int _xpos, int _ypos)
@@ -48,7 +53,7 @@ void Player::Update()
 		if (m_eMoveName == eMoveName::LeftMove)
 		{
 			m_tPos.x -= LeftRightMoveDist * m_moveSpeed * m_time;
-			m_pNicknameText->SetPos(m_tPos.x, m_tPos.y - 120);
+			m_pNicknameText->SetPos(m_tPos.x, m_tPos.y + m_nicknamePanelYPos);
 			if (m_tPos.x <= m_tDestPos.x)
 			{
 				m_tPos.x = m_tDestPos.x;
@@ -58,7 +63,7 @@ void Player::Update()
 		else if (m_eMoveName == eMoveName::LeftDoubleMove)
 		{
 			m_tPos.x -= LeftRightMoveDist * 2 * m_moveSpeed * m_time;
-			m_pNicknameText->SetPos(m_tPos.x, m_tPos.y - 120);
+			m_pNicknameText->SetPos(m_tPos.x, m_tPos.y + m_nicknamePanelYPos);
 			if (m_tPos.x <= m_tDestPos.x)
 			{
 				m_tPos.x = m_tDestPos.x;
@@ -68,7 +73,7 @@ void Player::Update()
 		else if (m_eMoveName == eMoveName::RightMove)
 		{
 			m_tPos.x += LeftRightMoveDist * m_moveSpeed * m_time;
-			m_pNicknameText->SetPos(m_tPos.x, m_tPos.y - 120);
+			m_pNicknameText->SetPos(m_tPos.x, m_tPos.y + m_nicknamePanelYPos);
 			if (m_tPos.x >= m_tDestPos.x)
 			{
 				m_tPos.x = m_tDestPos.x;
@@ -78,7 +83,7 @@ void Player::Update()
 		else if (m_eMoveName == eMoveName::RightDoubleMove)
 		{
 			m_tPos.x += LeftRightMoveDist * 2 * m_moveSpeed * m_time;
-			m_pNicknameText->SetPos(m_tPos.x, m_tPos.y - 120);
+			m_pNicknameText->SetPos(m_tPos.x, m_tPos.y + m_nicknamePanelYPos);
 			if (m_tPos.x >= m_tDestPos.x)
 			{
 				m_tPos.x = m_tDestPos.x;
@@ -88,7 +93,7 @@ void Player::Update()
 		else if (m_eMoveName == eMoveName::UpMove)
 		{
 			m_tPos.y -= UpDownMoveDist * m_moveSpeed * m_time;
-			m_pNicknameText->SetPos(m_tPos.x, m_tPos.y - 120);
+			m_pNicknameText->SetPos(m_tPos.x, m_tPos.y + m_nicknamePanelYPos);
 			if (m_tPos.y <= m_tDestPos.y)
 			{
 				m_tPos.y = m_tDestPos.y;
@@ -98,7 +103,7 @@ void Player::Update()
 		else if (m_eMoveName == eMoveName::DownMove)
 		{
 			m_tPos.y += UpDownMoveDist * m_moveSpeed * m_time;
-			m_pNicknameText->SetPos(m_tPos.x, m_tPos.y - 120);
+			m_pNicknameText->SetPos(m_tPos.x, m_tPos.y + m_nicknamePanelYPos);
 			if (m_tPos.y >= m_tDestPos.y)
 			{
 				m_tPos.y = m_tDestPos.y;
@@ -238,7 +243,9 @@ void Player::ChangeAnimationState(const std::wstring& _strStateName)
 
 UIPanel* Player::SetNicknameUI(std::wstring _strNickname)
 {
-	m_pNicknameText = new UIPanel(nullptr, 50, 25, m_tPos.x, m_tPos.y - 120, 0.5f, 1.0f);
+	Bitmap* pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingame_playernickname.png");
+	m_pNicknameText = new UIPanel(nullptr, 150, 25, m_tPos.x, m_tPos.y + m_nicknamePanelYPos, 0.5f, 1.0f);
+	m_pNicknameText->SetBitmap(pBitmap);
 	m_pNicknameText->SetName(_strNickname);
 	UIText* pText = new UIText(m_pNicknameText, _strNickname, 20.f, m_pNicknameText->GetWidth() / 2, m_pNicknameText->GetHeight() / 2, 0.5f, 0.5f);
 	m_pNicknameText->AddChildUI(pText);

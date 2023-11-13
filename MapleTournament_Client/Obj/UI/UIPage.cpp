@@ -29,16 +29,18 @@ UIPage::UIPage(UI* _pParentPanel, UINT _width, UINT _height, UINT _itemWidth, UI
 	m_maxPageCount = 64 / 9; // TODO : 사용자 세팅 가능하도록
 	if (64 % 9 != 0) m_maxPageCount++;
 
-	Bitmap* pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_arrow_left.png");
+	Bitmap* pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_arrow_left_normal.png");
 	m_pPrevBtn = new UIButton(_pParentPanel, 40, 40, 0, _pParentPanel->GetHeight(), 0.f, 1.f);
 	if (pBitmap) m_pPrevBtn->SetBitmap(pBitmap);
-
+	pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_arrow_left_pressed.png");
+	m_pPrevBtn->SetPressedBitmap(pBitmap);
 	m_pPrevBtn->SetClickable(true);
 
-	pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_arrow_right.png");
+	pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_arrow_right_normal.png");
 	m_pNextBtn = new UIButton(_pParentPanel, 40, 40, _pParentPanel->GetWidth(), _pParentPanel->GetHeight(), 1.f, 1.f);
 	if (pBitmap) m_pNextBtn->SetBitmap(pBitmap);
-
+	pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_arrow_right_pressed.png");
+	m_pNextBtn->SetPressedBitmap(pBitmap);
 	m_pNextBtn->SetClickable(true);
 
 	//Graphics::GetInst()->CreateSolidColorBrush(D2D1::ColorF::Blue, &m_pBrush);

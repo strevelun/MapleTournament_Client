@@ -52,8 +52,6 @@ void UIText::ReassignText(std::wstring _text)
 		return;
 	}
 
-	SetTextColor(D2D1::ColorF::Black);
-
 	float width = float(m_pParentUI ? m_pParentUI->GetWidth() : ScreenWidth);
 	float height = float(m_pParentUI ? m_pParentUI->GetHeight() : ScreenHeight);
 

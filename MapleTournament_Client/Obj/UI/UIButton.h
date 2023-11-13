@@ -10,9 +10,9 @@ class UIButton :
     public UI
 {
 private:    
-    //Bitmap* m_pNormalBitmap;
-    Bitmap* m_pHoverBitmap = nullptr;
-    //Bitmap* m_pPressedBitmap;
+    Bitmap* m_pNormalBitmap = nullptr;
+    Bitmap* m_pPressedBitmap = nullptr;
+    Bitmap* m_pMouseHoverBitmap = nullptr;
 
     UIText* m_pUIText = nullptr;
     Bitmap* m_pBitmap = nullptr;
@@ -27,13 +27,15 @@ public:
 
     void Update() override;
     void Render() override;
+    
     template <typename T>
     void SetCallback(void (T::*pFunc)(), T* _pObj) { m_Callback = std::bind(pFunc, _pObj); }
     void SetCallback(const std::function<void()>& _func) {  m_Callback = _func; }
-    void SetBitmap(Bitmap* _pBitmap) { m_pBitmap = _pBitmap; }
-
-    void SetHoverBitmap(Bitmap* _pBitmap) { m_pHoverBitmap = _pBitmap; }
+    void SetBitmap(Bitmap* _pBitmap);
+    void SetMouseHoverBitmap(Bitmap* _pBitmap) { m_pMouseHoverBitmap = _pBitmap; }
     void SetUIText(UIText* _pUIText);
+    void SetPressedBitmap(Bitmap* _pBitmap) { m_pPressedBitmap = _pBitmap; }
+
     UIText* GetUIText();
 
     void OnClick() override;

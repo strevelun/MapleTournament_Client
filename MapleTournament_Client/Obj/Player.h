@@ -17,7 +17,9 @@ public:
     static constexpr float UpDownMoveDist = 100.f;
 
 private:
+    int m_slot = 0;
     int m_boardXPos = 0, m_boardYPos = 0;
+    int m_nicknamePanelYPos = 0;
 
     InGameScene* m_pScene = nullptr;
     Skill* m_pCurSkill = nullptr;
@@ -30,7 +32,7 @@ protected:
     eSkillName                  m_eSkillName = eSkillName::None;
 
 public:
-    Player(InGameScene* _pScene);
+    Player(InGameScene* _pScene, int _slot);
     virtual ~Player();
 
     void SetPos(float _xpos, float _ypos) override;

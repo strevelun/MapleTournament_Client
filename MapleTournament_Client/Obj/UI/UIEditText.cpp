@@ -49,7 +49,7 @@ void UIEditText::Update()
 	{
 		WPARAM key = vecKeyInput[i];
 		size_t curStrInputSize = m_strInput.size();
-		if (key == VK_SPACE && curStrInputSize < 7) m_strInput.append(L" ");
+		if (key == VK_SPACE && curStrInputSize < m_inputMaxCount) m_strInput.append(L" ");
 		else if (key == VK_BACK)
 		{
 			if (curStrInputSize >= 1) m_strInput.pop_back();
@@ -59,7 +59,7 @@ void UIEditText::Update()
 		{
 			m_Callback(this, m_strInput);
 		}
-		else if (('a' <= key && key <= 'z') || ('A' <= key && key <= 'Z') || ('0' <= key && key <= '9'))
+		else if (char(33) <= key && key <= char(126))
 		{
 			if (curStrInputSize < m_inputMaxCount)
 			{

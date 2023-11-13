@@ -61,6 +61,12 @@ void UIButton::Render()
 	if (m_pUIText) m_pUIText->Render();
 }
 
+void UIButton::SetBitmap(Bitmap* _pBitmap)
+{
+	m_pBitmap = _pBitmap;
+	m_pNormalBitmap = _pBitmap;
+}
+
 void UIButton::SetUIText(UIText* _pUIText)
 {
 	if (m_pUIText) delete m_pUIText;
@@ -76,12 +82,14 @@ void UIButton::OnClick()
 {
 	if (m_Callback) m_Callback();
 	
-	m_pMouse->SetHoverBitmap(nullptr);
+	if (m_pMouseHoverBitmap)	m_pMouse->SetHoverBitmap(nullptr);
+
+	if (m_pPressedBitmap)	m_pBitmap = m_pNormalBitmap;
 }
 
 void UIButton::OnLButtonDown()
 {
-	//SetPos(m_tPos.x, m_tPos.y + 3);
+	if (m_pPressedBitmap)	m_pBitmap = m_pPressedBitmap;
 }
 
 void UIButton::MousePressed()
@@ -90,14 +98,16 @@ void UIButton::MousePressed()
 
 void UIButton::MouseOn()
 {
-	m_pMouse->SetHoverBitmap(m_pHoverBitmap);
-	Debug::Log("MouseOn");
+	if(m_pMouseHoverBitmap)	m_pMouse->SetHoverBitmap(m_pMouseHoverBitmap);
+
 }
 
 void UIButton::MouseOut()
 {
-	if(m_pMouse->GetHoverBitmap() == m_pHoverBitmap)
+	if(m_pMouseHoverBitmap && m_pMouseHoverBitmap == m_pMouse->GetHoverBitmap())
 		m_pMouse->SetHoverBitmap(nullptr);
+
+	if (m_pPressedBitmap)	m_pBitmap = m_pNormalBitmap;
 }
 
 void UIButton::MouseHover()

@@ -290,8 +290,10 @@ void PacketHandler::S_JoinRoom(char* _packet)
 	{
 		UIButton* pBtn = static_cast<UIButton*>(pUI);
 		pBtn->SetCallback(&LobbyScene::GameReadyCallback, pLobbyScene);
-		UIText* pText = pBtn->GetUIText();
-		pText->ReassignText(L"준비");
+		Bitmap* pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_button_waiting_ready_normal.png");
+		pBtn->SetBitmap(pBitmap);
+		pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_button_waiting_ready_pressed.png");
+		pBtn->SetPressedBitmap(pBitmap);
 	}
 
 	Debug::Log("PacketHandler::S_JoinRoom");
@@ -455,14 +457,18 @@ void PacketHandler::S_UpdateUserType(char* _packet)
 	if (type == eMemberType::Owner)
 	{
 		pBtn->SetCallback(&LobbyScene::GameStartCallback, pLobbyScene);
-		UIText* pText = pBtn->GetUIText();
-		pText->ReassignText(L"게임 시작");
+		Bitmap* pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_button_waiting_start_normal.png");
+		pBtn->SetBitmap(pBitmap);
+		pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_button_waiting_start_pressed.png");
+		pBtn->SetPressedBitmap(pBitmap);
 	}
 	else if (type == eMemberType::Member)
 	{
 		pBtn->SetCallback(&LobbyScene::GameReadyCallback, pLobbyScene);
-		UIText* pText = pBtn->GetUIText();
-		pText->ReassignText(L"준비");
+		Bitmap* pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_button_waiting_ready_normal.png");
+		pBtn->SetBitmap(pBitmap);
+		pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_button_waiting_ready_pressed.png");
+		pBtn->SetPressedBitmap(pBitmap);
 	}
 
 	Debug::Log("PacketHandler::S_UpdateUserType");
@@ -474,14 +480,20 @@ void PacketHandler::S_UpdateWaitingRoomBtn(char* _packet)
 	UI* pUI = UIManager::GetInst()->FindUI(L"StartGame");
 	if (!pUI) return;
 	UIButton* pBtn = static_cast<UIButton*>(pUI);
-	UIText* pText = pBtn->GetUIText();
 	if (state == eMemberState::Wait)
 	{
-		pText->ReassignText(L"준비");
+		Bitmap* pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_button_waiting_ready_normal.png");
+		pBtn->SetBitmap(pBitmap);
+		pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_button_waiting_ready_pressed.png");
+		pBtn->SetPressedBitmap(pBitmap);
+
 	}
 	else if (state == eMemberState::Ready)
 	{
-		pText->ReassignText(L"대기");
+		Bitmap* pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_button_waiting_wait_normal.png");
+		pBtn->SetBitmap(pBitmap);
+		pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_button_waiting_wait_pressed.png");
+		pBtn->SetPressedBitmap(pBitmap);
 	}
 
 	Debug::Log("PacketHandler::S_UpdateWaitingRoomBtn");
@@ -505,7 +517,7 @@ void PacketHandler::S_InGameReady(char* _packet)
 		int mp = *(char*)_packet;							_packet += sizeof(char);
 		wchar_t* nickname = (wchar_t*)_packet;				_packet += (ushort)wcslen((wchar_t*)_packet) * 2 + 2;
 
-		myPlayer = new Player(pScene);
+		myPlayer = new Player(pScene, slot);
 		ObjectManager::GetInst()->AddObj(myPlayer);
 		
 		myPlayer->SetName(std::to_wstring(slot));
@@ -879,6 +891,8 @@ void PacketHandler::S_UpdateDashboard(char* _packet)
 {
 	int curTurn = int(*(char*)_packet);			_packet += sizeof(char);
 
+	if (curTurn > GAME_MAX_TURN) return;
+
 	UI* pUI = UIManager::GetInst()->FindUI(L"Dashboard");
 	if (!pUI) return;
 
@@ -1012,9 +1026,9 @@ void PacketHandler::S_UpdateProfile(char* _packet)
 	pUI = pPanel->FindChildUI(L"ProfileText");
 	UIText* pText = static_cast<UIText*>(pUI);
 	pText->ReassignText((wchar_t*)_packet);					_packet += (ushort)wcslen((wchar_t*)_packet) * 2 + 2;
-	pUI = pPanel->FindChildUI(L"HitCountText");
+	pUI = pPanel->FindChildUI(L"KillCountText");
 	pText = static_cast<UIText*>(pUI);
-	pText->ReassignText(L"킬 수 : " + std::to_wstring(*(u_int*)_packet));
+	pText->ReassignText(std::to_wstring(*(u_int*)_packet) + L" 킬");
 
 	Debug::Log("PacketHandler::S_UpdateProfile");
 }
