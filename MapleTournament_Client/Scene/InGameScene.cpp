@@ -223,13 +223,14 @@ bool InGameScene::Init()
     pLayer->AddObj(pPortal);
 
     /* 스킬 */
+    /* 어택0 */
     Skill* pSkill = new Skill;
     AnimationClip* pClip = ResourceManager::GetInst()->GetAnimClip(L"attack0", L"attack0");
     if (!pClip) return false;
 
     Animator* pAnimator = new Animator(pClip);
     pClip->SetLoop(false);
-    pClip->SetPlayTime(4.f);
+    pClip->SetPlayTime(3.f);
     pClip->SetAnyState(false);
     pSkill->SetAnimator(pAnimator);
     pSkill->SetActive(false);
@@ -238,44 +239,61 @@ bool InGameScene::Init()
     pLayer = CreateLayer(L"Skill", 5);
     pLayer->AddObj(pSkill);
 
+    /* 어택1 */
     pSkill = new Skill;
     pClip = ResourceManager::GetInst()->GetAnimClip(L"attack1", L"attack1");
     if (!pClip) return false;
     
     pAnimator = new Animator(pClip);
     pClip->SetLoop(false);
-    pClip->SetPlayTime(4.f);
+    pClip->SetPlayTime(2.f);
     pClip->SetAnyState(false);
     pSkill->SetAnimator(pAnimator);
     pSkill->SetActive(false);
     ObjectManager::GetInst()->AddSkill(pSkill, eSkillName::Attack1);
     pLayer->AddObj(pSkill);
 
+    /* 어택2 */
     pSkill = new Skill;
     pClip = ResourceManager::GetInst()->GetAnimClip(L"attack2", L"attack2");
     if (!pClip) return false;
     
     pAnimator = new Animator(pClip);
     pClip->SetLoop(false);
-    pClip->SetPlayTime(3.f);
+    pClip->SetPlayTime(2.f);
     pClip->SetAnyState(false);
     pSkill->SetAnimator(pAnimator);
     pSkill->SetActive(false);
     ObjectManager::GetInst()->AddSkill(pSkill, eSkillName::Attack2);
     pLayer->AddObj(pSkill);
 
+    /* 어택3 */
     pSkill = new Skill;
     pClip = ResourceManager::GetInst()->GetAnimClip(L"attack3", L"attack3");
     if (!pClip) return false;
 
     pAnimator = new Animator(pClip);
     pClip->SetLoop(false);
-    pClip->SetLoopCount(2);
-    pClip->SetPlayTime(2.f);
+    pClip->SetLoopCount(3);
+    pClip->SetPlayTime(1.f);
     pClip->SetAnyState(false);
     pSkill->SetAnimator(pAnimator);
     pSkill->SetActive(false);
     ObjectManager::GetInst()->AddSkill(pSkill, eSkillName::Attack3);
+    pLayer->AddObj(pSkill);
+
+    /* 어택4 */
+    pSkill = new Skill;
+    pClip = ResourceManager::GetInst()->GetAnimClip(L"attack4", L"attack4");
+    if (!pClip) return false;
+
+    pAnimator = new Animator(pClip);
+    pClip->SetLoop(false);
+    pClip->SetPlayTime(3.f);
+    pClip->SetAnyState(false);
+    pSkill->SetAnimator(pAnimator);
+    pSkill->SetActive(false);
+    ObjectManager::GetInst()->AddSkill(pSkill, eSkillName::Attack4);
     pLayer->AddObj(pSkill);
 
     pSkill = new Skill;
@@ -284,7 +302,7 @@ bool InGameScene::Init()
     
     pAnimator = new Animator(pClip);
     pClip->SetLoop(false);
-    pClip->SetPlayTime(1.5f);
+    pClip->SetPlayTime(1.0f);
     pClip->SetAnyState(false);
     pSkill->SetAnimator(pAnimator);
     pSkill->SetActive(false);
@@ -422,9 +440,24 @@ bool InGameScene::Init()
         });
     pPanel->AddChildUI(pButton);
 
-    pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingame_button_heal0.png");
+    pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingame_button_attack4.png");
     if (!pBitmap) return false;
     pButton = new UIButton(pPanel, 50, 50, 0, 50);
+    pButton->SetBitmap(pBitmap);
+    pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingame_button_attack4_hover.png");
+    if (!pBitmap) return false;
+    pButton->SetMouseHoverBitmap(pBitmap);
+    pButton->SetName(std::to_wstring((int)eSkillName::Attack4));
+    pButton->SetCallback([this, pPanel]
+        {
+            OnItemButtonClick(pPanel);
+            SendActionPacket(eActionType::Skill, eSkillName::Attack4);
+        });
+    pPanel->AddChildUI(pButton);
+
+    pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingame_button_heal0.png");
+    if (!pBitmap) return false;
+    pButton = new UIButton(pPanel, 50, 50, 50, 50);
     pButton->SetBitmap(pBitmap);
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingame_button_heal0_hover.png");
     if (!pBitmap) return false;
