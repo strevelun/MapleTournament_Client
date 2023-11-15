@@ -216,6 +216,7 @@ bool LobbyScene::InitLobbyUI()
     pRoomBtn->SetName(L"MakeRoom");
     pRoomBtn->SetBitmap(pBitmap);
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_button_createroom_pressed.png");
+    if (!pBitmap) return false;
     pRoomBtn->SetPressedBitmap(pBitmap);
     pRoomBtn->SetCallback([]() 
         {
@@ -247,6 +248,7 @@ bool LobbyScene::InitLobbyUI()
     UIButton* pOKButton = new UIButton(pPanel, 150, 100, pPanel->GetWidth() / 2 - 10, pPanel->GetHeight() - 70, 1.0f, 1.f);
     pOKButton->SetBitmap(pBitmap);
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_button_okay_pressed.png");
+    if (!pBitmap) return false;
     pOKButton->SetPressedBitmap(pBitmap);
     pOKButton->SetCallback([this, pPanel, pInputRoomName]()
         {
@@ -261,6 +263,7 @@ bool LobbyScene::InitLobbyUI()
     UIButton* pCancelButton = new UIButton(pPanel, 150, 100, pPanel->GetWidth() / 2 + 10, pPanel->GetHeight() - 70, 0.f, 1.f);
     pCancelButton->SetBitmap(pBitmap);
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_button_cancel_pressed.png");
+    if (!pBitmap) return false;
     pCancelButton->SetPressedBitmap(pBitmap);
     pCancelButton->SetCallback([pInputRoomName]()
         {
@@ -342,6 +345,7 @@ bool LobbyScene::InitLobbyUI()
     pOKButton = new UIButton(pPanel, 150, 100, pPanel->GetWidth() / 2, pPanel->GetHeight() - 50, 0.5f, 1.f);
     pOKButton->SetBitmap(pBitmap);
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_button_okay_pressed.png");
+    if (!pBitmap) return false;
     pOKButton->SetPressedBitmap(pBitmap);
     pOKButton->SetCallback([]()
         {
@@ -458,6 +462,7 @@ bool LobbyScene::InitWaitingRoomUI()
     pRoomBtn->SetName(L"StartGame");
     pRoomBtn->SetBitmap(pBitmap);
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_button_waiting_start_pressed.png");
+    if (!pBitmap) return false;
     pRoomBtn->SetPressedBitmap(pBitmap);
     pRoomBtn->SetClickable(true);
     UIManager::GetInst()->AddUI(pRoomBtn);
@@ -471,7 +476,8 @@ bool LobbyScene::InitWaitingRoomUI()
     pLayer->AddObj(pUserPanel);
     UIPanel* pUserPicture = new UIPanel(pUserPanel, 138, 113, 0, 0);
     Bitmap* pRoomPlayerBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_room_player0.png");
-    if (pRoomPlayerBitmap)         pUserPicture->SetBitmap(pRoomPlayerBitmap);
+    if (!pRoomPlayerBitmap) return false;
+    pUserPicture->SetBitmap(pRoomPlayerBitmap);
     pUserPicture->SetName(L"Picture");
     pUserPicture->SetBitmap(pBitmap);
     pUserPanel->AddChildUI(pUserPicture);
@@ -481,7 +487,8 @@ bool LobbyScene::InitWaitingRoomUI()
     pUserPanel->AddChildUI(pTextNickname);
     UIPanel* pTextState = new UIPanel(pUserPanel, pUserPanel->GetWidth(), 20, pUserPanel->GetWidth() / 2, 155, 0.5f, 0.f);
     Bitmap* pWaitBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_waitingroomscene_wait.png");
-    if (pWaitBitmap)  pTextState->SetBitmap(pWaitBitmap);
+    if (!pWaitBitmap) return false;
+    pTextState->SetBitmap(pWaitBitmap);
     pTextState->SetName(L"State");
     pUserPanel->AddChildUI(pTextState);
 
@@ -573,6 +580,7 @@ bool LobbyScene::InitWaitingRoomUI()
     UIButton* pOKButton = new UIButton(pPanel, 150, 100, pPanel->GetWidth() / 2, pPanel->GetHeight() - 50, 0.5f, 1.f);
     pOKButton->SetBitmap(pBitmap);
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_button_okay_pressed.png");
+    if (!pBitmap) return false;
     pOKButton->SetPressedBitmap(pBitmap);
     pOKButton->SetCallback([]()
         {
@@ -612,8 +620,9 @@ bool LobbyScene::InitWaitingRoomUI()
     pPanel = new UIPanel(nullptr, 440, 175, 788, 115);
     pPanel->SetName(L"PlayerChoicePanel");
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_player0.png");
+    if (!pBitmap) return false;
     UIButton* pBtn = new UIButton(pPanel, 92, 48);
-    if (pBitmap) pBtn->SetBitmap(pBitmap);
+    pBtn->SetBitmap(pBitmap);
     pBtn->SetClickable(true);
     pBtn->SetCallback([this]()
         {
@@ -622,8 +631,9 @@ bool LobbyScene::InitWaitingRoomUI()
     pPanel->AddChildUI(pBtn);
 
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_player1.png");
+    if (!pBitmap) return false;
     pBtn = new UIButton(pPanel, 92, 48, 115);
-    if (pBitmap) pBtn->SetBitmap(pBitmap);
+    pBtn->SetBitmap(pBitmap);
     pBtn->SetClickable(true);
     pBtn->SetCallback([this]()
         {
@@ -632,8 +642,9 @@ bool LobbyScene::InitWaitingRoomUI()
     pPanel->AddChildUI(pBtn);
 
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_player2.png");
+    if (!pBitmap) return false;
     pBtn = new UIButton(pPanel, 92, 48, 230);
-    if (pBitmap) pBtn->SetBitmap(pBitmap);
+    pBtn->SetBitmap(pBitmap);
     pBtn->SetClickable(true);
     pBtn->SetCallback([this]()
         {
@@ -642,8 +653,9 @@ bool LobbyScene::InitWaitingRoomUI()
     pPanel->AddChildUI(pBtn);
 
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_player3.png");
+    if (!pBitmap) return false;
     pBtn = new UIButton(pPanel, 92, 48, 345);
-    if (pBitmap) pBtn->SetBitmap(pBitmap);
+    pBtn->SetBitmap(pBitmap);
     pBtn->SetClickable(true);
     pBtn->SetCallback([this]()
         {

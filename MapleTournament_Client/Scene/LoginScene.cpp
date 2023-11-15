@@ -56,6 +56,7 @@ bool LoginScene::Init()
          (pInputNickname->GetPosX()) + pInputNickname->GetWidth() + 10.f, pInputNickname->GetPosY(), 0.f, 0.f);
     pLoginButton->SetBitmap(pBitmap);
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_button_login_pressed.png");
+    if (!pBitmap) return false;
     pLoginButton->SetPressedBitmap(pBitmap);
     pLoginButton->SetClickable(true);
     pLoginButton->SetCallback([this, pInputNickname]() { LoginButtonCallback(pInputNickname, pInputNickname->GetText()); });
@@ -76,6 +77,7 @@ bool LoginScene::Init()
     UIButton* pOKButton = new UIButton(pPanel, 150, 100, pPanel->GetWidth() / 2, pPanel->GetHeight() - 50, 0.5f, 1.f);
     pOKButton->SetBitmap(pBitmap);
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_button_okay_pressed.png");
+    if (!pBitmap) return false;
     pOKButton->SetPressedBitmap(pBitmap);
     pOKButton->SetCallback([]() { UIManager::GetInst()->PopPopupUI(); });
     pPanel->AddChildUI(pOKButton);
@@ -96,6 +98,7 @@ bool LoginScene::Init()
     pOKButton = new UIButton(pPanel, 150, 100, pPanel->GetWidth() / 2, pPanel->GetHeight() - 50, 0.5f, 1.f);
     pOKButton->SetBitmap(pBitmap);
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_button_okay_pressed.png");
+    if (!pBitmap) return false;
     pOKButton->SetPressedBitmap(pBitmap);
     pOKButton->SetCallback([]() { UIManager::GetInst()->PopPopupUI(); });
     pPanel->AddChildUI(pOKButton);

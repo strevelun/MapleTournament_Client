@@ -1,7 +1,6 @@
 #pragma once
 #include "UI.h"
 
-#include <list>
 #include <functional>
 
 class UIButton;

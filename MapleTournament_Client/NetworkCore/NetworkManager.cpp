@@ -37,7 +37,6 @@ bool NetworkManager::Init(const char* _serverIP, int _serverPort)
 	{
 		if (connect(m_hClientSocket, (SOCKADDR*)&m_servAddr, sizeof(m_servAddr)) == SOCKET_ERROR)
 		{
-			//Debug::Log("connect socket_error : " + std::to_string(WSAGetLastError()));
 			int error = WSAGetLastError();
 			if (error == WSAEWOULDBLOCK) continue;
 			if (error == WSAEISCONN) break;

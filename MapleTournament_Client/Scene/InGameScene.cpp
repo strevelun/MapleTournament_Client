@@ -37,6 +37,7 @@ bool InGameScene::Init()
 {
     /* Background */
     Bitmap* pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingame_scene.png");
+    if (!pBitmap) return false;
     UIPanel* pBackground = new UIPanel(nullptr, ScreenWidth, ScreenHeight);
     pBackground->SetBitmap(pBitmap);
     Layer* pLayer = CreateLayer(L"Background", 0);
@@ -51,7 +52,8 @@ bool InGameScene::Init()
     UIPanel* pPanel = new UIPanel(nullptr, 300, 100);
     pPanel->SetName(L"PlayerStat0");
     Bitmap* pStatBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingamescene_stat.png");
-    if (pStatBitmap) pPanel->SetBitmap(pStatBitmap);
+    if (!pStatBitmap) return false;
+    pPanel->SetBitmap(pStatBitmap);
     UIManager::GetInst()->AddUI(pPanel);
     pLayer->AddObj(pPanel);
     UIPanel* pPicture = new UIPanel(pPanel, 90, 80, 10, 10);
@@ -127,10 +129,11 @@ bool InGameScene::Init()
 
     /* 게임 중도 퇴장 버튼 */
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_button_ingame_exit_normal.png");
+    if (!pBitmap) return false;
     UIButton* pButton = new UIButton(nullptr, 150, 100, ScreenWidth, ScreenHeight / 2, 1.f, 0.5f);
-    if (pBitmap)
-        pButton->SetBitmap(pBitmap);
+    pButton->SetBitmap(pBitmap);
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_button_ingame_exit_pressed.png");
+    if (!pBitmap) return false;
     pButton->SetPressedBitmap(pBitmap);
     pButton->SetName(L"ExitButton");
     pButton->SetActive(true);
@@ -144,18 +147,18 @@ bool InGameScene::Init()
 
     /* 대기하세요 UI */
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingame_standby.png");
+    if (!pBitmap) return false;
     pPanel = new UIPanel(nullptr, 430, 640, ScreenWidth / 2, 0, 0.5f);
-    if (pBitmap) 
-        pPanel->SetBitmap(pBitmap);
+    pPanel->SetBitmap(pBitmap);
     pPanel->SetName(L"Standby");
     pPanel->SetActive(false);
     UIManager::GetInst()->AddPopupUI(pPanel);
 
     /* 게임 종료 UI */
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingame_gameover.png");
+    if (!pBitmap) return false;
     pPanel = new UIPanel(nullptr, 430, 640, ScreenWidth / 2, 0, 0.5f);
-    if (pBitmap) 
-        pPanel->SetBitmap(pBitmap);
+    pPanel->SetBitmap(pBitmap);
     pPanel->SetName(L"GameOver");
     pPanel->SetActive(false);
     UIText* pGameoverText = new UIText(pPanel, L"", 30.f, pPanel->GetWidth() / 2, pPanel->GetHeight() - 200, 0.5f, 1.f);
@@ -165,6 +168,7 @@ bool InGameScene::Init()
 
     /* 대시보드 */
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingame_dashboard.png");
+    if (!pBitmap) return false;
     pPanel = new UIPanel(nullptr, 150, 50, ScreenWidth / 2, 0, 0.5f);
     pPanel->SetName(L"Dashboard");
     pPanel->SetBitmap(pBitmap);
@@ -184,7 +188,8 @@ bool InGameScene::Init()
         pPanel->SetActive(false);
         pPanel->SetName(std::to_wstring(i));
         pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_" + std::to_wstring(i) + L".png");
-        if (pBitmap) pPanel->SetBitmap(pBitmap);
+        if (!pBitmap) return false;
+        pPanel->SetBitmap(pBitmap);
         UIManager::GetInst()->AddUI(pPanel);
         pLayer->AddObj(pPanel);
         m_arrTimer[i] = pPanel;
@@ -194,12 +199,16 @@ bool InGameScene::Init()
     pPanelWait->SetActive(true);
     pPanelWait->SetName(L"Wait");
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingame_wait.png");
-    if (pBitmap) pPanelWait->SetBitmap(pBitmap);
+    if (!pBitmap) return false;
+
+    pPanelWait->SetBitmap(pBitmap);
     UIManager::GetInst()->AddUI(pPanelWait);
     pLayer->AddObj(pPanelWait);
     
     /* 포탈 */
     AnimationClip* pPortalClip = ResourceManager::GetInst()->GetAnimClip(L"portal", L"portal");
+    if (!pPortalClip) return false;
+
     pPortalClip->SetLoop(true);
     pPortalClip->SetPlayTime(1.f);
     Animator* pPortalAnimator = new Animator(pPortalClip);
@@ -215,14 +224,13 @@ bool InGameScene::Init()
     /* 스킬 */
     Skill* pSkill = new Skill;
     AnimationClip* pClip = ResourceManager::GetInst()->GetAnimClip(L"attack0", L"attack0");
-    if (pClip)
-    {
-        Animator* pAnimator = new Animator(pClip);
-        pClip->SetLoop(false);
-        pClip->SetPlayTime(4.f);
-        pClip->SetAnyState(false);
-        pSkill->SetAnimator(pAnimator);
-    }
+    if (!pClip) return false;
+
+    Animator* pAnimator = new Animator(pClip);
+    pClip->SetLoop(false);
+    pClip->SetPlayTime(4.f);
+    pClip->SetAnyState(false);
+    pSkill->SetAnimator(pAnimator);
     pSkill->SetActive(false);
     ObjectManager::GetInst()->AddSkill(pSkill, eSkillName::Attack0);
 
@@ -231,57 +239,53 @@ bool InGameScene::Init()
 
     pSkill = new Skill;
     pClip = ResourceManager::GetInst()->GetAnimClip(L"attack1", L"attack1");
-    if (pClip)
-    {
-        Animator* pAnimator = new Animator(pClip);
-        pClip->SetLoop(false);
-        pClip->SetPlayTime(4.f);
-        pClip->SetAnyState(false);
-        pSkill->SetAnimator(pAnimator);
-    }
+    if (!pClip) return false;
+    
+    Animator* pAnimator = new Animator(pClip);
+    pClip->SetLoop(false);
+    pClip->SetPlayTime(4.f);
+    pClip->SetAnyState(false);
+    pSkill->SetAnimator(pAnimator);
     pSkill->SetActive(false);
     ObjectManager::GetInst()->AddSkill(pSkill, eSkillName::Attack1);
     pLayer->AddObj(pSkill);
 
     pSkill = new Skill;
     pClip = ResourceManager::GetInst()->GetAnimClip(L"attack2", L"attack2");
-    if (pClip)
-    {
-        Animator* pAnimator = new Animator(pClip);
-        pClip->SetLoop(false);
-        pClip->SetPlayTime(3.f);
-        pClip->SetAnyState(false);
-        pSkill->SetAnimator(pAnimator);
-    }
+    if (!pClip) return false;
+    
+    Animator* pAnimator = new Animator(pClip);
+    pClip->SetLoop(false);
+    pClip->SetPlayTime(3.f);
+    pClip->SetAnyState(false);
+    pSkill->SetAnimator(pAnimator);
     pSkill->SetActive(false);
     ObjectManager::GetInst()->AddSkill(pSkill, eSkillName::Attack2);
     pLayer->AddObj(pSkill);
 
     pSkill = new Skill;
     pClip = ResourceManager::GetInst()->GetAnimClip(L"attack3", L"attack3");
-    if (pClip)
-    {
-        Animator* pAnimator = new Animator(pClip);
-        pClip->SetLoop(false);
-        pClip->SetLoopCount(2);
-        pClip->SetPlayTime(2.f);
-        pClip->SetAnyState(false);
-        pSkill->SetAnimator(pAnimator);
-    }
+    if (!pClip) return false;
+
+    Animator* pAnimator = new Animator(pClip);
+    pClip->SetLoop(false);
+    pClip->SetLoopCount(2);
+    pClip->SetPlayTime(2.f);
+    pClip->SetAnyState(false);
+    pSkill->SetAnimator(pAnimator);
     pSkill->SetActive(false);
     ObjectManager::GetInst()->AddSkill(pSkill, eSkillName::Attack3);
     pLayer->AddObj(pSkill);
 
     pSkill = new Skill;
     pClip = ResourceManager::GetInst()->GetAnimClip(L"heal0", L"heal0");
-    if (pClip)
-    {
-        Animator* pAnimator = new Animator(pClip);
-        pClip->SetLoop(false);
-        pClip->SetPlayTime(1.5f);
-        pClip->SetAnyState(false);
-        pSkill->SetAnimator(pAnimator);
-    }
+    if (!pClip) return false;
+    
+    Animator* pAnimator = new Animator(pClip);
+    pClip->SetLoop(false);
+    pClip->SetPlayTime(1.5f);
+    pClip->SetAnyState(false);
+    pSkill->SetAnimator(pAnimator);
     pSkill->SetActive(false);
     ObjectManager::GetInst()->AddSkill(pSkill, eSkillName::Heal0);
     pLayer->AddObj(pSkill);
@@ -292,6 +296,7 @@ bool InGameScene::Init()
     pPanel = new UIPanel(nullptr, 500, 100, ScreenWidth / 2, ScreenHeight + 80, 0.5f, 1.0f);
     pPanel->SetName(L"SkillButtonPanel");
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingame_leftmove.png");
+    if (!pBitmap) return false;
     pButton = new UIButton(pPanel, 50, 50, 0, 0);
     pButton->SetBitmap(pBitmap);
     pButton->SetCallback([this, pPanel] 
@@ -302,6 +307,7 @@ bool InGameScene::Init()
     pPanel->AddChildUI(pButton);
 
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingame_leftdoublemove.png");
+    if (!pBitmap) return false;
     pButton = new UIButton(pPanel, 50, 50, 50, 0);
     pButton->SetBitmap(pBitmap);
     pButton->SetCallback([this, pPanel]
@@ -312,6 +318,7 @@ bool InGameScene::Init()
     pPanel->AddChildUI(pButton);
 
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingame_rightmove.png");
+    if (!pBitmap) return false;
     pButton = new UIButton(pPanel, 50, 50, 100, 0);
     pButton->SetBitmap(pBitmap);
     pButton->SetCallback([this, pPanel]
@@ -322,6 +329,7 @@ bool InGameScene::Init()
     pPanel->AddChildUI(pButton);
 
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingame_rightdoublemove.png");
+    if (!pBitmap) return false;
     pButton = new UIButton(pPanel, 50, 50, 150, 0);
     pButton->SetBitmap(pBitmap);
     pButton->SetCallback([this, pPanel]
@@ -332,6 +340,7 @@ bool InGameScene::Init()
     pPanel->AddChildUI(pButton);
 
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingame_upmove.png");
+    if (!pBitmap) return false;
     pButton = new UIButton(pPanel, 50, 50, 200, 0);
     pButton->SetBitmap(pBitmap);
     pButton->SetCallback([this, pPanel]
@@ -342,6 +351,7 @@ bool InGameScene::Init()
     pPanel->AddChildUI(pButton);
 
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingame_downmove.png");
+    if (!pBitmap) return false;
     pButton = new UIButton(pPanel, 50, 50, 250, 0);
     pButton->SetBitmap(pBitmap);
     pButton->SetCallback([this, pPanel]
@@ -352,9 +362,11 @@ bool InGameScene::Init()
     pPanel->AddChildUI(pButton);
 
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingame_button_attack0.png");
+    if (!pBitmap) return false;
     pButton = new UIButton(pPanel, 50, 50, 300, 0);
     pButton->SetBitmap(pBitmap);
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingame_button_attack0_hover.png");
+    if (!pBitmap) return false;
     pButton->SetMouseHoverBitmap(pBitmap);
     pButton->SetName(std::to_wstring((int)eSkillName::Attack0));
     pButton->SetCallback([this, pPanel]
@@ -365,9 +377,11 @@ bool InGameScene::Init()
     pPanel->AddChildUI(pButton);
 
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingame_button_attack1.png");
+    if (!pBitmap) return false;
     pButton = new UIButton(pPanel, 50, 50, 350, 0);
     pButton->SetBitmap(pBitmap);
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingame_button_attack1_hover.png");
+    if (!pBitmap) return false;
     pButton->SetMouseHoverBitmap(pBitmap);
     pButton->SetName(std::to_wstring((int)eSkillName::Attack1));
     pButton->SetCallback([this, pPanel]
@@ -378,9 +392,11 @@ bool InGameScene::Init()
     pPanel->AddChildUI(pButton);
 
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingame_button_attack2.png");
+    if (!pBitmap) return false;
     pButton = new UIButton(pPanel, 50, 50, 400, 0);
     pButton->SetBitmap(pBitmap);
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingame_button_attack2_hover.png");
+    if (!pBitmap) return false;
     pButton->SetMouseHoverBitmap(pBitmap);
     pButton->SetName(std::to_wstring((int)eSkillName::Attack2));
     pButton->SetCallback([this, pPanel]
@@ -391,9 +407,11 @@ bool InGameScene::Init()
     pPanel->AddChildUI(pButton);
 
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingame_button_attack3.png");
+    if (!pBitmap) return false;
     pButton = new UIButton(pPanel, 50, 50, 450, 0);
     pButton->SetBitmap(pBitmap);
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingame_button_attack3_hover.png");
+    if (!pBitmap) return false;
     pButton->SetMouseHoverBitmap(pBitmap);
     pButton->SetName(std::to_wstring((int)eSkillName::Attack3));
     pButton->SetCallback([this, pPanel]
@@ -404,9 +422,11 @@ bool InGameScene::Init()
     pPanel->AddChildUI(pButton);
 
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingame_button_heal0.png");
+    if (!pBitmap) return false;
     pButton = new UIButton(pPanel, 50, 50, 0, 50);
     pButton->SetBitmap(pBitmap);
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_ingame_button_heal0_hover.png");
+    if (!pBitmap) return false;
     pButton->SetMouseHoverBitmap(pBitmap);
     pButton->SetCallback([this, pPanel]
         {
@@ -425,6 +445,7 @@ bool InGameScene::Init()
     pLayer->AddObj(pRangeBlockPanel);
 
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ingame_rangeBlock.png");
+    if (!pBitmap) return false;
     for (int ypos = 0; ypos < 4; ypos++)
     {
         for (int xpos = 0; xpos < 5; xpos++)

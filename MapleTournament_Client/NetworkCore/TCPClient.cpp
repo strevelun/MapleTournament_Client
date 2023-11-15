@@ -52,15 +52,7 @@ TCPClient::~TCPClient()
 bool TCPClient::Init(const char* _serverIP, int _serverPort) // ip주소 여기로 옮기기
 {
 	if (!NetworkManager::GetInst()->Init(_serverIP, _serverPort)) return false;
-	//if (!NetworkManager::GetInst()->Init("220.127.242.178", 30001)) return false;
 
-	//unsigned int threadID;
-	//m_hThread = (HANDLE)_beginthreadex(NULL, 0, ThreadFunc, this, 0, &threadID);
-	//if (m_hThread == NULL)
-	//{
-	//	Debug::Log("Failed BeginThreadEx");
-	//	return false;
-	//}
 	return true;
 }
 
