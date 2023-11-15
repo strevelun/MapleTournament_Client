@@ -37,6 +37,9 @@
     <Filter Include="Animation">
       <UniqueIdentifier>{9f186d7b-bc1b-4ab4-a253-d7dc2bbadba3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Obj\GameObj">
+      <UniqueIdentifier>{a2feefa9-0f4d-4427-a6cd-3911c1f61bcd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -117,9 +120,6 @@
     <ClCompile Include="Managers\ObjectManager.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
-    <ClCompile Include="Obj\Player.cpp">
-      <Filter>Obj</Filter>
-    </ClCompile>
     <ClCompile Include="Timer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -132,14 +132,8 @@
     <ClCompile Include="Animation\Animator.cpp">
       <Filter>Animation</Filter>
     </ClCompile>
-    <ClCompile Include="Obj\GameObj.cpp">
-      <Filter>Obj</Filter>
-    </ClCompile>
     <ClCompile Include="Debug.cpp">
       <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Obj\Skill.cpp">
-      <Filter>Obj</Filter>
     </ClCompile>
     <ClCompile Include="InstructionQueue.cpp">
       <Filter>소스 파일</Filter>
@@ -149,6 +143,15 @@
     </ClCompile>
     <ClCompile Include="Obj\UI\UIScrollView.cpp">
       <Filter>Obj\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Obj\GameObj\GameObj.cpp">
+      <Filter>Obj\GameObj</Filter>
+    </ClCompile>
+    <ClCompile Include="Obj\GameObj\Player.cpp">
+      <Filter>Obj\GameObj</Filter>
+    </ClCompile>
+    <ClCompile Include="Obj\GameObj\Skill.cpp">
+      <Filter>Obj\GameObj</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -227,9 +230,6 @@
     <ClInclude Include="Managers\ObjectManager.h">
       <Filter>Managers</Filter>
     </ClInclude>
-    <ClInclude Include="Obj\Player.h">
-      <Filter>Obj</Filter>
-    </ClInclude>
     <ClInclude Include="Timer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -245,14 +245,8 @@
     <ClInclude Include="Animation\Animator.h">
       <Filter>Animation</Filter>
     </ClInclude>
-    <ClInclude Include="Obj\GameObj.h">
-      <Filter>Obj</Filter>
-    </ClInclude>
     <ClInclude Include="Debug.h">
       <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Obj\Skill.h">
-      <Filter>Obj</Filter>
     </ClInclude>
     <ClInclude Include="InstructionQueue.h">
       <Filter>헤더 파일</Filter>
@@ -262,6 +256,15 @@
     </ClInclude>
     <ClInclude Include="Obj\UI\UIScrollView.h">
       <Filter>Obj\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Obj\GameObj\GameObj.h">
+      <Filter>Obj\GameObj</Filter>
+    </ClInclude>
+    <ClInclude Include="Obj\GameObj\Player.h">
+      <Filter>Obj\GameObj</Filter>
+    </ClInclude>
+    <ClInclude Include="Obj\GameObj\Skill.h">
+      <Filter>Obj\GameObj</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

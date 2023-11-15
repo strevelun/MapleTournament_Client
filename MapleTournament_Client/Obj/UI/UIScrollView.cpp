@@ -26,7 +26,7 @@ UIScrollView::UIScrollView(UI* _pParentPanel, UINT _width, UINT _height, float _
 	//m_pUIList->SetItemVerticalInterval(_itemVerticalInterval);
 
 	Bitmap* pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_arrow_up_normal.png");
-	m_pUpBtn = new UIButton(this, 50, 50, _width, 0, 1.f);
+	m_pUpBtn = new UIButton(this, 50, 50, (float)_width, 0, 1.f);
 	if (pBitmap) m_pUpBtn->SetBitmap(pBitmap);
 	pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_arrow_up_pressed.png");
 	m_pUpBtn->SetPressedBitmap(pBitmap);
@@ -39,7 +39,7 @@ UIScrollView::UIScrollView(UI* _pParentPanel, UINT _width, UINT _height, float _
 		});
 
 	pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_arrow_down_normal.png");
-	m_pDownBtn = new UIButton(this, 50, 50, _width, _height, 1.f, 1.f);
+	m_pDownBtn = new UIButton(this, 50, 50, (float)_width, (float)_height, 1.f, 1.f);
 	if (pBitmap) m_pDownBtn->SetBitmap(pBitmap);
 	pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_arrow_down_pressed.png");
 	m_pDownBtn->SetPressedBitmap(pBitmap);
@@ -68,7 +68,7 @@ void UIScrollView::SetIdx(int _topIdx, int _bottomIdx)
 void UIScrollView::AddItem(const std::wstring& _text, float _textSize)
 {
 	// TODO : 스크롤바 자동으로 내려주는 코드는 따로 분리
-	size_t ct = m_pUIList->GetItemCount();
+	int ct = m_pUIList->GetItemCount();
 	if (m_maxItemViewCount <= ct)
 		SetIdx(ct - m_maxItemViewCount + 1, ct + 1);
 
@@ -77,7 +77,7 @@ void UIScrollView::AddItem(const std::wstring& _text, float _textSize)
 
 void UIScrollView::Update()
 {
-	size_t itemCount = m_pUIList->GetItemCount();
+	int itemCount = m_pUIList->GetItemCount();
 	if (itemCount > m_bottomIdx - m_topIdx)
 	{
 		if(itemCount <= m_maxItemViewCount)

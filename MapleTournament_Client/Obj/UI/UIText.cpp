@@ -32,18 +32,7 @@ void UIText::ReassignText(std::wstring _text)
 	m_text = _text;
 
 	IDWriteFactory* pDWriteFactory = Graphics::GetInst()->GetDwriteFactory();
-	/*
-	if (m_pLayout)
-	{
-		m_pLayout->Release();
-		m_pLayout = nullptr;
-	}
-	if (m_pTextFormat)
-	{
-		m_pTextFormat->Release();
-		m_pTextFormat = nullptr;
-	}
-	*/
+
 	HRESULT hr = pDWriteFactory->CreateTextFormat(L"Arial", nullptr, DWRITE_FONT_WEIGHT_NORMAL, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL,
 		m_size, L"en-US", &m_pTextFormat);
 	if (FAILED(hr))
@@ -55,7 +44,7 @@ void UIText::ReassignText(std::wstring _text)
 	float width = float(m_pParentUI ? m_pParentUI->GetWidth() : ScreenWidth);
 	float height = float(m_pParentUI ? m_pParentUI->GetHeight() : ScreenHeight);
 
-	hr = pDWriteFactory->CreateTextLayout(m_text.c_str(), m_text.length(), m_pTextFormat, width, height, &m_pLayout);
+	hr = pDWriteFactory->CreateTextLayout(m_text.c_str(), (UINT32)m_text.length(), m_pTextFormat, width, height, &m_pLayout);
 	if (FAILED(hr))
 	{
 		Debug::Log(("UIText : CreateTextLayout returned : " + std::to_string(hr)));
@@ -69,15 +58,7 @@ void UIText::ReassignText(std::wstring _text)
 		return;
 	}
 
-	SetSize(m_metrics.width, m_metrics.height);
-
-	/* // ScrollView에만 적용
-	if (m_metrics.lineCount > 1)
-	{
-		if (m_pParentUI)
-			m_pParentUI->SetSize(m_metrics.width, m_metrics.lineCount * m_pParentUI->GetHeight());
-	}
-	*/
+	SetSize((UINT)m_metrics.width, (UINT)m_metrics.height);
 }
 
 void UIText::SetTextColor(D2D1::ColorF _color)
@@ -108,9 +89,9 @@ bool UIText::Init()
 	Graphics::GetInst()->CreateSolidColorBrush(D2D1::ColorF::Black, &m_pBrush);
 
 	if(m_pParentUI)
-		hr = pDWriteFactory->CreateTextLayout(m_text.c_str(), m_text.length(), m_pTextFormat, m_pParentUI->GetWidth(), m_pParentUI->GetHeight(), &m_pLayout);
+		hr = pDWriteFactory->CreateTextLayout(m_text.c_str(), (u_int)m_text.length(), m_pTextFormat, (float)m_pParentUI->GetWidth(), (float)m_pParentUI->GetHeight(), &m_pLayout);
 	else
-		hr = pDWriteFactory->CreateTextLayout(m_text.c_str(), m_text.length(), m_pTextFormat, ScreenWidth, ScreenHeight, &m_pLayout);
+		hr = pDWriteFactory->CreateTextLayout(m_text.c_str(), (u_int)m_text.length(), m_pTextFormat, ScreenWidth, ScreenHeight, &m_pLayout);
 	if (FAILED(hr))
 	{
 		Debug::Log(("UIText : CreateTextLayout returned : " + std::to_string(hr)));
@@ -124,12 +105,12 @@ bool UIText::Init()
 		return false;
 	}
 
-	SetSize(m_metrics.width, m_metrics.height);
+	SetSize((UINT)m_metrics.width, (UINT)m_metrics.height);
 
 	if (m_metrics.lineCount > 1)
 	{
 		if (m_pParentUI)
-			m_pParentUI->SetSize(m_metrics.width, m_metrics.lineCount * m_pParentUI->GetHeight());
+			m_pParentUI->SetSize((UINT)m_metrics.width, m_metrics.lineCount * m_pParentUI->GetHeight());
 	}
 	return true;
 }

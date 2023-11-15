@@ -85,7 +85,7 @@ int GameApp::Run()
 		{
 			if (msg.message == WM_QUIT)
 			{
-				char buffer[255];
+				char buffer[255] = {};
 				ushort count = sizeof(ushort);
 				*(ushort*)(buffer + count) = (ushort)ePacketType::C_Exit;					count += sizeof(ushort);
 				*(ushort*)buffer = count;
@@ -136,7 +136,7 @@ void GameApp::Render()
 	wchar_t output[50];
 	wsprintf(output, L"x: %d, y: %d", (int)pMouse->GetMouseXPos(), (int)pMouse->GetMouseYPos());
 	D2D1_RECT_F outputRect = D2D1::RectF(5.0f, 5.0f, 500.0f, 20.0f);
-	Graphics::GetInst()->GetRenderTarget()->DrawText(output, wcslen(output), m_pTextFormat, outputRect, m_pBrush);
+	Graphics::GetInst()->GetRenderTarget()->DrawText(output, (int)wcslen(output), m_pTextFormat, outputRect, m_pBrush);
 
 	Graphics::GetInst()->EndDraw();
 }

@@ -132,8 +132,8 @@ void UIPanel::Render()
 	// 자기자신 비트맵 출력 후 벡터에 있는 모든 UI Render하기
 	if (m_pBitmap)		Graphics::GetInst()->GetRenderTarget()->DrawBitmap(m_pBitmap->GetBitmap(), m_rect);
 
-	unsigned int size = m_vecMemberUI.size();
-	for (int i = 0; i< size; i++)
+	size_t size = m_vecMemberUI.size();
+	for (size_t i = 0; i< size; i++)
 	{
 		if (!m_vecMemberUI[i]->IsActive()) continue;
 		m_vecMemberUI[i]->Render();

@@ -1,5 +1,5 @@
 #pragma once
-#include "Obj.h"
+#include "../Obj.h"
 
 class Animator;
 

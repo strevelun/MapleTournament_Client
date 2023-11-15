@@ -12,7 +12,7 @@
 #include "../Obj/UI/UIList.h"
 #include "../Obj/UI/UIText.h"
 #include "../Obj/UI/UIPage.h"
-#include "../Obj/Player.h"
+#include "../Obj/GameObj/Player.h"
 #include "../Setting.h"
 #include "../Constants.h"
 #include "../Debug.h"
@@ -38,7 +38,7 @@ bool LobbyScene::Init()
     if (!InitLobbyUI()) return false;
     if (!InitWaitingRoomUI()) return false;
 
-    char buffer[255];
+    char buffer[255] = {};
     ushort count = sizeof(ushort);
     *(ushort*)(buffer + count) = (ushort)ePacketType::C_LobbyInit;				count += sizeof(ushort);
     *(ushort*)buffer = count;
@@ -53,11 +53,12 @@ void LobbyScene::CreateRoomButtonCallback(UIEditText* _pEditText, const std::wst
     if (std::all_of(_str.begin(), _str.end(), [](wchar_t c) { return c == L' '; })) { return; }
     if (!_pEditText) return;
 
-    char buffer[255];
+    char buffer[255] = {};
     ushort count = sizeof(ushort);
     *(ushort*)(buffer + count) = (ushort)ePacketType::C_CreateRoom;				count += sizeof(ushort);
     const wchar_t* str = _str.c_str();
-    memcpy(buffer + count, str, wcslen(str) * 2);			                    count += (ushort)wcslen(str) * 2;
+    int len = (int)wcslen(str) * 2;
+    memcpy(buffer + count, str, len);			                    count += len;
     *(wchar_t*)(buffer + count) = L'\0';								        count += 2;
     *(ushort*)buffer = count;
     NetworkManager::GetInst()->Send(buffer);
@@ -79,11 +80,12 @@ void LobbyScene::ChatCallback(UIEditText* _pEditText, const std::wstring& _str)
     if (std::all_of(_str.begin(), _str.end(), [](wchar_t c) { return c == L' '; })) { return; }
     if (!_pEditText) return;
 
-    char buffer[255];
+    char buffer[255] = {};
     ushort count = sizeof(ushort);
     *(ushort*)(buffer + count) = (ushort)ePacketType::C_Chat;				count += sizeof(ushort);
     const wchar_t* str = _str.c_str();
-    memcpy(buffer + count, str, wcslen(str) * 2);			                    count += (ushort)wcslen(str) * 2;
+    int len = (int)wcslen(str) * 2;
+    memcpy(buffer + count, str, len);			                    count += len;
     *(wchar_t*)(buffer + count) = L'\0';								        count += 2;
     *(ushort*)buffer = count;
     NetworkManager::GetInst()->Send(buffer);
@@ -101,7 +103,7 @@ void LobbyScene::UpdateUserListPage()
     UIPage* pPage = static_cast<UIPage*>(pUI);
     char page = pPage->GetCurPageIdx();
 
-    char buffer[255];
+    char buffer[255] = {};
     ushort count = sizeof(ushort);
     *(ushort*)(buffer + count) = (ushort)ePacketType::C_UpdateUserListPage;		count += sizeof(ushort);
     *(char*)(buffer + count) = page;                                         count += sizeof(char);
@@ -119,7 +121,7 @@ void LobbyScene::UpdateRoomListPage()
     UIPage* pPage = static_cast<UIPage*>(pUI);
     char page = pPage->GetCurPageIdx();
 
-    char buffer[255];
+    char buffer[255] = {};
     ushort count = sizeof(ushort);
     *(ushort*)(buffer + count) = (ushort)ePacketType::C_UpdateRoomListPage;		count += sizeof(ushort);
     *(char*)(buffer + count) = page;                                         count += sizeof(char);
@@ -129,7 +131,7 @@ void LobbyScene::UpdateRoomListPage()
 
 void LobbyScene::UpdateUserSlot(u_int _choice)
 {
-    char buffer[255];
+    char buffer[255] = {};
     ushort count = sizeof(ushort);
     *(ushort*)(buffer + count) = (ushort)ePacketType::C_UpdateUserSlot;		count += sizeof(ushort);
     *(char*)(buffer + count) = (char)_choice;                                         count += sizeof(char);
@@ -212,7 +214,7 @@ bool LobbyScene::InitLobbyUI()
     /* 방만들기 버튼 */
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_button_createroom_normal.png");
     if (!pBitmap) return false;
-    UIButton* pRoomBtn = new UIButton(nullptr, 150, 100, pBackground->GetWidth() / 2, pBackground->GetHeight(), 0.5f, 1.0f);
+    UIButton* pRoomBtn = new UIButton(nullptr, 150, 100, (float)pBackground->GetWidth() / 2, (float)pBackground->GetHeight(), 0.5f, 1.0f);
     pRoomBtn->SetName(L"MakeRoom");
     pRoomBtn->SetBitmap(pBitmap);
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_button_createroom_pressed.png");
@@ -237,7 +239,7 @@ bool LobbyScene::InitLobbyUI()
 
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_login_edittext.png");
     if (!pBitmap) return false;
-    UIEditText* pInputRoomName = new UIEditText(pPanel, pPanel->GetWidth() - 100, 50, 15, pPanel->GetWidth() / 2, pPanel->GetHeight() / 2+40, 0.5f, 0.5f);
+    UIEditText* pInputRoomName = new UIEditText(pPanel, pPanel->GetWidth() - 100, 50, 15, (float)pPanel->GetWidth() / 2, (float)pPanel->GetHeight() / 2 + 40, 0.5f, 0.5f);
     pInputRoomName->SetBitmap(pBitmap);
     pInputRoomName->SetClickable(true);
     pInputRoomName->SetCallback(&LobbyScene::CreateRoomButtonCallback, this);
@@ -245,7 +247,7 @@ bool LobbyScene::InitLobbyUI()
 
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_button_okay_normal.png");
     if (!pBitmap) return false;
-    UIButton* pOKButton = new UIButton(pPanel, 150, 100, pPanel->GetWidth() / 2 - 10, pPanel->GetHeight() - 70, 1.0f, 1.f);
+    UIButton* pOKButton = new UIButton(pPanel, 150, 100, (float)pPanel->GetWidth() / 2 - 10, (float)pPanel->GetHeight() - 70, 1.0f, 1.f);
     pOKButton->SetBitmap(pBitmap);
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_button_okay_pressed.png");
     if (!pBitmap) return false;
@@ -260,7 +262,7 @@ bool LobbyScene::InitLobbyUI()
 
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_button_cancel_normal.png");
     if (!pBitmap) return false;
-    UIButton* pCancelButton = new UIButton(pPanel, 150, 100, pPanel->GetWidth() / 2 + 10, pPanel->GetHeight() - 70, 0.f, 1.f);
+    UIButton* pCancelButton = new UIButton(pPanel, 150, 100, (float)pPanel->GetWidth() / 2 + 10, (float)pPanel->GetHeight() - 70, 0.f, 1.f);
     pCancelButton->SetBitmap(pBitmap);
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_button_cancel_pressed.png");
     if (!pBitmap) return false;
@@ -313,7 +315,7 @@ bool LobbyScene::InitLobbyUI()
             if (curPage <= 0)
                 return;
 
-            char buffer[255];
+            char buffer[255] = {};
             u_short count = sizeof(u_short);
             *(u_short*)(buffer + count) = (u_short)ePacketType::C_UpdateRoomListPage;		count += sizeof(u_short);
             *(char*)(buffer + count) = (char)curPage - 1;										count += sizeof(char);
@@ -324,7 +326,7 @@ bool LobbyScene::InitLobbyUI()
         {
             u_int curPage = pRoomPage->GetCurPageIdx();
 
-            char buffer[255];
+            char buffer[255] = {};
             u_short count = sizeof(u_short);
             *(u_short*)(buffer + count) = (u_short)ePacketType::C_UpdateRoomListPage;		count += sizeof(u_short);
             *(char*)(buffer + count) = (char)curPage + 1;										count += sizeof(char);
@@ -342,7 +344,7 @@ bool LobbyScene::InitLobbyUI()
    
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_button_okay_normal.png");
     if (!pBitmap) return false;
-    pOKButton = new UIButton(pPanel, 150, 100, pPanel->GetWidth() / 2, pPanel->GetHeight() - 50, 0.5f, 1.f);
+    pOKButton = new UIButton(pPanel, 150, 100, (float)pPanel->GetWidth() / 2, (float)pPanel->GetHeight() - 50, 0.5f, 1.f);
     pOKButton->SetBitmap(pBitmap);
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_button_okay_pressed.png");
     if (!pBitmap) return false;
@@ -383,7 +385,7 @@ bool LobbyScene::InitLobbyUI()
             if (curPage <= 0)
                 return;
 
-            char buffer[255];
+            char buffer[255] = {};
             u_short count = sizeof(u_short);
             *(u_short*)(buffer + count) = (u_short)ePacketType::C_UpdateUserListPage;		count += sizeof(u_short);
             *(char*)(buffer + count) = (char)curPage - 1;										count += sizeof(char);
@@ -394,7 +396,7 @@ bool LobbyScene::InitLobbyUI()
         {
             u_int curPage = pPage->GetCurPageIdx();
 
-            char buffer[255];
+            char buffer[255] = {};
             u_short count = sizeof(u_short);
             *(u_short*)(buffer + count) = (u_short)ePacketType::C_UpdateUserListPage;		count += sizeof(u_short);
             *(char*)(buffer + count) = (char)curPage + 1;										count += sizeof(char);
@@ -481,11 +483,11 @@ bool LobbyScene::InitWaitingRoomUI()
     pUserPicture->SetName(L"Picture");
     pUserPicture->SetBitmap(pBitmap);
     pUserPanel->AddChildUI(pUserPicture);
-    UIText* pTextNickname = new UIText(pUserPanel, L"", 20.f, pUserPanel->GetWidth() / 2, 128, 0.5f, 0.f);
+    UIText* pTextNickname = new UIText(pUserPanel, L"", 20.f, (float)pUserPanel->GetWidth() / 2, 128.f, 0.5f, 0.f);
     pTextNickname->SetName(L"Nickname");
     pTextNickname->SetTextColor(D2D1::ColorF::White);
     pUserPanel->AddChildUI(pTextNickname);
-    UIPanel* pTextState = new UIPanel(pUserPanel, pUserPanel->GetWidth(), 20, pUserPanel->GetWidth() / 2, 155, 0.5f, 0.f);
+    UIPanel* pTextState = new UIPanel(pUserPanel, pUserPanel->GetWidth(), 20, (float)pUserPanel->GetWidth() / 2, 155.f, 0.5f, 0.f);
     Bitmap* pWaitBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_waitingroomscene_wait.png");
     if (!pWaitBitmap) return false;
     pTextState->SetBitmap(pWaitBitmap);
@@ -503,11 +505,11 @@ bool LobbyScene::InitWaitingRoomUI()
     pUserPicture->SetName(L"Picture");
     pUserPicture->SetBitmap(pBitmap);
     pUserPanel->AddChildUI(pUserPicture);
-    pTextNickname = new UIText(pUserPanel, L"", 20.f, pUserPanel->GetWidth()/2, 128, 0.5f, 0.f);
+    pTextNickname = new UIText(pUserPanel, L"", 20.f, (float)pUserPanel->GetWidth()/2, 128.f, 0.5f, 0.f);
     pTextNickname->SetName(L"Nickname");
     pTextNickname->SetTextColor(D2D1::ColorF::White);
     pUserPanel->AddChildUI(pTextNickname);
-    pTextState = new UIPanel(pUserPanel, pUserPanel->GetWidth(), 20, pUserPanel->GetWidth() / 2, 155, 0.5f, 0.f);
+    pTextState = new UIPanel(pUserPanel, pUserPanel->GetWidth(), 20, (float)pUserPanel->GetWidth() / 2, 155.f, 0.5f, 0.f);
     pTextState->SetBitmap(pWaitBitmap);
     pTextState->SetName(L"State");
     pUserPanel->AddChildUI(pTextState);
@@ -523,11 +525,11 @@ bool LobbyScene::InitWaitingRoomUI()
     pUserPicture->SetName(L"Picture");
     pUserPicture->SetBitmap(pBitmap);
     pUserPanel->AddChildUI(pUserPicture);
-    pTextNickname = new UIText(pUserPanel, L"", 20.f, pUserPanel->GetWidth()/2, 128, 0.5f, 0.f);
+    pTextNickname = new UIText(pUserPanel, L"", 20.f, (float)pUserPanel->GetWidth()/2, 128.f, 0.5f, 0.f);
     pTextNickname->SetName(L"Nickname");
     pTextNickname->SetTextColor(D2D1::ColorF::White);
     pUserPanel->AddChildUI(pTextNickname);
-    pTextState = new UIPanel(pUserPanel, pUserPanel->GetWidth(), 20, pUserPanel->GetWidth() / 2, 155, 0.5f, 0.f);
+    pTextState = new UIPanel(pUserPanel, pUserPanel->GetWidth(), 20, (float)pUserPanel->GetWidth() / 2, 155.f, 0.5f, 0.f);
     pTextState->SetBitmap(pWaitBitmap);
     pTextState->SetName(L"State");
     pUserPanel->AddChildUI(pTextState);
@@ -543,11 +545,11 @@ bool LobbyScene::InitWaitingRoomUI()
     pUserPicture->SetName(L"Picture");
     pUserPicture->SetBitmap(pBitmap);
     pUserPanel->AddChildUI(pUserPicture);
-    pTextNickname = new UIText(pUserPanel, L"", 20.f, pUserPanel->GetWidth()/2, 128, 0.5f, 0.f);
+    pTextNickname = new UIText(pUserPanel, L"", 20.f, (float)pUserPanel->GetWidth()/2, 128.f, 0.5f, 0.f);
     pTextNickname->SetName(L"Nickname");
     pTextNickname->SetTextColor(D2D1::ColorF::White);
     pUserPanel->AddChildUI(pTextNickname);
-    pTextState = new UIPanel(pUserPanel, pUserPanel->GetWidth(), 20, pUserPanel->GetWidth() / 2, 155, 0.5f, 0.f);
+    pTextState = new UIPanel(pUserPanel, pUserPanel->GetWidth(), 20, (float)pUserPanel->GetWidth() / 2, 155.f, 0.5f, 0.f);
     pTextState->SetBitmap(pWaitBitmap);
     pTextState->SetName(L"State");
     pUserPanel->AddChildUI(pTextState);
@@ -557,7 +559,7 @@ bool LobbyScene::InitWaitingRoomUI()
     pBackBtn->SetName(L"WaitingRoomBackBtn");
     pBackBtn->SetCallback([]() 
         {
-            char buffer[255];
+            char buffer[255] = {};
             ushort count = sizeof(ushort);
             *(ushort*)(buffer + count) = (ushort)ePacketType::C_LeaveRoom;		count += sizeof(ushort);
             *(ushort*)buffer = count;
@@ -577,7 +579,7 @@ bool LobbyScene::InitWaitingRoomUI()
 
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_button_okay_normal.png");
     if (!pBitmap) return false;
-    UIButton* pOKButton = new UIButton(pPanel, 150, 100, pPanel->GetWidth() / 2, pPanel->GetHeight() - 50, 0.5f, 1.f);
+    UIButton* pOKButton = new UIButton(pPanel, 150, 100, (float)pPanel->GetWidth() / 2, (float)pPanel->GetHeight() - 50, 0.5f, 1.f);
     pOKButton->SetBitmap(pBitmap);
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_button_okay_pressed.png");
     if (!pBitmap) return false;
@@ -670,7 +672,7 @@ bool LobbyScene::InitWaitingRoomUI()
 
 void LobbyScene::GameStartCallback()
 {
-    char buffer[255];
+    char buffer[255] = {};
     ushort count = sizeof(ushort);
     *(ushort*)(buffer + count) = (ushort)ePacketType::C_CheckRoomReady;          count += sizeof(ushort);
     *(ushort*)buffer = count;
@@ -679,7 +681,7 @@ void LobbyScene::GameStartCallback()
 
 void LobbyScene::GameReadyCallback()
 {
-    char buffer[255];
+    char buffer[255] = {};
     ushort count = sizeof(ushort);
     *(ushort*)(buffer + count) = (ushort)ePacketType::C_UserRoomReady;          count += sizeof(ushort);
     *(ushort*)buffer = count;

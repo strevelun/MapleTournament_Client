@@ -1,8 +1,8 @@
 #include "Skill.h"
-#include "../Timer.h"
-#include "../Animation/Animator.h"
-#include "../Animation/AnimationClip.h"
-#include "../Debug.h"
+#include "../../Timer.h"
+#include "../../Animation/Animator.h"
+#include "../../Animation/AnimationClip.h"
+#include "../../Debug.h"
 
 Skill::Skill()
 {

@@ -24,20 +24,20 @@ UIPage::UIPage(UI* _pParentPanel, UINT _width, UINT _height, UINT _itemWidth, UI
 	UI(_pParentPanel, _width, _height, _xpos, _ypos, _pivotX, _pivotY)
 {
 	m_pUIList = new UIList(this, _width, _height, _itemWidth, _itemHeight, 0, 0, 0.f, 0.f);
-	m_maxItemViewCount = _height / (_itemHeight + _itemVerticalInterval);
+	m_maxItemViewCount = _height / (_itemHeight + (u_int)_itemVerticalInterval);
 	m_pUIList->SetItemVerticalInterval(_itemVerticalInterval);
 	m_maxPageCount = 64 / 9; // TODO : 사용자 세팅 가능하도록
 	if (64 % 9 != 0) m_maxPageCount++;
 
 	Bitmap* pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_arrow_left_normal.png");
-	m_pPrevBtn = new UIButton(_pParentPanel, 40, 40, 0, _pParentPanel->GetHeight(), 0.f, 1.f);
+	m_pPrevBtn = new UIButton(_pParentPanel, 40, 40, 0.f, (float)_pParentPanel->GetHeight(), 0.f, 1.f);
 	if (pBitmap) m_pPrevBtn->SetBitmap(pBitmap);
 	pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_arrow_left_pressed.png");
 	m_pPrevBtn->SetPressedBitmap(pBitmap);
 	m_pPrevBtn->SetClickable(true);
 
 	pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_arrow_right_normal.png");
-	m_pNextBtn = new UIButton(_pParentPanel, 40, 40, _pParentPanel->GetWidth(), _pParentPanel->GetHeight(), 1.f, 1.f);
+	m_pNextBtn = new UIButton(_pParentPanel, 40, 40, (float)_pParentPanel->GetWidth(), (float)_pParentPanel->GetHeight(), 1.f, 1.f);
 	if (pBitmap) m_pNextBtn->SetBitmap(pBitmap);
 	pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_arrow_right_pressed.png");
 	m_pNextBtn->SetPressedBitmap(pBitmap);
@@ -57,7 +57,7 @@ UIPage::~UIPage()
 
 void UIPage::SetItemTemplate(UIPanel* _pItem)
 {
-	for (int i = 0; i < m_maxItemViewCount; i++)
+	for (u_int i = 0; i < m_maxItemViewCount; i++)
 	{
 		m_pUIList->AddItem(_pItem->Clone());
 	}

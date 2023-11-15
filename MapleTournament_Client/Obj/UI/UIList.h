@@ -29,7 +29,7 @@ public:
     UI* GetIdxItem(u_int _idx);
     void RemoveAllItems(); // ¾À ¹Ù²ð¶§
 
-    size_t GetItemCount() const { return m_vecItem.size(); }
+    int GetItemCount() const { return (int)m_vecItem.size(); }
     UINT GetItemHeight() const { return m_itemHeight; }
     UINT GetCurViewItemLineCount() const;
 

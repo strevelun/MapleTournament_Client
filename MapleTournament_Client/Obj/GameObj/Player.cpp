@@ -1,15 +1,15 @@
 #include "Player.h"
 #include "Skill.h"
-#include "../Defines.h"
-#include "../Animation/Animator.h"
-#include "../Animation/AnimationClip.h"
-#include "../Managers/ObjectManager.h"
-#include "../Scene/InGameScene.h"
-#include "../Timer.h"
-#include "UI/UIText.h"
-#include "UI/UIPanel.h"
-#include "../Managers/UIManager.h"
-#include "../Managers/ResourceManager.h"
+#include "../../Defines.h"
+#include "../../Animation/Animator.h"
+#include "../../Animation/AnimationClip.h"
+#include "../../Managers/ObjectManager.h"
+#include "../../Scene/InGameScene.h"
+#include "../../Timer.h"
+#include "../UI/UIText.h"
+#include "../UI/UIPanel.h"
+#include "../../Managers/UIManager.h"
+#include "../../Managers/ResourceManager.h"
 
 #include <string>
 
@@ -214,7 +214,7 @@ void Player::DoAction(eSkillName _name) // hit, die
 	{
 		m_eCurSkillType = eActionType::Skill;
 		m_pCurSkill->SetActive(true);
-		m_pCurSkill->SetPos(288+(176* m_boardXPos), 298+(100* m_boardYPos)); // 플레이어가 위치한 칸 중앙 (290,300)
+		m_pCurSkill->SetPos(288.f + (176 * m_boardXPos), 298.f + (100 * m_boardYPos)); // 플레이어가 위치한 칸 중앙 (290,300)
 		m_pCurSkill->SetDir(m_eDir); // 애니메이션 출력용
 		m_eSkillName = _name;
 	}
@@ -247,7 +247,7 @@ UIPanel* Player::SetNicknameUI(std::wstring _strNickname)
 	m_pNicknameText = new UIPanel(nullptr, 150, 25, m_tPos.x, m_tPos.y + m_nicknamePanelYPos, 0.5f, 1.0f);
 	m_pNicknameText->SetBitmap(pBitmap);
 	m_pNicknameText->SetName(_strNickname);
-	UIText* pText = new UIText(m_pNicknameText, _strNickname, 20.f, m_pNicknameText->GetWidth() / 2, m_pNicknameText->GetHeight() / 2, 0.5f, 0.5f);
+	UIText* pText = new UIText(m_pNicknameText, _strNickname, 20.f, m_pNicknameText->GetWidth() / 2.f, m_pNicknameText->GetHeight() / 2.f, 0.5f, 0.5f);
 	m_pNicknameText->AddChildUI(pText);
 	return m_pNicknameText;
 }

@@ -19,8 +19,8 @@
 #include "../Managers/InputManager.h"
 #include "../Animation/AnimationClip.h"
 #include "../Animation/Animator.h"
-#include "../Obj/Player.h"
-#include "../Obj/Skill.h"
+#include "../Obj/GameObj/Player.h"
+#include "../Obj/GameObj/Skill.h"
 #include "../Debug.h"
 #include "../Constants.h"
 //#include "../InstructionQueue.h"
@@ -645,7 +645,7 @@ void PacketHandler::S_InGameReady(char* _packet)
 void PacketHandler::S_UpdateUserListPage(char* _packet)
 {
 	int newPage = *(char*)_packet;			_packet += sizeof(char);
-	int numOfUser = *(char*)_packet;			_packet += sizeof(char);
+	u_int numOfUser = *(char*)_packet;			_packet += sizeof(char);
 
 	if (numOfUser <= 0) return;
 
@@ -662,7 +662,7 @@ void PacketHandler::S_UpdateUserListPage(char* _packet)
 	UIPanel* pPanel = nullptr;
 	UIText* pText = nullptr;
 
-	for (int i = 0; i < maxViewCount; i++)
+	for (u_int i = 0; i < maxViewCount; i++)
 	{
 		pUI = pList->GetIdxItem(i);
 		pPanel = static_cast<UIPanel*>(pUI);
@@ -704,7 +704,7 @@ void PacketHandler::S_UpdateUserListPage(char* _packet)
 void PacketHandler::S_UpdateRoomListPage(char* _packet)
 {
 	int newPage = *(char*)_packet;			_packet += sizeof(char);
-	int numOfRoom = *(char*)_packet;			_packet += sizeof(char);
+	u_int numOfRoom = *(char*)_packet;			_packet += sizeof(char);
 
 	UI* pUI = UIManager::GetInst()->FindUI(L"RoomListPanel");
 	if (!pUI) return;
@@ -718,7 +718,7 @@ void PacketHandler::S_UpdateRoomListPage(char* _packet)
 	pRoomPage->SetCurPageIdx(newPage);
 	u_int maxViewCount = pRoomPage->GetMaxItemViewCount();
 
-	for (int i = 0; i < maxViewCount; i++)
+	for (u_int i = 0; i < maxViewCount; i++)
 	{
 		UI* pUI = pRoomPageList->GetIdxItem(i);
 		UIPanel* pPanel = static_cast<UIPanel*>(pUI);
@@ -729,7 +729,7 @@ void PacketHandler::S_UpdateRoomListPage(char* _packet)
 		}
 		pPanel->SetActive(true);
 
-		u_int roomId = *(char*)_packet;					_packet += sizeof(u_int);
+		u_int roomId = *(char*)_packet;							_packet += sizeof(u_int);
 		ushort eRoomState = *(ushort*)_packet;					_packet += sizeof(ushort);
 		std::wstring roomTitle = (wchar_t*)_packet;				_packet += (ushort)wcslen((wchar_t*)_packet) * 2 + 2;
 		std::wstring  roomOwner = (wchar_t*)_packet;			_packet += (ushort)wcslen((wchar_t*)_packet) * 2 + 2;
@@ -747,7 +747,7 @@ void PacketHandler::S_UpdateRoomListPage(char* _packet)
 		{
 			pBtn->SetCallback([roomId]()
 				{
-					char buffer[255];
+					char buffer[255] = {};
 					ushort count = sizeof(ushort);
 					*(ushort*)(buffer + count) = (ushort)ePacketType::C_JoinRoom;				count += sizeof(ushort);
 					*(unsigned int*)(buffer + count) = roomId;									count += sizeof(unsigned int);
@@ -858,7 +858,7 @@ void PacketHandler::S_UpdateTurn(char* _packet)
 	UI* pUI = UIManager::GetInst()->FindUI(L"SkillButtonPanel");
 	if (pUI)
 	{
-		pUI->SetPos(ScreenWidth / 2, ScreenHeight);
+		pUI->SetPos(ScreenWidth / 2.f, ScreenHeight);
 		pUI->SetClickable(true);
 
 		UIPanel* pPanel = static_cast<UIPanel*>(pUI);

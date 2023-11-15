@@ -146,10 +146,10 @@
     <ClCompile Include="Managers\UIManager.cpp" />
     <ClCompile Include="NetworkCore\NetworkManager.cpp" />
     <ClCompile Include="NetworkCore\TCPClient.cpp" />
-    <ClCompile Include="Obj\GameObj.cpp" />
+    <ClCompile Include="Obj\GameObj\GameObj.cpp" />
+    <ClCompile Include="Obj\GameObj\Player.cpp" />
+    <ClCompile Include="Obj\GameObj\Skill.cpp" />
     <ClCompile Include="Obj\Obj.cpp" />
-    <ClCompile Include="Obj\Player.cpp" />
-    <ClCompile Include="Obj\Skill.cpp" />
     <ClCompile Include="Obj\UI\Mouse.cpp" />
     <ClCompile Include="Obj\UI\UI.cpp" />
     <ClCompile Include="Obj\UI\UIButton.cpp" />
@@ -186,10 +186,10 @@
     <ClInclude Include="Managers\UIManager.h" />
     <ClInclude Include="NetworkCore\NetworkManager.h" />
     <ClInclude Include="NetworkCore\TCPClient.h" />
-    <ClInclude Include="Obj\GameObj.h" />
+    <ClInclude Include="Obj\GameObj\GameObj.h" />
+    <ClInclude Include="Obj\GameObj\Player.h" />
+    <ClInclude Include="Obj\GameObj\Skill.h" />
     <ClInclude Include="Obj\Obj.h" />
-    <ClInclude Include="Obj\Player.h" />
-    <ClInclude Include="Obj\Skill.h" />
     <ClInclude Include="Obj\UI\Mouse.h" />
     <ClInclude Include="Obj\UI\UI.h" />
     <ClInclude Include="Obj\UI\UIButton.h" />

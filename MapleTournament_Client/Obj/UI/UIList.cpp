@@ -105,8 +105,8 @@ void UIList::RemoveAllItems()
 
 UINT UIList::GetCurViewItemLineCount() const
 {
-	int h = 0, line = 0;
-
+	u_int h = 0, line = 0;
+	
 	for (auto& item : m_vecItem)
 	{
 		if (h >= m_size.height) break;
@@ -147,7 +147,7 @@ void UIList::Render(int _from, int _to)
 		//if (h > m_size.height) break;
 		if (!m_vecItem[i]->IsActive()) continue;
 
-		m_vecItem[i]->SetPos(0, m_vecItem[i]->GetHeight() * j);
+		m_vecItem[i]->SetPos(0, (float)m_vecItem[i]->GetHeight() * j);
 
 		//m_vecItem[i]->SetPos(0, h);
 		//h += m_vecItem[i]->GetHeight();

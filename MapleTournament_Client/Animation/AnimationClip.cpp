@@ -7,7 +7,7 @@
 AnimationClip::AnimationClip(Bitmap* _pBitmap, std::vector<tAnimationFrame*>* _pVecFrame) :
 	m_pBitmap(_pBitmap), m_pVecFrame(_pVecFrame)
 {
-	m_clipSize = _pVecFrame->size();
+	m_clipSize = (int)_pVecFrame->size();
 }
 
 AnimationClip::AnimationClip(const AnimationClip& _clip) :

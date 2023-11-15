@@ -44,7 +44,7 @@ bool LoginScene::Init()
     /* UI */
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_login_edittext.png");
     if (!pBitmap) return false;
-    UIEditText* pInputNickname = new UIEditText(pBackground, 500, 50, 7, pBackground->GetWidth() / 2, pBackground->GetHeight() / 2, 0.5f, 0.5f);
+    UIEditText* pInputNickname = new UIEditText(pBackground, 500, 50, 7, (float)pBackground->GetWidth() / 2, (float)pBackground->GetHeight() / 2, 0.5f, 0.5f);
     pInputNickname->SetBitmap(pBitmap);
     pInputNickname->SetClickable(true);
     pInputNickname->SetCallback(&LoginScene::LoginButtonCallback, this);
@@ -74,7 +74,7 @@ bool LoginScene::Init()
 
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_button_okay_normal.png");
     if (!pBitmap) return false;
-    UIButton* pOKButton = new UIButton(pPanel, 150, 100, pPanel->GetWidth() / 2, pPanel->GetHeight() - 50, 0.5f, 1.f);
+    UIButton* pOKButton = new UIButton(pPanel, 150, 100, pPanel->GetWidth() / 2.f, pPanel->GetHeight() - 50.f, 0.5f, 1.f);
     pOKButton->SetBitmap(pBitmap);
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_button_okay_pressed.png");
     if (!pBitmap) return false;
@@ -95,7 +95,7 @@ bool LoginScene::Init()
 
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_button_okay_normal.png");
     if (!pBitmap) return false;
-    pOKButton = new UIButton(pPanel, 150, 100, pPanel->GetWidth() / 2, pPanel->GetHeight() - 50, 0.5f, 1.f);
+    pOKButton = new UIButton(pPanel, 150, 100, (float)pPanel->GetWidth() / 2, (float)pPanel->GetHeight() - 50, 0.5f, 1.f);
     pOKButton->SetBitmap(pBitmap);
     pBitmap = ResourceManager::GetInst()->GetBitmap(L"Resource\\UI\\ui_button_okay_pressed.png");
     if (!pBitmap) return false;
@@ -115,11 +115,12 @@ void LoginScene::LoginButtonCallback(UIEditText* _pEditText, const std::wstring&
         if (pUI) UIManager::GetInst()->SetPopupUI(static_cast<UIPanel*>(pUI));
         return;
     }
-    char buffer[255];
+    char buffer[255] = {};
     ushort count = sizeof(ushort);
     *(ushort*)(buffer + count) = (ushort)ePacketType::C_OKLogin;						count += sizeof(ushort);
     const wchar_t* str = _str.c_str();
-    memcpy(buffer + count, str, wcslen(str) * 2);				count += (ushort)wcslen(str) * 2;
+    int len = (int)wcslen(str) * 2;
+    memcpy(buffer + count, str, len);			                            count += len;
     *(wchar_t*)(buffer + count) = L'\0';									count += 2;
     *(ushort*)buffer = count;
     NetworkManager::GetInst()->Send(buffer);

@@ -1,6 +1,6 @@
 #include "GameObj.h"
-#include "../Animation/Animator.h"
-#include "../GraphicCore/Graphics.h"
+#include "../../Animation/Animator.h"
+#include "../../GraphicCore/Graphics.h"
 
 GameObj::GameObj()
 {

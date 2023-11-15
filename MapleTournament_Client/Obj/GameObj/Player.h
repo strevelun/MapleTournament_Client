@@ -1,6 +1,6 @@
 #pragma once
 #include "GameObj.h"
-#include "../Setting.h"
+#include "../../Setting.h"
 
 #include <map>
 #include <d2d1.h>

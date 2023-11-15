@@ -72,7 +72,7 @@ void UIEditText::Update()
 	if (size > 0)
 	{
 		IDWriteTextLayout* pLayout = nullptr;
-		HRESULT hr = Graphics::GetInst()->GetDwriteFactory()->CreateTextLayout(m_strInput.c_str(), m_strInput.length(), m_pTextFormat, (FLOAT)m_size.width, (FLOAT)m_size.height, &pLayout);
+		HRESULT hr = Graphics::GetInst()->GetDwriteFactory()->CreateTextLayout(m_strInput.c_str(), (int)m_strInput.length(), m_pTextFormat, (FLOAT)m_size.width, (FLOAT)m_size.height, &pLayout);
 
 		if (SUCCEEDED(hr))
 		{
@@ -103,7 +103,7 @@ void UIEditText::Render()
 	if (m_pBitmap)		pRenderTarget->DrawBitmap(m_pBitmap->GetBitmap(), m_rect);
 
 	if(m_strInput.length() > 0)
-		pRenderTarget->DrawTextW(m_strInput.c_str(), m_strInput.length(), m_pTextFormat, m_rect, m_pBrush);
+		pRenderTarget->DrawTextW(m_strInput.c_str(), (int)m_strInput.length(), m_pTextFormat, m_rect, m_pBrush);
 
 	if (m_bFocus)
 	{

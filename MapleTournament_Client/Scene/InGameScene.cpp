@@ -7,8 +7,8 @@
 #include "../Obj/UI/UIPanel.h"
 #include "../Obj/UI/UIButton.h"
 #include "../Obj/UI/UIText.h"
-#include "../Obj/Player.h"
-#include "../Obj/Skill.h"
+#include "../Obj/GameObj/Player.h"
+#include "../Obj/GameObj/Skill.h"
 #include "../Animation/Animator.h"
 #include "../Animation/AnimationClip.h"
 #include "LobbyScene.h"
@@ -24,7 +24,8 @@
 
 typedef unsigned short ushort;
 
-InGameScene::InGameScene()
+InGameScene::InGameScene() :
+    m_arrTimer{}
 {
 }
 
@@ -161,7 +162,7 @@ bool InGameScene::Init()
     pPanel->SetBitmap(pBitmap);
     pPanel->SetName(L"GameOver");
     pPanel->SetActive(false);
-    UIText* pGameoverText = new UIText(pPanel, L"", 30.f, pPanel->GetWidth() / 2, pPanel->GetHeight() - 200, 0.5f, 1.f);
+    UIText* pGameoverText = new UIText(pPanel, L"", 30.f, (float)pPanel->GetWidth() / 2, (float)pPanel->GetHeight() - 200, 0.5f, 1.f);
     pGameoverText->SetName(L"GameOverText");
     pPanel->AddChildUI(pGameoverText);
     UIManager::GetInst()->AddPopupUI(pPanel);
@@ -174,7 +175,7 @@ bool InGameScene::Init()
     pPanel->SetBitmap(pBitmap);
     UIManager::GetInst()->AddUI(pPanel);
     pLayer->AddObj(pPanel);
-    UIText *pDashboardText = new UIText(pPanel, L"1 / " + std::to_wstring(GAME_MAX_TURN), 30.f, pPanel->GetWidth()/2, pPanel->GetHeight()/2, 0.5f, 0.5f);
+    UIText *pDashboardText = new UIText(pPanel, L"1 / " + std::to_wstring(GAME_MAX_TURN), 30.f, (float)pPanel->GetWidth()/2, (float)pPanel->GetHeight()/2, 0.5f, 0.5f);
     pDashboardText->SetTextColor(D2D1::ColorF::White);
     pPanel->AddChildUI(pDashboardText);
     pDashboardText->SetName(L"DashboardText");
@@ -241,7 +242,7 @@ bool InGameScene::Init()
     pClip = ResourceManager::GetInst()->GetAnimClip(L"attack1", L"attack1");
     if (!pClip) return false;
     
-    Animator* pAnimator = new Animator(pClip);
+    pAnimator = new Animator(pClip);
     pClip->SetLoop(false);
     pClip->SetPlayTime(4.f);
     pClip->SetAnyState(false);
@@ -254,7 +255,7 @@ bool InGameScene::Init()
     pClip = ResourceManager::GetInst()->GetAnimClip(L"attack2", L"attack2");
     if (!pClip) return false;
     
-    Animator* pAnimator = new Animator(pClip);
+    pAnimator = new Animator(pClip);
     pClip->SetLoop(false);
     pClip->SetPlayTime(3.f);
     pClip->SetAnyState(false);
@@ -267,7 +268,7 @@ bool InGameScene::Init()
     pClip = ResourceManager::GetInst()->GetAnimClip(L"attack3", L"attack3");
     if (!pClip) return false;
 
-    Animator* pAnimator = new Animator(pClip);
+    pAnimator = new Animator(pClip);
     pClip->SetLoop(false);
     pClip->SetLoopCount(2);
     pClip->SetPlayTime(2.f);
@@ -281,7 +282,7 @@ bool InGameScene::Init()
     pClip = ResourceManager::GetInst()->GetAnimClip(L"heal0", L"heal0");
     if (!pClip) return false;
     
-    Animator* pAnimator = new Animator(pClip);
+    pAnimator = new Animator(pClip);
     pClip->SetLoop(false);
     pClip->SetPlayTime(1.5f);
     pClip->SetAnyState(false);
@@ -450,7 +451,7 @@ bool InGameScene::Init()
     {
         for (int xpos = 0; xpos < 5; xpos++)
         {
-            pPanel = new UIPanel(pRangeBlockPanel, 173, 97, 176*xpos, 100*ypos);
+            pPanel = new UIPanel(pRangeBlockPanel, 173, 97, 176.f * xpos, 100.f * ypos);
             pPanel->SetBitmap(pBitmap);
             pPanel->SetName(std::to_wstring((ypos*10) + xpos));
             pRangeBlockPanel->AddChildUI(pPanel);
@@ -458,7 +459,7 @@ bool InGameScene::Init()
     }
     pRangeBlockPanel->SetActive(false);
 
-    char buffer[255];
+    char buffer[255] = {};
     ushort count = sizeof(ushort);
     *(ushort*)(buffer + count) = (ushort)ePacketType::C_InGameReady;          count += sizeof(ushort);
     *(ushort*)buffer = count;
@@ -494,7 +495,7 @@ void InGameScene::Update()
             UIManager::GetInst()->PopPopupUI();
             ChangeState(eInGameState::None);
 
-            char buffer[255];
+            char buffer[255] = {};
             ushort count = sizeof(ushort);
             *(ushort*)(buffer + count) = (ushort)ePacketType::C_Standby;          count += sizeof(ushort);
             *(ushort*)buffer = count;
@@ -512,7 +513,7 @@ void InGameScene::Update()
             LobbyScene* pScene = new LobbyScene;
             SceneManager::GetInst()->ChangeScene(pScene);
 
-            char buffer[255];
+            char buffer[255] = {};
             ushort count = sizeof(ushort);
             *(ushort*)(buffer + count) = (ushort)ePacketType::C_GameOver;				count += sizeof(ushort);
             *(ushort*)buffer = count;
@@ -525,7 +526,7 @@ void InGameScene::Update()
         {
             if (m_isMyTurn)
             {
-                char buffer[255];
+                char buffer[255] = {};
                 ushort count = sizeof(ushort);
                 *(ushort*)(buffer + count) = (ushort)ePacketType::C_CheckHit;               count += sizeof(ushort);
                 *(ushort*)buffer = count;
@@ -535,7 +536,7 @@ void InGameScene::Update()
         }
        else if (m_eSkillState == eSkillState::CheckHeal)
        {
-           char buffer[255];
+           char buffer[255] = {};
            ushort count = sizeof(ushort);
            *(ushort*)(buffer + count) = (ushort)ePacketType::C_CheckHeal;               count += sizeof(ushort);
            *(ushort*)buffer = count;
@@ -574,17 +575,10 @@ void InGameScene::ChangeState(eInGameState _state)
         break;
     }
 }
-/*
-void InGameScene::SetSkillTimer(float _timer)
-{
-    if (m_eState != eInGameState::UseSkill) return;
 
-    m_timer = _timer;
-}
-*/
 void InGameScene::SendActionPacket(eActionType _type, eMoveName _name)
 {
-    char buffer[255];
+    char buffer[255] = {};
     ushort count = sizeof(ushort);
     *(ushort*)(buffer + count) = (ushort)ePacketType::C_Skill;				count += sizeof(ushort);
     *(char*)(buffer + count) = (char)_type;                     count += sizeof(char);
@@ -595,7 +589,7 @@ void InGameScene::SendActionPacket(eActionType _type, eMoveName _name)
 
 void InGameScene::SendActionPacket(eActionType _type, eSkillName _name)
 {
-    char buffer[255];
+    char buffer[255] = {};
     ushort count = sizeof(ushort);
     *(ushort*)(buffer + count) = (ushort)ePacketType::C_Skill;				count += sizeof(ushort);
     *(char*)(buffer + count) = (char)_type;                     count += sizeof(char);
@@ -606,7 +600,7 @@ void InGameScene::SendActionPacket(eActionType _type, eSkillName _name)
 
 void InGameScene::NextTurn()
 {
-    char buffer[255];
+    char buffer[255] = {};
     ushort count = sizeof(ushort);
     *(ushort*)(buffer + count) = (ushort)ePacketType::C_NextTurn;				count += sizeof(ushort);
     *(ushort*)buffer = count;
@@ -623,7 +617,7 @@ void InGameScene::OnItemButtonClick(UIPanel* _pPanel)
     }
     _pPanel->SetActive(true);
     _pPanel->SetClickable(false);
-    _pPanel->SetPos(ScreenWidth / 2, ScreenHeight + 80);
+    _pPanel->SetPos((float)ScreenWidth / 2, ScreenHeight + 80);
     m_arrTimer[(u_int)m_timer]->SetActive(false);
 
     ChangeState(eInGameState::None);
@@ -634,7 +628,7 @@ void InGameScene::OnTimeout()
 {
     UI* pUI = UIManager::GetInst()->FindUI(L"SkillButtonPanel");
     if (!pUI) return;
-    pUI->SetPos(ScreenWidth / 2, ScreenHeight + 80);
+    pUI->SetPos((float)ScreenWidth / 2, ScreenHeight + 80);
     pUI->SetClickable(false);
 
     Mouse* pMouse = InputManager::GetInst()->GetMouse();
@@ -654,7 +648,7 @@ void InGameScene::OnTimeout()
 
 void InGameScene::SendExitPacket()
 {
-    char buffer[255];
+    char buffer[255] = {};
     ushort count = sizeof(ushort);
     *(ushort*)(buffer + count) = (ushort)ePacketType::C_ExitInGame;				count += sizeof(ushort);
     *(ushort*)buffer = count;
