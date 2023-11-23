@@ -55,6 +55,7 @@ enum class ePacketType
 	S_UpdateScore,
 	C_CheckHeal,
 	S_UpdateHeal,
+	C_CreatePortal,
 	S_CreatePortal,
 	S_Teleport,
 	C_ExitInGame,
@@ -73,7 +74,6 @@ enum class eInGameState
 enum class eSkillState
 {
 	None,
-	InUse,
 	CheckHit,
 	CheckHeal,
 	End,
@@ -112,6 +112,14 @@ enum class eSkillName
 	Attack3,
 	Attack4,
 	NumOfSkills,
+};
+
+enum class eSkillType
+{
+	None,
+	Attack,
+	Heal,
+	NumOfSkillType
 };
 
 enum class eMemberType

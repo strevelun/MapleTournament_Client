@@ -18,5 +18,5 @@ public: \
 	} 
 
 
-#define GAME_MAX_TURN			30
-#define FRAME_PER_SEC			120
+constexpr int FramePerSec = 120;
+

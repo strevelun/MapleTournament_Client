@@ -17,8 +17,7 @@ private:
 
 private:
 	std::array<UI*, 10> m_arrTimer ;
-	bool m_isMyTurn = false;
-	eInGameState m_eState = eInGameState::Prepare;
+	eInGameState m_eState = eInGameState::None;
 	eSkillState m_eSkillState = eSkillState::None;
 
 	float m_timer = PrepareTimer;
@@ -30,19 +29,26 @@ public:
 	bool Init() override;
 	void Update() override;
 
-	void SetMyTurn(bool _isMyTurn);
 	void ChangeState(eInGameState _state);
 	void SetSkillState(eSkillState _state) { m_eSkillState = _state;  }
 
-	bool IsMyTurn() const { return m_isMyTurn; }
-	//void SetSkillTimer(float _timer);
+	void UpdateMPUI(int _slot, int _mp);
+	void UpdateHPUI(int _slot, int _hp);
 
 private:
 	void SendActionPacket(eActionType _type, eMoveName _name);
 	void SendActionPacket(eActionType _type, eSkillName _name);
 	void NextTurn();
 	void OnItemButtonClick(UIPanel* _pPanel);
-	void OnTimeout();
 	void SendExitPacket();
+
+	void CheckAttackResult(bool& _hit, bool& _dead);
+	void UpdateHeal();
+	void TurnOver();
+	void GameOver();
+
+	void ShowGameOverUI();
+
+	void UpdateDashboardUI();
 };
 

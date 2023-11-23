@@ -14,7 +14,7 @@
 #include <string>
 
 Player::Player(InGameScene* _pScene, int _slot) :
-	m_pScene(_pScene), m_slot(_slot)
+	m_pScene(_pScene)
 {
 	if (_slot == 1 || _slot == 3)
 		m_nicknamePanelYPos = 55;
@@ -44,11 +44,11 @@ void Player::Update()
 {
 	GameObj::Update();
 
-	if (m_eCurSkillType == eActionType::None) return;
+	if (m_eCurActionType == eActionType::None) return;
 
 	m_time = Timer::GetInst()->GetDeltaTime();
 
-	if (m_eCurSkillType == eActionType::Move)
+	if (m_eCurActionType == eActionType::Move)
 	{
 		if (m_eMoveName == eMoveName::LeftMove)
 		{
@@ -111,14 +111,14 @@ void Player::Update()
 			}
 		}
 	}
-	else if (m_eCurSkillType == eActionType::Hit)
+	else if (m_eCurActionType == eActionType::Hit)
 	{
 		if (m_pAnimator->GetCurClip()->IsEnd())
 		{
 			SkillEnd(eSkillState::End);
 		}
 	}
-	else if (m_eCurSkillType == eActionType::Die)
+	else if (m_eCurActionType == eActionType::Die)
 	{
 		if (m_pAnimator->GetCurClip()->IsEnd())
 		{
@@ -128,7 +128,7 @@ void Player::Update()
 
 		}
 	}
-	else if(m_eCurSkillType == eActionType::Skill)
+	else if(m_eCurActionType == eActionType::Skill)
 	{
 		if (m_pCurSkill && m_pCurSkill->IsEnd())
 		{
@@ -164,7 +164,7 @@ void Player::DoAction(eMoveName _name)
 {
 	if (_name == eMoveName::None || _name == eMoveName::NumOfMoves) return;
 
-	m_eCurSkillType = eActionType::Move;
+	m_eCurActionType = eActionType::Move;
 	m_pAnimator->SetNextClip(L"Walk");
 
 	if (_name == eMoveName::LeftMove)
@@ -212,7 +212,7 @@ void Player::DoAction(eSkillName _name) // hit, die
 	m_pCurSkill = ObjectManager::GetInst()->FindSkill(_name);
 	if (m_pCurSkill)
 	{
-		m_eCurSkillType = eActionType::Skill;
+		m_eCurActionType = eActionType::Skill;
 		m_pCurSkill->SetActive(true);
 		m_pCurSkill->SetPos(288.f + (176 * m_boardXPos), 298.f + (100 * m_boardYPos)); // 플레이어가 위치한 칸 중앙 (290,300)
 		m_pCurSkill->SetDir(m_eDir); // 애니메이션 출력용
@@ -226,12 +226,12 @@ void Player::DoAction(eActionType _type)
 
 	if (_type == eActionType::Hit)
 	{
-		m_eCurSkillType = _type;
+		m_eCurActionType = _type;
 		m_pAnimator->SetNextClip(L"Hit");
 	}
 	else if (_type == eActionType::Die)
 	{
-		m_eCurSkillType = _type;
+		m_eCurActionType = _type;
 		m_pAnimator->SetNextClip(L"Die");
 	}
 }
@@ -254,7 +254,7 @@ UIPanel* Player::SetNicknameUI(std::wstring _strNickname)
 
 void Player::SkillEnd(eSkillState _eSkillState)
 {
-	m_eCurSkillType = eActionType::None;
+	m_eCurActionType = eActionType::None;
 	m_eMoveName = eMoveName::None;
 	m_eSkillName = eSkillName::None;
 	m_pAnimator->SetDefaultClip();

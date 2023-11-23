@@ -17,7 +17,6 @@ public:
     static constexpr float UpDownMoveDist = 100.f;
 
 private:
-    int m_slot = 0;
     int m_boardXPos = 0, m_boardYPos = 0;
     int m_nicknamePanelYPos = 0;
 
@@ -27,7 +26,7 @@ private:
     UIPanel* m_pNicknameText = nullptr;
 
 protected:
-    eActionType              m_eCurSkillType = eActionType::None;
+    eActionType              m_eCurActionType = eActionType::None;
     eMoveName                   m_eMoveName = eMoveName::None;
     eSkillName                  m_eSkillName = eSkillName::None;
 
@@ -47,7 +46,7 @@ public:
     void ChangeAnimationState(const std::wstring& _strStateName);
     UIPanel* SetNicknameUI(std::wstring _strNickname);
 
-    eActionType GetActionType() const { return m_eCurSkillType; }
+    eActionType GetActionType() const { return m_eCurActionType; }
     
     void SkillEnd(eSkillState _eSkillState); // actionEnd
 };

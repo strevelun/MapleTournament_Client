@@ -7,11 +7,13 @@
 #include "Managers/UIManager.h"
 #include "Managers/InputManager.h"
 #include "Managers/ObjectManager.h"
+#include "Managers/SkillManager.h"
 #include "InstructionQueue.h"
 #include "Scene/LoginScene.h"
 #include "Obj/UI/Mouse.h"
 #include "Timer.h"
 #include "Debug.h"
+#include "Game.h"
 
 typedef unsigned short ushort;
 
@@ -32,6 +34,7 @@ GameApp::~GameApp()
 	if (m_pBrush) m_pBrush->Release();
 
 	//InstructionQueue::DestroyInst();
+	SkillManager::DestroyInst();
 	InputManager::DestroyInst();
 	SceneManager::DestroyInst();
 	UIManager::DestroyInst();
@@ -39,6 +42,7 @@ GameApp::~GameApp()
 	Timer::DestroyInst();
 	Graphics::DestroyInst();
 	ResourceManager::DestroyInst();
+	Game::DestroyInst();
 }
 
 bool GameApp::Init(int _nCmdShow, const wchar_t* _windowName, UINT _width, UINT _height)
@@ -60,6 +64,7 @@ bool GameApp::Init(int _nCmdShow, const wchar_t* _windowName, UINT _width, UINT 
 	if (!m_pClient->Init("192.168.219.167", 30001)) return false;
 	//if (!m_pClient->Init("182.220.167.199", 30001)) return false;
 
+	if (!SkillManager::GetInst()->Init()) return false;
 	if (!ResourceManager::GetInst()->Init())
 	{
 		Debug::Log(L"NetworkManager 초기화 에러");
@@ -68,7 +73,7 @@ bool GameApp::Init(int _nCmdShow, const wchar_t* _windowName, UINT _width, UINT 
 	if (!InputManager::GetInst()->Init(m_window.GetHWnd())) return false;
 	if (!UIManager::GetInst()->Init()) return false;
 	if (!ObjectManager::GetInst()->Init()) return false;
-	if (!Timer::GetInst()->Init(FRAME_PER_SEC)) return false;
+	if (!Timer::GetInst()->Init(FramePerSec)) return false;
 	//if (!InstructionQueue::GetInst()->Init()) return false;
 
 	SceneManager::GetInst()->ChangeScene(new LoginScene);

@@ -40,6 +40,12 @@
     <Filter Include="Obj\GameObj">
       <UniqueIdentifier>{a2feefa9-0f4d-4427-a6cd-3911c1f61bcd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Libs">
+      <UniqueIdentifier>{4b4b896f-e92d-4475-b2ac-522bbd37d527}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Skill">
+      <UniqueIdentifier>{8194d8a5-8161-406d-99c5-01b65cfd40d9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -153,6 +159,24 @@
     <ClCompile Include="Obj\GameObj\Skill.cpp">
       <Filter>Obj\GameObj</Filter>
     </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Managers\SkillManager.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Skill\SkillInfo.cpp">
+      <Filter>Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="Skill\SkillAttack.cpp">
+      <Filter>Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="Skill\SkillHeal.cpp">
+      <Filter>Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\dist\jsoncpp.cpp">
+      <Filter>Libs</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameApp.h">
@@ -265,6 +289,27 @@
     </ClInclude>
     <ClInclude Include="Obj\GameObj\Skill.h">
       <Filter>Obj\GameObj</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Managers\SkillManager.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\json\json.h">
+      <Filter>Libs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\json\json-forwards.h">
+      <Filter>Libs</Filter>
+    </ClInclude>
+    <ClInclude Include="Skill\SkillInfo.h">
+      <Filter>Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="Skill\SkillAttack.h">
+      <Filter>Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="Skill\SkillHeal.h">
+      <Filter>Skill</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

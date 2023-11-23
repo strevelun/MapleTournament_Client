@@ -3,6 +3,8 @@
 #include "../Managers/ResourceManager.h"
 #include "../Managers/ObjectManager.h"
 #include "../Managers/UIManager.h"
+#include "../Managers/SkillManager.h"
+#include "../Skill/SkillHeal.h"
 #include "../Constants.h"
 #include "../Obj/UI/UIPanel.h"
 #include "../Obj/UI/UIButton.h"
@@ -15,6 +17,7 @@
 #include "../Managers/SceneManager.h"
 #include "../Managers/InputManager.h"
 #include "Layer.h"
+#include "../Game.h"
 #include "../Timer.h"
 #include "../Debug.h"
 #include "../Obj/UI/Mouse.h"
@@ -63,10 +66,10 @@ bool InGameScene::Init()
     UIText* pPlayerName = new UIText(pPanel, L"", 25.f, 130, 10);
     pPlayerName->SetName(L"Nickname");
     pPanel->AddChildUI(pPlayerName);
-    UIText* pHP = new UIText(pPanel, L"HP : 0", 15.f, 130, 50);
+    UIText* pHP = new UIText(pPanel, L"HP : " + std::to_wstring(Game::HPMax), 15.f, 130, 50);
     pHP->SetName(L"HP");
     pPanel->AddChildUI(pHP);
-    UIText* pMP = new UIText(pPanel, L"MP : 0", 15.f, 130, 70);
+    UIText* pMP = new UIText(pPanel, L"MP : " + std::to_wstring(Game::MPMax), 15.f, 130, 70);
     pMP->SetName(L"MP");
     pPanel->AddChildUI(pMP);
     pPanel->SetActive(false);
@@ -82,10 +85,10 @@ bool InGameScene::Init()
     pPlayerName = new UIText(pPanel, L"", 25.f, 130, 10);
     pPlayerName->SetName(L"Nickname");
     pPanel->AddChildUI(pPlayerName);
-    pHP = new UIText(pPanel, L"HP : 0", 15.f, 130, 50);
+    pHP = new UIText(pPanel, L"HP : " + std::to_wstring(Game::HPMax), 15.f, 130, 50);
     pHP->SetName(L"HP");
     pPanel->AddChildUI(pHP);
-    pMP = new UIText(pPanel, L"MP : 0", 15.f, 130, 70);
+    pMP = new UIText(pPanel, L"MP : " + std::to_wstring(Game::MPMax), 15.f, 130, 70);
     pMP->SetName(L"MP");
     pPanel->AddChildUI(pMP);
     pPanel->SetActive(false);
@@ -101,10 +104,10 @@ bool InGameScene::Init()
     pPlayerName = new UIText(pPanel, L"", 25.f, 130, 10);
     pPlayerName->SetName(L"Nickname");
     pPanel->AddChildUI(pPlayerName);
-    pHP = new UIText(pPanel, L"HP : 0", 15.f, 130, 50);
+    pHP = new UIText(pPanel, L"HP : " + std::to_wstring(Game::HPMax), 15.f, 130, 50);
     pHP->SetName(L"HP");
     pPanel->AddChildUI(pHP);
-    pMP = new UIText(pPanel, L"MP : 0", 15.f, 130, 70);
+    pMP = new UIText(pPanel, L"MP : " + std::to_wstring(Game::MPMax), 15.f, 130, 70);
     pMP->SetName(L"MP");
     pPanel->AddChildUI(pMP);
     pPanel->SetActive(false);
@@ -120,10 +123,10 @@ bool InGameScene::Init()
     pPlayerName = new UIText(pPanel, L"", 25.f, 130, 10);
     pPlayerName->SetName(L"Nickname");
     pPanel->AddChildUI(pPlayerName);
-    pHP = new UIText(pPanel, L"HP : 0", 15.f, 130, 50);
+    pHP = new UIText(pPanel, L"HP : " + std::to_wstring(Game::HPMax), 15.f, 130, 50);
     pHP->SetName(L"HP");
     pPanel->AddChildUI(pHP);
-    pMP = new UIText(pPanel, L"MP : 0", 15.f, 130, 70);
+    pMP = new UIText(pPanel, L"MP : " + std::to_wstring(Game::MPMax), 15.f, 130, 70);
     pMP->SetName(L"MP");
     pPanel->AddChildUI(pMP);
     pPanel->SetActive(false);
@@ -175,7 +178,7 @@ bool InGameScene::Init()
     pPanel->SetBitmap(pBitmap);
     UIManager::GetInst()->AddUI(pPanel);
     pLayer->AddObj(pPanel);
-    UIText *pDashboardText = new UIText(pPanel, L"1 / " + std::to_wstring(GAME_MAX_TURN), 30.f, (float)pPanel->GetWidth()/2, (float)pPanel->GetHeight()/2, 0.5f, 0.5f);
+    UIText *pDashboardText = new UIText(pPanel, L"1 / " + std::to_wstring(Game::GameMaxRound), 30.f, (float)pPanel->GetWidth()/2, (float)pPanel->GetHeight()/2, 0.5f, 0.5f);
     pDashboardText->SetTextColor(D2D1::ColorF::White);
     pPanel->AddChildUI(pDashboardText);
     pDashboardText->SetName(L"DashboardText");
@@ -492,6 +495,8 @@ bool InGameScene::Init()
     }
     pRangeBlockPanel->SetActive(false);
 
+    Game::GetInst()->Init();
+
     char buffer[255] = {};
     ushort count = sizeof(ushort);
     *(ushort*)(buffer + count) = (ushort)ePacketType::C_InGameReady;          count += sizeof(ushort);
@@ -509,16 +514,16 @@ void InGameScene::Update()
 
     if (m_eState == eInGameState::Play)
     {
-        if (!m_isMyTurn) return;
+        bool myTurn = Game::GetInst()->IsMyTurn();
+        if (myTurn) m_arrTimer[(u_int)m_timer]->SetActive(false);
 
-        m_arrTimer[(u_int)m_timer]->SetActive(false);
         m_timer -= Timer::GetInst()->GetDeltaTime();
         if (m_timer <= 0.f)
         {
-            OnTimeout();
+            TurnOver();
             return;
         }
-        m_arrTimer[(u_int)m_timer]->SetActive(true);
+        if (myTurn) m_arrTimer[(u_int)m_timer]->SetActive(true);
     }
     else if (m_eState == eInGameState::Prepare)
     {
@@ -526,13 +531,9 @@ void InGameScene::Update()
         if (m_timer <= 0.f)
         {
             UIManager::GetInst()->PopPopupUI();
-            ChangeState(eInGameState::None);
+            ChangeState(eInGameState::Play);
 
-            char buffer[255] = {};
-            ushort count = sizeof(ushort);
-            *(ushort*)(buffer + count) = (ushort)ePacketType::C_Standby;          count += sizeof(ushort);
-            *(ushort*)buffer = count;
-            NetworkManager::GetInst()->Send(buffer);
+            TurnOver();
         }
     }
     else if (m_eState == eInGameState::GameOver)
@@ -546,50 +547,36 @@ void InGameScene::Update()
             LobbyScene* pScene = new LobbyScene;
             SceneManager::GetInst()->ChangeScene(pScene);
 
-            char buffer[255] = {};
-            ushort count = sizeof(ushort);
-            *(ushort*)(buffer + count) = (ushort)ePacketType::C_GameOver;				count += sizeof(ushort);
-            *(ushort*)buffer = count;
-            NetworkManager::GetInst()->Send(buffer);
+            GameOver();
         }
     }
     else if (m_eState == eInGameState::UseSkill)
     {
-       if (m_eSkillState == eSkillState::CheckHit)
+        if (m_eSkillState == eSkillState::CheckHit)
         {
-            if (m_isMyTurn)
-            {
-                char buffer[255] = {};
-                ushort count = sizeof(ushort);
-                *(ushort*)(buffer + count) = (ushort)ePacketType::C_CheckHit;               count += sizeof(ushort);
-                *(ushort*)buffer = count;
-                NetworkManager::GetInst()->Send(buffer);
-            }
-            m_eSkillState = eSkillState::None;
+            bool dead = false, hit = false;
+            CheckAttackResult(hit, dead);
+            SetSkillState(!(hit || dead) ? eSkillState::End : eSkillState::None);
         }
-       else if (m_eSkillState == eSkillState::CheckHeal)
-       {
-           char buffer[255] = {};
-           ushort count = sizeof(ushort);
-           *(ushort*)(buffer + count) = (ushort)ePacketType::C_CheckHeal;               count += sizeof(ushort);
-           *(ushort*)buffer = count;
-           NetworkManager::GetInst()->Send(buffer);
-       }
-       else if (m_eSkillState == eSkillState::End)
-       {
-            if (m_isMyTurn)
-            {
-                NextTurn();
-                SetMyTurn(false);
-            }			
+        else if (m_eSkillState == eSkillState::CheckHeal)
+        {
+            UpdateHeal();
+            SetSkillState(eSkillState::End);
+        }
+        else if (m_eSkillState == eSkillState::End)
+        {
+            Game::GetInst()->SetSkillName(Game::GetInst()->GetCurSlot(), eSkillName::None);
             m_eSkillState = eSkillState::None;
-       }
-    }
-}
 
-void InGameScene::SetMyTurn(bool _isMyTurn)
-{
-    m_isMyTurn = _isMyTurn;
+            if (Game::GetInst()->GetAliveCount() <= 1)
+            {
+                ChangeState(eInGameState::GameOver);
+                return;
+            }
+
+            TurnOver();
+        }
+    }
 }
 
 void InGameScene::ChangeState(eInGameState _state)
@@ -604,9 +591,36 @@ void InGameScene::ChangeState(eInGameState _state)
         m_timer = StartTimer;
         break;
     case eInGameState::GameOver:
+        ShowGameOverUI();
         m_timer = GameOverTimer;
         break;
     }
+}
+
+void InGameScene::UpdateMPUI(int _slot, int _mp)
+{
+    UI* pUI = UIManager::GetInst()->FindUI(L"PlayerStat" + std::to_wstring(_slot));
+    if (!pUI) return;
+
+    UIPanel* pPanel = static_cast<UIPanel*>(pUI);
+    pUI = pPanel->FindChildUI(L"MP");
+    if (!pUI) return;
+
+    UIText* pText = static_cast<UIText*>(pUI);
+    pText->ReassignText(L"MP : " + std::to_wstring(_mp));
+}
+
+void InGameScene::UpdateHPUI(int _slot, int _hp)
+{
+    UI* pUI = UIManager::GetInst()->FindUI(L"PlayerStat" + std::to_wstring(_slot));
+    if (!pUI) return;
+
+    UIPanel* pPanel = static_cast<UIPanel*>(pUI);
+    pUI = pPanel->FindChildUI(L"HP");
+    if (!pUI) return;
+
+    UIText* pText = static_cast<UIText*>(pUI);
+    pText->ReassignText(L"HP : " + std::to_wstring(_hp));
 }
 
 void InGameScene::SendActionPacket(eActionType _type, eMoveName _name)
@@ -657,33 +671,230 @@ void InGameScene::OnItemButtonClick(UIPanel* _pPanel)
     // 스킬 애니메이션 출력 후 NextTurn
 }
 
-void InGameScene::OnTimeout()
-{
-    UI* pUI = UIManager::GetInst()->FindUI(L"SkillButtonPanel");
-    if (!pUI) return;
-    pUI->SetPos((float)ScreenWidth / 2, ScreenHeight + 80);
-    pUI->SetClickable(false);
-
-    Mouse* pMouse = InputManager::GetInst()->GetMouse();
-    pMouse->SetHoverBitmap(nullptr);
-
-    pUI = UIManager::GetInst()->FindUI(L"Wait");
-    if (pUI)
-    {
-        UIPanel* pPanel = static_cast<UIPanel*>(pUI);
-        pPanel->SetActive(true);
-    }
-
-    SetMyTurn(false);
-    m_timer = StartTimer;
-    NextTurn();
-}
-
 void InGameScene::SendExitPacket()
 {
     char buffer[255] = {};
     ushort count = sizeof(ushort);
     *(ushort*)(buffer + count) = (ushort)ePacketType::C_ExitInGame;				count += sizeof(ushort);
+    *(char*)(buffer + count) = (char)Game::GetInst()->GetMyScore();              count += sizeof(char);
     *(ushort*)buffer = count;
     NetworkManager::GetInst()->Send(buffer);
 }
+
+void InGameScene::CheckAttackResult(bool& _hit, bool& _dead)
+{
+    std::vector<PlayerInfo*> hitPlayerList, deadPlayerList;
+    Game::GetInst()->GetHitResult(Game::GetInst()->GetCurSlot(), hitPlayerList, deadPlayerList);
+
+    UI* pUI = nullptr;
+    UIPanel* pPanel = nullptr;
+    UIText* pText = nullptr;
+
+    for (const auto& player : hitPlayerList)
+    {
+        UpdateHPUI(player->m_slot, player->m_hp);
+
+        Obj* pObj = ObjectManager::GetInst()->FindObj(std::to_wstring(player->m_slot));
+        if (pObj)
+        {
+            Player* pPlayer = static_cast<Player*>(pObj);
+            pPlayer->DoAction(eActionType::Hit);
+        }
+    }
+
+    if (!hitPlayerList.empty()) _hit = true;
+
+    int deadSize = (int)deadPlayerList.size();
+    if (deadSize > 0)
+    {
+        Game::GetInst()->AddScore(Game::GetInst()->GetCurSlot(), deadSize);
+        _dead = true;
+    }
+
+    for (const auto& player : deadPlayerList)
+    {
+        Game::GetInst()->RemovePlayerFromBoard(player->m_slot);
+
+        UpdateHPUI(player->m_slot, 0);
+
+        Obj* pObj = ObjectManager::GetInst()->FindObj(std::to_wstring(player->m_slot));
+        if (pObj)
+        {
+            Player* pPlayer = static_cast<Player*>(pObj);
+            pPlayer->DoAction(eActionType::Die);
+        }
+        Game::GetInst()->DecreaseAliveCount();
+    }
+
+    pUI = UIManager::GetInst()->FindUI(L"RangeBlock");
+    pPanel = static_cast<UIPanel*>(pUI);
+    pPanel->SetActive(false);
+}
+
+void InGameScene::UpdateHeal()
+{
+    const SkillInfo* pSkill = SkillManager::GetInst()->GetSkill(0, eSkillName::Heal0); // 현재 단 한 개
+    const SkillHeal* pSkillHeal = static_cast<const SkillHeal*>(pSkill);
+
+    int slot = Game::GetInst()->GetCurSlot();
+    int mana = Game::GetInst()->GetMana(slot);
+
+    if (mana < Game::MPMax)
+    {
+        int result = mana + pSkillHeal->GetHeal();
+        if (result > Game::MPMax) result = Game::MPMax;
+        
+        if (Game::GetInst()->GetMana(slot) != result)
+        {
+            Game::GetInst()->SetMana(slot, result);
+            UpdateMPUI(slot, result);
+        }
+    }
+}
+
+void InGameScene::TurnOver()
+{
+    Game* pGameInst = Game::GetInst();
+
+    if (pGameInst->IsMyTurn())
+    {
+        UI* pUI = UIManager::GetInst()->FindUI(L"SkillButtonPanel");
+        if (!pUI) return;
+        pUI->SetPos((float)ScreenWidth / 2, ScreenHeight + 80);
+        pUI->SetClickable(false);
+
+        Mouse* pMouse = InputManager::GetInst()->GetMouse();
+        pMouse->SetHoverBitmap(nullptr);
+
+        pUI = UIManager::GetInst()->FindUI(L"Wait");
+        if (pUI)
+        {
+            UIPanel* pPanel = static_cast<UIPanel*>(pUI);
+            pPanel->SetActive(true);
+        }
+    }
+
+    pGameInst->UpdateNextSlot();
+    if (pGameInst->CheckNextRound())
+    {
+        int curRound = pGameInst->GetCurRound();
+        if (curRound > Game::GameMaxRound)
+        {
+            ChangeState(eInGameState::GameOver);
+            return;
+        }
+        if (curRound > 1 && curRound % 3 == 0)
+        {
+            pGameInst->UpdatePortal();
+        }
+        pGameInst->UpdateNextSlot();
+        UpdateDashboardUI();
+
+        pGameInst->ResetPlayerSkillName();
+    }
+
+    if (pGameInst->IsMyTurn())
+    {
+        int slot = pGameInst->GetMySlot();
+        UI* pUI = UIManager::GetInst()->FindUI(L"SkillButtonPanel");
+        if (pUI)
+        {
+            pUI->SetPos(ScreenWidth / 2.f, ScreenHeight);
+            pUI->SetClickable(true);
+
+            UIPanel* pPanel = static_cast<UIPanel*>(pUI);
+
+            std::vector<eSkillName> skillNameList;
+            SkillManager::GetInst()->GetSkillsNotAvailable(pGameInst->GetMana(slot), skillNameList);
+
+            for (const auto& n : skillNameList)
+            {
+                eSkillName name = (eSkillName)n;
+                pUI = pPanel->FindChildUI(std::to_wstring((int)name));
+                if (pUI)
+                    pUI->SetActive(false);
+            }
+        }
+
+        pUI = UIManager::GetInst()->FindUI(L"Wait");
+        if (pUI)
+        {
+            UIPanel* pPanel = static_cast<UIPanel*>(pUI);
+            pPanel->SetActive(false);
+        }
+    }
+ 
+    ChangeState(eInGameState::Play);
+}
+
+void InGameScene::GameOver()
+{
+    Game::GetInst()->OnGameOver();
+
+    // S_GameOver받은 후 씬전환
+    char buffer[255] = {};
+    ushort count = sizeof(ushort);
+    *(ushort*)(buffer + count) = (ushort)ePacketType::C_GameOver;				count += sizeof(ushort);
+    *(ushort*)buffer = count;
+    NetworkManager::GetInst()->Send(buffer);
+}
+
+void InGameScene::ShowGameOverUI()
+{
+    UI* pUI = UIManager::GetInst()->FindUI(L"GameOver");
+    if (!pUI) return;
+
+    int killCount = Game::GetInst()->GetMyScore();
+
+    UIPanel* pPanel = static_cast<UIPanel*>(pUI);
+    UIManager::GetInst()->SetPopupUI(pPanel);
+    pUI = pPanel->FindChildUI(L"GameOverText");
+    UIText* pText = static_cast<UIText*>(pUI);
+    pText->ReassignText(std::to_wstring(killCount) + L" 킬!");
+}
+
+void InGameScene::UpdateDashboardUI()
+{
+    UI* pUI = UIManager::GetInst()->FindUI(L"Dashboard");
+    if (!pUI) return;
+
+    UIPanel* pPanel = static_cast<UIPanel*>(pUI);
+    pUI = pPanel->FindChildUI(L"DashboardText");
+    if (!pUI) return;
+
+    UIText* pText = static_cast<UIText*>(pUI);
+    pText->ReassignText(std::to_wstring(Game::GetInst()->GetCurRound()) + L" / " + std::to_wstring(Game::GameMaxRound));
+}
+
+/*
+void InGameScene::ShowMyTurnUI()
+{
+    UI* pUI = UIManager::GetInst()->FindUI(L"SkillButtonPanel");
+    if (pUI)
+    {
+        pUI->SetPos(ScreenWidth / 2.f, ScreenHeight);
+        pUI->SetClickable(true);
+
+        UIPanel* pPanel = static_cast<UIPanel*>(pUI);
+
+        SkillManager::GetInst()->GetSkillsNotAvailable();
+        int skillNameListSize = *(char*)_packet;				_packet += sizeof(char);
+        for (int i = 0; i < skillNameListSize; i++)
+        {
+            eSkillName name = (eSkillName) * (char*)_packet;				_packet += sizeof(char);
+            pUI = pPanel->FindChildUI(std::to_wstring((int)name));
+            if (pUI)
+                pUI->SetActive(false);
+        }
+    }
+
+    pUI = UIManager::GetInst()->FindUI(L"Wait");
+    if (pUI)
+    {
+        UIPanel* pPanel = static_cast<UIPanel*>(pUI);
+        pPanel->SetActive(false);
+    }
+
+    ChangeState(eInGameState::Play);
+}
+*/
