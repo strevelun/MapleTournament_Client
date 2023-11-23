@@ -1015,7 +1015,7 @@ void PacketHandler::S_UpdateIngameUserLeave(char* _packet)
 	Game::GetInst()->LeavePlayer(slot);
 
 	// 2명인데 한 명이 나간경우
-	if (Game::GetInst()->GetPlayingCount() <= 1)
+	if (Game::GetInst()->GetAliveCount() <= 1)
 	{
 		InGameScene* pScene = SceneManager::GetInst()->GetCurScene<InGameScene>();
 		pScene->ChangeState(eInGameState::GameOver);

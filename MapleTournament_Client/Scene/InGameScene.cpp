@@ -831,10 +831,13 @@ void InGameScene::GameOver()
 {
     Game::GetInst()->OnGameOver();
 
+
+
     // S_GameOver받은 후 씬전환
     char buffer[255] = {};
     ushort count = sizeof(ushort);
     *(ushort*)(buffer + count) = (ushort)ePacketType::C_GameOver;				count += sizeof(ushort);
+    *(char*)(buffer + count) = (char)Game::GetInst()->GetMyScore();              count += sizeof(char);
     *(ushort*)buffer = count;
     NetworkManager::GetInst()->Send(buffer);
 }

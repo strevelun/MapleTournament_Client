@@ -23,7 +23,6 @@ bool Game::Init()
 	m_portalPosition = { -1,-1 };
 	m_curPlayerSlot = -1;
 	m_curRound = 1;
-	m_playingcount = 0;
 	m_aliveCount = 0;
 
 	for (int i = 0; i < RoomSlotNum; i++)
@@ -56,9 +55,7 @@ bool Game::Init()
 
 void Game::AddPlayer(int _slot)
 {
-	m_playingcount++;
 	m_aliveCount++;
-	m_arrPlayer[_slot].m_bPlaying = true;
 	m_arrPlayer[_slot].m_bAlive = true;
 }
 
@@ -89,17 +86,15 @@ void Game::SetSkillName(int _slot, eSkillName _name)
 
 void Game::LeavePlayer(int _slot)
 {
-	m_playingcount--;
 	m_aliveCount--;
 	m_arrBoard[m_arrPlayer[_slot].m_ypos][m_arrPlayer[_slot].m_xpos].erase(m_arrPlayer[_slot].m_slot);
-	m_arrPlayer[_slot].m_bPlaying = false;
 	m_arrPlayer[_slot].m_bAlive = false;
 }
 
 void Game::GetHitResult(int _slot, std::vector<PlayerInfo*>& _list, std::vector<PlayerInfo*>& _listDead)
 {
 	PlayerInfo& player = m_arrPlayer[_slot];
-	if (!player.m_bAlive || !player.m_bPlaying) return;
+	if (!player.m_bAlive) return;
 
 	PlayerInfo* pCounterPlayer = nullptr;
 
@@ -189,7 +184,7 @@ int Game::UpdateNextSlot()
 			m_curPlayerSlot = -1;
 			break;
 		}
-	} while (m_arrPlayer[++m_curPlayerSlot].m_bPlaying == false || m_arrPlayer[m_curPlayerSlot].m_bAlive == false);
+	} while (m_arrPlayer[++m_curPlayerSlot].m_bAlive == false);
 
 	return m_curPlayerSlot;
 }
@@ -209,17 +204,19 @@ void Game::OnGameOver()
 {
 	// 나갈때 그 유저의 m_bPlaying을 false함. 그때 m_arrBoard에서 제거
 	for (int i = 0; i < RoomSlotNum; i++)
-		if (m_arrPlayer[i].m_bPlaying)
+		if (m_arrPlayer[i].m_bAlive)
 		{
 			m_arrBoard[m_arrPlayer[i].m_ypos][m_arrPlayer[i].m_xpos].erase(m_arrPlayer[i].m_slot);
-			m_arrPlayer[i].m_bPlaying = false;
+			m_arrPlayer[i].m_bAlive = false;
 		}
+
+	//Data::GetInst()->AddKillCount(m_arrPlayer[m_mySlot].m_score);
 }
 
 eMoveName Game::Move(int _slot, eMoveName _name)
 {
 	PlayerInfo& player = m_arrPlayer[_slot];
-	if (!player.m_bAlive || !player.m_bPlaying) return eMoveName::None;
+	if (!player.m_bAlive) return eMoveName::None;
 
 	if (_name == eMoveName::LeftMove)
 	{
@@ -352,7 +349,6 @@ void Game::ResetPlayerSkillName()
 
 void PlayerInfo::Init(int _slot, int _xpos, int _ypos)
 {
-	m_bPlaying = false;
 	m_score = 0; 
 	m_slot = _slot;
 	m_hp = Game::HPMax;

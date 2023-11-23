@@ -10,7 +10,6 @@
 struct PlayerInfo
 {
 	bool m_bAlive = false;
-	bool m_bPlaying = false;
 	int m_score = 0; // Å³ ¼ö
 	int m_slot = 0;
 	int m_hp = 0;
@@ -43,7 +42,6 @@ private:
 
 	int m_curPlayerSlot = -1;
 	unsigned int m_curRound = 1;
-	int m_playingcount = 0;
 	int m_aliveCount = 0;
 
 	int m_mySlot = 0;
@@ -67,9 +65,7 @@ public:
 
 	bool IsMyTurn() const { return m_curPlayerSlot == m_mySlot; }
 	bool IsSlotAlive(int _slot) const { return m_arrPlayer[_slot].m_bAlive; }
-	bool IsSlotPlaying(int _slot) const { return m_arrPlayer[_slot].m_bPlaying; }
 
-	int GetPlayingCount() const { return m_playingcount; }
 	int GetAliveCount() const { return m_aliveCount; }
 	int GetCurSlot() const { return m_curPlayerSlot; }
 	unsigned int GetCurRound() const { return m_curRound; }
