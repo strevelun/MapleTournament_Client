@@ -15,7 +15,6 @@ struct PlayerInfo
 	int m_hp = 0;
 	int m_mana = 0;
 	int m_xpos = 0, m_ypos = 0;
-	bool m_bWaitForPortal = false;
 	eSkillName m_eSkillName = eSkillName::None;
 
 	void Init(int _slot, int _xpos, int _ypos);
@@ -60,11 +59,14 @@ public:
 	void SetMySlot(int _slot) { m_mySlot = _slot; }
 	void SetMana(int _slot, int _mana);
 	void SetSkillName(int _slot, eSkillName _name);
+	void SetOwner(int _slot) { m_owner = _slot; }
 
 	void LeavePlayer(int _slot);
 
+
 	bool IsMyTurn() const { return m_curPlayerSlot == m_mySlot; }
 	bool IsSlotAlive(int _slot) const { return m_arrPlayer[_slot].m_bAlive; }
+	bool AmIOwner() const { return m_owner == m_mySlot; }
 
 	int GetAliveCount() const { return m_aliveCount; }
 	int GetCurSlot() const { return m_curPlayerSlot; }
@@ -78,6 +80,8 @@ public:
 	int GetSlotYPos(int _slot) const { return m_arrPlayer[_slot].m_ypos; }
 	void GetHitResult(int _slot, std::vector<PlayerInfo*>& _list, std::vector<PlayerInfo*>& _listDead);
 	int GetMySlot() const { return m_mySlot; }
+	int GetPortalTeleportPosX() const { return m_portalTeleportPosition.first; }
+	int GetPortalTeleportPosY() const { return m_portalTeleportPosition.second; }
 
 	void UpdatePortal();
 	void UpdateSlotPos(int _slot, int _xpos, int _ypos);
@@ -87,7 +91,7 @@ public:
 	void OnGameOver();
 
 	eMoveName Move(int _slot, eMoveName _name);
-	void CheckPortal(u_int _slot);
+	bool CheckPlayerOnPortal(u_int _slot);
 
 	void CreatePortal(int _xpos, int _ypos, int _teleportX, int _teleportY);
 

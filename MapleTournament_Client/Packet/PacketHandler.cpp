@@ -802,7 +802,7 @@ void PacketHandler::S_Skill(char* _packet)
 		eMoveName name = Game::GetInst()->Move(slotNumber, eMoveName(*(char*)_packet));
 		if(name == eMoveName::None)
 		{
-			Game::GetInst()->CheckPortal(slotNumber);
+			Game::GetInst()->CheckPlayerOnPortal(slotNumber);
 			pScene->SetSkillState(eSkillState::End);
 			return;
 		}
@@ -993,6 +993,7 @@ void PacketHandler::S_UpdateIngameUserLeave(char* _packet)
 {
 	// 누가 나갔고, 바뀐 방장 알려줌
 	int slot = int(*(char*)_packet);				_packet += sizeof(char);
+	int newOwnerslot = int(*(char*)_packet);				_packet += sizeof(char);
 	eSkillName name = Game::GetInst()->GetSlotSkillName(slot);
 
 	UI* pUI = UIManager::GetInst()->FindUI(L"PlayerStat" + std::to_wstring(slot));
@@ -1021,10 +1022,7 @@ void PacketHandler::S_UpdateIngameUserLeave(char* _packet)
 		pScene->ChangeState(eInGameState::GameOver);
 	}
 
-	// 나간애가 방장일때
-	//if(Game::GetInst()->)
-
-	
+	Game::GetInst()->SetOwner(newOwnerslot);
 
 	Debug::Log("PacketHandler::S_UpdateIngameUserLeave");
 }

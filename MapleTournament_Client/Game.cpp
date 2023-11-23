@@ -148,14 +148,19 @@ void Game::GetHitResult(int _slot, std::vector<PlayerInfo*>& _list, std::vector<
 
 void Game::UpdatePortal()
 {
+	if (!AmIOwner()) return;
+
 	int portalPositionX, portalPositionY, portalTeleportX, portalTeleportY;
 
 	do {
 		portalPositionX = rand() % BoardWidth;
 		portalPositionY = rand() % BoardHeight;
+	} while (m_arrBoard[portalPositionY][portalPositionX].size() >= 1);
+
+	do {
 		portalTeleportX = rand() % BoardWidth;
 		portalTeleportY = rand() % BoardHeight;
-	} while (m_arrBoard[portalPositionY][portalPositionX].size() >= 1);
+	} while (portalTeleportX == portalPositionX && portalTeleportY == portalPositionY);
 
 	char buffer[255] = {};
 	ushort count = sizeof(ushort);
@@ -301,20 +306,15 @@ eMoveName Game::Move(int _slot, eMoveName _name)
 	return _name;
 }
 
-void Game::CheckPortal(u_int _slot)
+bool Game::CheckPlayerOnPortal(u_int _slot)
 {
-	if (_slot >= RoomSlotNum) return;
+	if (_slot >= RoomSlotNum) return false;
 
 	if (m_arrPlayer[_slot].m_xpos == m_portalPosition.first && m_arrPlayer[_slot].m_ypos == m_portalPosition.second)
 	{
 		// 플레이어 랜덤 이동시키고 한번 더 턴을 줌. 그리고 포탈은 비활성화
-		// 서버에서 포탈 비활성화는 -1
-		u_int newXPos;
-		u_int newYPos;
-		do {
-			newXPos = rand() % BoardWidth;
-			newYPos = rand() % BoardHeight;
-		} while (m_arrPlayer[_slot].m_xpos == newXPos && m_arrPlayer[_slot].m_ypos == newYPos);
+		u_int newXPos = m_portalTeleportPosition.first;;
+		u_int newYPos = m_portalTeleportPosition.second;
 
 		RemovePlayerFromBoard(_slot);
 
@@ -323,11 +323,11 @@ void Game::CheckPortal(u_int _slot)
 
 		m_arrBoard[newYPos][newXPos][_slot] = &m_arrPlayer[_slot];
 
-		m_arrPlayer[_slot].m_bWaitForPortal = true;
-
 		m_portalPosition.first = -1;
 		m_portalPosition.second = -1;
+		return true;
 	}
+	return false;
 }
 
 void Game::CreatePortal(int _xpos, int _ypos, int _teleportX, int _teleportY)
@@ -355,6 +355,5 @@ void PlayerInfo::Init(int _slot, int _xpos, int _ypos)
 	m_mana = Game::MPMax;
 	m_xpos = _xpos, m_ypos = _ypos;
 	m_bAlive = false;
-	m_bWaitForPortal = false;
 	m_eSkillName = eSkillName::None;
 }

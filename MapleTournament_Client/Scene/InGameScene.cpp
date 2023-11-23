@@ -774,23 +774,49 @@ void InGameScene::TurnOver()
         }
     }
 
-    pGameInst->UpdateNextSlot();
-    if (pGameInst->CheckNextRound())
+    if (!pGameInst->CheckPlayerOnPortal(pGameInst->GetCurSlot()))
     {
-        int curRound = pGameInst->GetCurRound();
-        if (curRound > Game::GameMaxRound)
-        {
-            ChangeState(eInGameState::GameOver);
-            return;
-        }
-        if (curRound > 1 && curRound % 3 == 0)
-        {
-            pGameInst->UpdatePortal();
-        }
         pGameInst->UpdateNextSlot();
-        UpdateDashboardUI();
+        if (pGameInst->CheckNextRound())
+        {
+            int curRound = pGameInst->GetCurRound();
+            if (curRound > Game::GameMaxRound)
+            {
+                ChangeState(eInGameState::GameOver);
+                return;
+            }
+            if (curRound > 1 && curRound % 3 == 0)
+            {
+                pGameInst->UpdatePortal();
+            }
+            pGameInst->UpdateNextSlot();
+            UpdateDashboardUI();
 
-        pGameInst->ResetPlayerSkillName();
+            pGameInst->ResetPlayerSkillName();
+        }
+    }
+    else
+    {
+        int portalTeleportPosX = pGameInst->GetPortalTeleportPosX();
+        int portalTeleportPosY = pGameInst->GetPortalTeleportPosY();
+        int curSlot = pGameInst->GetCurSlot();
+        Obj* pObj = ObjectManager::GetInst()->FindObj(L"Portal");
+        pObj->SetActive(false);
+
+        pObj = ObjectManager::GetInst()->FindObj(std::to_wstring(curSlot));
+
+        int slotXPos = 240;
+        int slotYPos = 220;
+        if (curSlot == 2 || curSlot == 3)
+            slotYPos = 280;
+
+        if (curSlot == 1 || curSlot == 3)
+            slotXPos = 310;
+
+        // Player의 Move상태가 None이어야 함
+        Player* pPlayer = static_cast<Player*>(pObj);
+        pPlayer->SetPos(slotXPos + (portalTeleportPosX * Player::LeftRightMoveDist), slotYPos + (portalTeleportPosY * Player::UpDownMoveDist));
+        pPlayer->SetBoardPos(portalTeleportPosX, portalTeleportPosY);
     }
 
     if (pGameInst->IsMyTurn())
@@ -831,9 +857,6 @@ void InGameScene::GameOver()
 {
     Game::GetInst()->OnGameOver();
 
-
-
-    // S_GameOver받은 후 씬전환
     char buffer[255] = {};
     ushort count = sizeof(ushort);
     *(ushort*)(buffer + count) = (ushort)ePacketType::C_GameOver;				count += sizeof(ushort);
