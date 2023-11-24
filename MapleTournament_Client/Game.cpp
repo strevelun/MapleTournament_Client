@@ -86,9 +86,12 @@ void Game::SetSkillName(int _slot, eSkillName _name)
 
 void Game::LeavePlayer(int _slot)
 {
-	m_aliveCount--;
+	if (m_arrPlayer[_slot].m_bAlive)
+	{
+		m_aliveCount--;
+		m_arrPlayer[_slot].m_bAlive = false;
+	}
 	m_arrBoard[m_arrPlayer[_slot].m_ypos][m_arrPlayer[_slot].m_xpos].erase(m_arrPlayer[_slot].m_slot);
-	m_arrPlayer[_slot].m_bAlive = false;
 }
 
 void Game::GetHitResult(int _slot, std::vector<PlayerInfo*>& _list, std::vector<PlayerInfo*>& _listDead)
