@@ -69,6 +69,7 @@ enum class eInGameState
 	Play,
 	UseSkill,
 	GameOver,
+	TurnOver,
 };
 
 enum class eSkillState

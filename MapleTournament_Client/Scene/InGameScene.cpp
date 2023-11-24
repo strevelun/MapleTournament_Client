@@ -520,7 +520,7 @@ void InGameScene::Update()
         m_timer -= Timer::GetInst()->GetDeltaTime();
         if (m_timer <= 0.f)
         {
-            TurnOver();
+            ChangeState(eInGameState::TurnOver);
             return;
         }
         if (myTurn) m_arrTimer[(u_int)m_timer]->SetActive(true);
@@ -533,7 +533,7 @@ void InGameScene::Update()
             UIManager::GetInst()->PopPopupUI();
             ChangeState(eInGameState::Play);
 
-            TurnOver();
+            ChangeState(eInGameState::TurnOver);
         }
     }
     else if (m_eState == eInGameState::GameOver)
@@ -574,8 +574,12 @@ void InGameScene::Update()
                 return;
             }
 
-            TurnOver();
+            ChangeState(eInGameState::TurnOver);
         }
+    }
+    else if (m_eState == eInGameState::TurnOver)
+    {
+        TurnOver();
     }
 }
 

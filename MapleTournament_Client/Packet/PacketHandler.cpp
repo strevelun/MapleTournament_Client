@@ -1000,25 +1000,30 @@ void PacketHandler::S_UpdateIngameUserLeave(char* _packet)
 	if (!pUI) return;
 	pUI->SetActive(false);
 
-	// 나간애가 자기 차례라서 스킬 사용 중일때 스킬 종료하고 다음 차례
+	ObjectManager::GetInst()->KillObj(std::to_wstring(slot));
+	InGameScene* pScene = SceneManager::GetInst()->GetCurScene<InGameScene>();
+	
 	if (slot == Game::GetInst()->GetCurSlot())
 	{
-		ObjectManager::GetInst()->KillObj(std::to_wstring(slot));
-		Skill* pSkill = ObjectManager::GetInst()->FindSkill(name);
-		if (pSkill)
-			pSkill->Reset();
+		if (Game::GetInst()->GetSlotSkillName(slot) != eSkillName::None)
+		{
+			Skill* pSkill = ObjectManager::GetInst()->FindSkill(name);
+			if (pSkill)
+				pSkill->Reset();
+
+			pUI = UIManager::GetInst()->FindUI(L"RangeBlock");
+			UIPanel* pPanel = static_cast<UIPanel*>(pUI);
+			pPanel->SetActive(false);
+		}
+		pScene->ChangeState(eInGameState::TurnOver);
 	}
 
-	pUI = UIManager::GetInst()->FindUI(L"RangeBlock");
-	UIPanel* pPanel = static_cast<UIPanel*>(pUI);
-	pPanel->SetActive(false);
 
 	Game::GetInst()->LeavePlayer(slot);
 
 	// 2명인데 한 명이 나간경우
 	if (Game::GetInst()->GetAliveCount() <= 1)
 	{
-		InGameScene* pScene = SceneManager::GetInst()->GetCurScene<InGameScene>();
 		pScene->ChangeState(eInGameState::GameOver);
 	}
 

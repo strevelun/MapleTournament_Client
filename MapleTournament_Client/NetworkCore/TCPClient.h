@@ -12,7 +12,7 @@ class Packet;
 class TCPClient
 {
 private:
-	char						m_recvBuffer[1000];
+	char						m_recvBuffer[1000] = {0};
 	u_short						m_packetSize = 0;
 	int							m_totalSize = 0;
 	
