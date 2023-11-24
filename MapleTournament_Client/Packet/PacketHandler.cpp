@@ -783,8 +783,12 @@ void PacketHandler::S_UpdateUserSlot(char* _packet)
 
 void PacketHandler::S_Skill(char* _packet)
 {
-	u_int slotNumber = *(char*)_packet;					_packet += sizeof(char);
+	u_int slotNumber = *(char*)_packet;					
+	if (Game::GetInst()->GetCurSlot() != slotNumber) return; // 이미 턴이 넘어가버림
+
+	_packet += sizeof(char);
 	eActionType actionType = eActionType(*(char*)_packet);					_packet += sizeof(char);
+	
 
 	InGameScene* pScene = SceneManager::GetInst()->GetCurScene<InGameScene>();
 	pScene->ChangeState(eInGameState::UseSkill);
