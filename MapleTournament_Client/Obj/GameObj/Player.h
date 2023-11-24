@@ -19,10 +19,11 @@ public:
 private:
     int m_boardXPos = 0, m_boardYPos = 0;
     int m_nicknamePanelYPos = 0;
+    int m_slot = 0;
 
     InGameScene* m_pScene = nullptr;
     Skill* m_pCurSkill = nullptr;
-    //std::wstring m_strNickname;
+    std::wstring m_strNickname;
     UIPanel* m_pNicknameText = nullptr;
 
 protected:

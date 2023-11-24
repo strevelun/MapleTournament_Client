@@ -30,6 +30,8 @@
 #include "../Game.h"
 //#include "../InstructionQueue.h"
 
+#include <cassert>
+
 typedef unsigned short ushort;
 
 void PacketHandler::S_OKLogin(char* _packet)
@@ -789,6 +791,7 @@ void PacketHandler::S_Skill(char* _packet)
 	if (actionType == eActionType::None)
 	{
 		pScene->SetSkillState(eSkillState::End);
+		Debug::Log("S_Skill Error: Action type is None");
 		return;
 	}
 
@@ -1020,6 +1023,13 @@ void PacketHandler::S_UpdateIngameUserLeave(char* _packet)
 
 
 	Game::GetInst()->LeavePlayer(slot);
+
+	if (Game::GetInst()->IsSlotInAction(slot))
+	{
+		Game::GetInst()->SetSlotInAction(slot, false);
+		if(Game::GetInst()->GetInActionCount() == 0)
+			pScene->SetSkillState(eSkillState::End);
+	}
 
 	// 2명인데 한 명이 나간경우
 	if (Game::GetInst()->GetAliveCount() <= 1)

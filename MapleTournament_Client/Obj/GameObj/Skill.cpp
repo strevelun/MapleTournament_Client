@@ -32,7 +32,7 @@ void Skill::Reset()
 	pClip->Reset();
 	m_isEnd = false;
 	m_bActive = false;
-	Debug::Log(L"Skill::Reset()");
+	//Debug::Log(L"Skill::Reset()");
 }
 
 void Skill::SetDir(eDir _eDir)

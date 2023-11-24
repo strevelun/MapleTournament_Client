@@ -30,7 +30,7 @@ public:
 	void Update() override;
 
 	void ChangeState(eInGameState _state);
-	void SetSkillState(eSkillState _state) { m_eSkillState = _state;  }
+	void SetSkillState(eSkillState _state);
 
 	void UpdateMPUI(int _slot, int _mp);
 	void UpdateHPUI(int _slot, int _hp);

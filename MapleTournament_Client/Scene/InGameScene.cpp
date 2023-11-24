@@ -531,7 +531,6 @@ void InGameScene::Update()
         if (m_timer <= 0.f)
         {
             UIManager::GetInst()->PopPopupUI();
-            ChangeState(eInGameState::Play);
 
             ChangeState(eInGameState::TurnOver);
         }
@@ -566,7 +565,7 @@ void InGameScene::Update()
         else if (m_eSkillState == eSkillState::End)
         {
             Game::GetInst()->SetSkillName(Game::GetInst()->GetCurSlot(), eSkillName::None);
-            m_eSkillState = eSkillState::None;
+            SetSkillState(eSkillState::None);
 
             if (Game::GetInst()->GetAliveCount() <= 1)
             {
@@ -599,6 +598,12 @@ void InGameScene::ChangeState(eInGameState _state)
         m_timer = GameOverTimer;
         break;
     }
+}
+
+void InGameScene::SetSkillState(eSkillState _state)
+{
+    m_eSkillState = _state; 
+    Debug::Log("SetSkillState : " + std::to_string((int)_state));
 }
 
 void InGameScene::UpdateMPUI(int _slot, int _mp)
@@ -694,20 +699,6 @@ void InGameScene::CheckAttackResult(bool& _hit, bool& _dead)
     UIPanel* pPanel = nullptr;
     UIText* pText = nullptr;
 
-    for (const auto& player : hitPlayerList)
-    {
-        UpdateHPUI(player->m_slot, player->m_hp);
-
-        Obj* pObj = ObjectManager::GetInst()->FindObj(std::to_wstring(player->m_slot));
-        if (pObj)
-        {
-            Player* pPlayer = static_cast<Player*>(pObj);
-            pPlayer->DoAction(eActionType::Hit);
-        }
-    }
-
-    if (!hitPlayerList.empty()) _hit = true;
-
     int deadSize = (int)deadPlayerList.size();
     if (deadSize > 0)
     {
@@ -729,6 +720,20 @@ void InGameScene::CheckAttackResult(bool& _hit, bool& _dead)
         }
         Game::GetInst()->DecreaseAliveCount();
     }
+
+    for (const auto& player : hitPlayerList)
+    {
+        UpdateHPUI(player->m_slot, player->m_hp);
+
+        Obj* pObj = ObjectManager::GetInst()->FindObj(std::to_wstring(player->m_slot));
+        if (pObj)
+        {
+            Player* pPlayer = static_cast<Player*>(pObj);
+            pPlayer->DoAction(eActionType::Hit);
+        }
+    }
+
+    if (!hitPlayerList.empty()) _hit = true;
 
     pUI = UIManager::GetInst()->FindUI(L"RangeBlock");
     pPanel = static_cast<UIPanel*>(pUI);

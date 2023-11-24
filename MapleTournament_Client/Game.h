@@ -16,6 +16,7 @@ struct PlayerInfo
 	int m_mana = 0;
 	int m_xpos = 0, m_ypos = 0;
 	eSkillName m_eSkillName = eSkillName::None;
+	bool m_inAction = false;
 
 	void Init(int _slot, int _xpos, int _ypos);
 };
@@ -39,6 +40,7 @@ private:
 	std::pair<int, int> m_portalPosition;
 	std::pair<int, int> m_portalTeleportPosition;
 
+	int m_inActionCount = 0;
 	int m_curPlayerSlot = -1;
 	unsigned int m_curRound = 1;
 	int m_aliveCount = 0;
@@ -60,6 +62,7 @@ public:
 	void SetMana(int _slot, int _mana);
 	void SetSkillName(int _slot, eSkillName _name);
 	void SetOwner(int _slot) { m_owner = _slot; }
+	void SetSlotInAction(int _slot, bool _inAction);
 
 	void LeavePlayer(int _slot);
 
@@ -82,6 +85,8 @@ public:
 	int GetMySlot() const { return m_mySlot; }
 	int GetPortalTeleportPosX() const { return m_portalTeleportPosition.first; }
 	int GetPortalTeleportPosY() const { return m_portalTeleportPosition.second; }
+	int GetInActionCount() const { return m_inActionCount; }
+	bool IsSlotInAction(int _slot) { return m_arrPlayer[_slot].m_inAction; }
 
 	void UpdatePortal();
 	void UpdateSlotPos(int _slot, int _xpos, int _ypos);

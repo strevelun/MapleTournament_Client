@@ -3,6 +3,9 @@
 #include "Skill/SkillInfo.h"
 #include "Skill/SkillAttack.h"
 #include "Game.h"
+#include "Debug.h"
+
+#include <cassert>
 
 Game* Game::m_pInst = nullptr;
 
@@ -24,6 +27,7 @@ bool Game::Init()
 	m_curPlayerSlot = -1;
 	m_curRound = 1;
 	m_aliveCount = 0;
+	m_inActionCount = 0;
 
 	for (int i = 0; i < RoomSlotNum; i++)
 	{
@@ -84,6 +88,12 @@ void Game::SetSkillName(int _slot, eSkillName _name)
 	m_arrPlayer[_slot].m_eSkillName = _name;
 }
 
+void Game::SetSlotInAction(int _slot, bool _inAction)
+{
+	m_arrPlayer[_slot].m_inAction = _inAction;
+	m_inActionCount += _inAction ? 1 : -1;
+}
+
 void Game::LeavePlayer(int _slot)
 {
 	if (m_arrPlayer[_slot].m_bAlive)
@@ -96,13 +106,24 @@ void Game::LeavePlayer(int _slot)
 
 void Game::GetHitResult(int _slot, std::vector<PlayerInfo*>& _list, std::vector<PlayerInfo*>& _listDead)
 {
+
 	PlayerInfo& player = m_arrPlayer[_slot];
 	if (!player.m_bAlive) return;
+	if (player.m_eSkillName == eSkillName::None)
+	{
+		Debug::Log("Error: m_eSkillName is None");
+		return;
+	}
+	Debug::Log(std::to_string(_slot) + "attacked! : " + std::to_string((int)player.m_eSkillName));
 
 	PlayerInfo* pCounterPlayer = nullptr;
 
 	const SkillInfo* pSkill = SkillManager::GetInst()->GetSkill(_slot, player.m_eSkillName);
-	if (pSkill->GetType() != eSkillType::Attack) return;
+	if (pSkill->GetType() != eSkillType::Attack)
+	{
+		Debug::Log("Error: eSkillType is not attack");
+		return;
+	}
 
 	const SkillAttack* pSkillAttack = static_cast<const SkillAttack*>(pSkill);
 
@@ -359,4 +380,5 @@ void PlayerInfo::Init(int _slot, int _xpos, int _ypos)
 	m_xpos = _xpos, m_ypos = _ypos;
 	m_bAlive = false;
 	m_eSkillName = eSkillName::None;
+	m_inAction = false;
 }
