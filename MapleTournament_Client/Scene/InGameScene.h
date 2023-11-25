@@ -20,7 +20,7 @@ private:
 	eInGameState m_eState = eInGameState::None;
 	eSkillState m_eSkillState = eSkillState::None;
 
-	float m_timer = PrepareTimer;
+	float m_timer = 0.f;
 
 public:
 	InGameScene();

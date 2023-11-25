@@ -10,6 +10,7 @@
 #include "Managers/SkillManager.h"
 #include "InstructionQueue.h"
 #include "Scene/LoginScene.h"
+//#include "Scene/InGameScene.h"
 #include "Obj/UI/Mouse.h"
 #include "Timer.h"
 #include "Debug.h"
@@ -104,10 +105,11 @@ int GameApp::Run()
 		}
 		else
 		{
+			m_pClient->ReceivePacket();
+			SceneManager::GetInst()->CheckSceneChange();
+
 			if (Timer::GetInst()->Update())
 			{
-				SceneManager::GetInst()->CheckSceneChange();
-				m_pClient->ReceivePacket();
 				Input();
 				Update();
 				Render();
@@ -143,6 +145,15 @@ void GameApp::Render()
 	wsprintf(output, L"x: %d, y: %d", (int)pMouse->GetMouseXPos(), (int)pMouse->GetMouseYPos());
 	D2D1_RECT_F outputRect = D2D1::RectF(5.0f, 5.0f, 500.0f, 20.0f);
 	Graphics::GetInst()->GetRenderTarget()->DrawText(output, (int)wcslen(output), m_pTextFormat, outputRect, m_pBrush);
-
+	/*
+	InGameScene* pScene = SceneManager::GetInst()->GetCurScene<InGameScene>();
+	if (pScene)
+	{
+		wchar_t output[50];
+		swprintf_s(output, L"timer : %f", pScene->GetTimer());
+		D2D1_RECT_F outputRect = D2D1::RectF(400.0f, 5.0f, 500.0f, 20.0f);
+		Graphics::GetInst()->GetRenderTarget()->DrawText(output, (int)wcslen(output), m_pTextFormat, outputRect, m_pBrush);
+	}
+	*/
 	Graphics::GetInst()->EndDraw();
 }
